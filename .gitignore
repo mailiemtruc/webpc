@@ -1,0 +1,26 @@
+# Environment variables
+.env
+
+# Dependencies
+/vendor/
+
+# Temporary files & uploads
+/public/uploads/temp/
+*.log
+/artifacts/
+/scripts/
+
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local private documents & notes
+Bai tap nhom.pdf
+*.pdf
+LICH_COMMIT_DEV1.md
+premium-audit.json
+
+
