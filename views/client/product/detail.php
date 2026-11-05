@@ -1,0 +1,14 @@
+<?php
+require VIEWS_DIR . '/layouts/client_header.php';
+$details = json_decode($product['specifications'] ?? '{}', true) ?: [];
+$specLabels = ['cpu' => 'Vi xử lý', 'mainboard' => 'Bo mạch chủ', 'ram' => 'Bộ nhớ RAM', 'vga' => 'Card đồ họa', 'storage' => 'Lưu trữ', 'psu' => 'Nguồn', 'case' => 'Vỏ máy', 'cooling' => 'Tản nhiệt', 'socket' => 'Socket', 'cores' => 'Số nhân', 'threads' => 'Số luồng', 'base_clock' => 'Xung nhịp cơ bản', 'boost_clock' => 'Xung nhịp tối đa', 'tdp' => 'Công suất', 'capacity' => 'Dung lượng', 'speed' => 'Tốc độ', 'interface' => 'Chuẩn kết nối', 'vram' => 'Bộ nhớ đồ họa', 'bus' => 'Bus bộ nhớ', 'type' => 'Loại bộ nhớ'];
+$regularPrice = (float)$product['price'];
+$salePrice = (float)($product['discount_price'] ?? 0);
+$hasDiscount = $salePrice > 0 && $salePrice < $regularPrice;
+?>
+<div class="page-width">
+    <nav class="breadcrumb" aria-label="Đường dẫn"><a href="<?= base_url() ?>">Trang chủ</a><span>/</span><a href="<?= base_url('san-pham') ?>">Cửa hàng</a><span>/</span><span><?= htmlspecialchars($product['brand_name'] ?? 'Sản phẩm') ?></span></nav>
+    <article class="detail-layout"><figure class="detail-photo"><img src="<?= htmlspecialchars($product['thumbnail'] ?? '') ?>" alt="<?= htmlspecialchars($product['name']) ?>" width="800" height="800" data-product-image></figure><div class="detail-copy"><span class="eyebrow"><?= htmlspecialchars($product['brand_name'] ?? 'PCMarket') ?> / <?= htmlspecialchars($product['sku'] ?? '') ?></span><h1><?= htmlspecialchars($product['name']) ?></h1><div class="product-prices"><strong><?= format_money($hasDiscount ? $salePrice : $regularPrice) ?></strong><?php if ($hasDiscount): ?><s><?= format_money($regularPrice) ?></s><?php endif; ?></div><p><?= htmlspecialchars(strip_tags($product['summary'] ?? '')) ?></p><div class="detail-stock"><?= (int)$product['quantity'] > 0 ? 'Còn hàng · ' . (int)$product['quantity'] . ' sản phẩm' : 'Tạm hết hàng' ?></div><a class="button button-outline" href="#specifications">Xem thông số kỹ thuật <span aria-hidden="true">↓</span></a><p class="availability-note">Đặt hàng trực tuyến đang được hoàn thiện. Bạn có thể xem giá và thông số sản phẩm tại đây.</p></div></article>
+    <section class="detail-specs" id="specifications"><div><span class="eyebrow">Hiểu rõ chiếc máy của bạn</span><h2>Thông số kỹ thuật</h2></div><?php if ($details): ?><table class="spec-table"><caption hidden>Thông số <?= htmlspecialchars($product['name']) ?></caption><tbody><?php foreach ($details as $key => $value): ?><tr><th scope="row"><?= htmlspecialchars($specLabels[$key] ?? ucfirst(str_replace('_', ' ', $key))) ?></th><td><?= htmlspecialchars(is_scalar($value) ? (string)$value : json_encode($value, JSON_UNESCAPED_UNICODE)) ?></td></tr><?php endforeach; ?></tbody></table><?php else: ?><p>Thông số chi tiết đang được cập nhật.</p><?php endif; ?></section>
+</div>
+<?php require VIEWS_DIR . '/layouts/client_footer.php'; ?>
