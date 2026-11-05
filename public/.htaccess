@@ -1,0 +1,14 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Chặn truy cập trực tiếp vào các file nhạy cảm
+    RewriteRule ^(\.env|\.git|composer\.(json|lock)) - [F,L]
+
+    # Nếu file hoặc thư mục tồn tại thật trong public/ (như css, js, images), phục vụ trực tiếp
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Điều hướng mọi request còn lại vào index.php
+    RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>
+
