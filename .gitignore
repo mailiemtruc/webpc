@@ -23,9 +23,12 @@ Bai tap nhom.pdf
 *.pdf
 LICH_COMMIT_DEV1.md
 premium-audit.json
+premium-ui.json
 KE_HOACH_DU_AN.md
 *.docx
 deliverables/
+/scripts/
+
 
 
 
