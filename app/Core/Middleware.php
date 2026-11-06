@@ -40,5 +40,31 @@ class Middleware {
             redirect('/');
         }
     }
+
+    /**
+     * Xác thực CSRF Token cho các Form POST / AJAX
+     * Chống tấn công giả mạo yêu cầu từ trang khác (Cross-Site Request Forgery)
+     */
+    public static function csrf(): void {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+            $token = $_POST['_csrf'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
+            $sessionToken = $_SESSION['_csrf_token'] ?? '';
+            
+            if (empty($token) || empty($sessionToken) || !hash_equals($sessionToken, $token)) {
+                http_response_code(403);
+                if (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
+                    json_response([
+                        'success' => false,
+                        'message' => 'Lỗi bảo mật CSRF: Phiên làm việc đã hết hạn hoặc yêu cầu không hợp lệ. Vui lòng tải lại trang!'
+                    ], 403);
+                }
+                set_flash('error', 'Phiên làm việc đã hết hạn hoặc yêu cầu không hợp lệ. Vui lòng thử lại!');
+                redirect($_SERVER['HTTP_REFERER'] ?? '/dang-nhap');
+            }
+        }
+    }
 }
 

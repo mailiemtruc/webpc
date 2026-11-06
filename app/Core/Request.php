@@ -26,7 +26,18 @@ class Request {
 
     public static function post(string $key, $default = null) {
         $val = $_POST[$key] ?? $default;
-        return is_string($val) ? trim(htmlspecialchars($val, ENT_QUOTES, 'UTF-8')) : $val;
+        if (!is_string($val)) {
+            return $val;
+        }
+        // Các trường mật khẩu bí mật không bị htmlspecialchars biến đổi ký tự
+        if (in_array($key, ['password', 'password_confirmation', 'old_password', 'current_password', 'new_password'], true)) {
+            return $val;
+        }
+        return trim(htmlspecialchars($val, ENT_QUOTES, 'UTF-8'));
+    }
+
+    public static function raw(string $key, $default = null) {
+        return $_POST[$key] ?? $_GET[$key] ?? $default;
     }
 
     public static function file(string $key) {

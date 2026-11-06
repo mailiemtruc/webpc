@@ -20,6 +20,8 @@ CREATE TABLE `users` (
     `role` ENUM('admin', 'staff', 'customer') DEFAULT 'customer',
     `avatar` VARCHAR(255) DEFAULT 'assets/images/default-avatar.png',
     `status` TINYINT(1) DEFAULT 1 COMMENT '1: Hoạt động, 0: Bị khóa',
+    `reset_token` VARCHAR(100) NULL,
+    `reset_expires` DATETIME NULL,
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

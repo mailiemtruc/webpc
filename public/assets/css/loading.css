@@ -1,0 +1,203 @@
+/* Shared skeleton recipes. Visible only while real downloads/navigation are pending. */
+#main-content {
+  position: relative;
+}
+.page-skeleton {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  background: var(--paper);
+  overflow: hidden;
+  pointer-events: none;
+  min-height: 650px;
+}
+.page-skeleton > .page-width {
+  padding-top: 25px;
+}
+.skeleton-block {
+  display: block;
+  background: #e0e6f0;
+  border-radius: 5px;
+}
+.skeleton-breadcrumb {
+  width: 150px;
+  height: 12px;
+  margin-bottom: 30px;
+}
+.skeleton-heading {
+  width: 300px;
+  max-width: 80%;
+  height: 36px;
+  margin-bottom: 30px;
+}
+.skeleton-page-layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 24px;
+}
+.skeleton-sidebar {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 22px;
+  background: white;
+  align-self: start;
+}
+.skeleton-sidebar > span {
+  height: 12px;
+  margin-bottom: 22px;
+}
+.skeleton-sidebar > span:nth-child(even) {
+  width: 75%;
+}
+.skeleton-toolbar {
+  height: 50px;
+  margin-bottom: 18px;
+}
+.skeleton-product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+.skeleton-product {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+.skeleton-product-photo {
+  aspect-ratio: 1.22;
+  border-radius: 0;
+}
+.skeleton-product-copy {
+  padding: 16px;
+}
+.skeleton-product-copy > span {
+  height: 12px;
+  margin-bottom: 13px;
+}
+.skeleton-product-copy > span:nth-child(2) {
+  width: 75%;
+}
+.skeleton-product-copy > span:nth-child(3) {
+  height: 65px;
+  margin-top: 20px;
+  background: #edf0f6;
+}
+.skeleton-product-copy > strong {
+  width: 65%;
+  height: 23px;
+  margin-top: 20px;
+}
+.skeleton-detail {
+  display: none;
+  grid-template-columns: 1fr 1fr;
+  gap: 35px;
+  padding: 30px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: white;
+}
+.skeleton-detail-photo {
+  aspect-ratio: 1.1;
+}
+.skeleton-detail-copy > span {
+  height: 18px;
+  margin-bottom: 18px;
+}
+.skeleton-detail-copy > span:nth-child(3) {
+  height: 70px;
+  margin-block: 30px;
+}
+.skeleton-detail-copy > span:last-child {
+  width: 50%;
+  height: 45px;
+}
+.page-skeleton[data-layout="detail"] .skeleton-page-layout,
+.page-skeleton[data-layout="detail"] .skeleton-heading {
+  display: none;
+}
+.page-skeleton[data-layout="detail"] .skeleton-detail {
+  display: grid;
+}
+.media-loading::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: linear-gradient(110deg, #e2e8f2 10%, #f1f5fc 42%, #e2e8f2 72%);
+  background-size: 230% 100%;
+  pointer-events: none;
+}
+.campaign-visual.media-loading::before {
+  background: #203a60;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .media-loading::before {
+    animation: skeleton-shimmer 1.6s ease-in-out infinite;
+  }
+  .skeleton-product::after,
+  .skeleton-detail::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      100deg,
+      transparent 25%,
+      rgb(255 255 255 / 0.55) 50%,
+      transparent 75%
+    );
+    animation: skeleton-sweep 1.8s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .skeleton-detail {
+    position: relative;
+    overflow: hidden;
+  }
+}
+@keyframes skeleton-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -130% 0;
+  }
+}
+@keyframes skeleton-sweep {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+@media (max-width: 1250px) {
+  .skeleton-product-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 1000px) {
+  .skeleton-page-layout {
+    grid-template-columns: 190px minmax(0, 1fr);
+    gap: 18px;
+  }
+  .skeleton-product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 760px) {
+  .skeleton-sidebar {
+    display: none;
+  }
+  .skeleton-page-layout {
+    grid-template-columns: 1fr;
+  }
+  .skeleton-product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .skeleton-detail {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+}

@@ -1,0 +1,338 @@
+/* Shared comparison controls, persistent tray and native modal table. */
+.pc-compare-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  width: 100%;
+  margin-top: 9px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: white;
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 600;
+}
+.pc-compare-toggle:hover {
+  background: var(--soft);
+  border-color: var(--primary);
+}
+.pc-compare-toggle[aria-pressed="true"] {
+  background: var(--soft);
+  border-color: var(--primary);
+}
+.pc-compare-toggle:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+.detail-copy .pc-compare-toggle {
+  max-width: 280px;
+  margin-top: 14px;
+}
+.compare-active {
+  padding-bottom: 130px;
+}
+.compare-tray {
+  position: fixed;
+  z-index: 35;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1380px, calc(100% - 48px));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px 25px;
+  padding: 15px 20px;
+  background: white;
+  border: 1px solid #b8c9f0;
+  border-radius: 9px;
+  box-shadow: 0 5px 35px #183b7026;
+}
+.compare-tray-heading {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  grid-column: 1;
+}
+.compare-tray-heading strong {
+  font: 700 20px/1.2 var(--display);
+}
+.compare-tray-heading strong span {
+  color: var(--primary);
+  font-family: var(--font);
+  font-size: 12px;
+  margin-left: 7px;
+}
+.compare-tray .text-button {
+  font-size: 11px;
+  color: var(--primary);
+  min-height: 30px;
+}
+.compare-tray-items {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  min-width: 0;
+  grid-column: 1;
+  scrollbar-gutter: stable;
+}
+.compare-chip {
+  display: flex;
+  align-items: center;
+  min-width: 150px;
+  max-width: 250px;
+  flex: 1;
+  gap: 5px;
+  padding-left: 9px;
+  background: #f2f5fc;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+}
+.compare-chip > span {
+  font-size: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.compare-chip > button {
+  min-width: 44px;
+  min-height: 44px;
+  align-self: stretch;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 18px;
+  margin-left: auto;
+}
+.compare-chip > button:hover {
+  background: #e4ebfc;
+  color: var(--primary);
+}
+.compare-tray-actions {
+  grid-column: 2;
+  grid-row: 1/3;
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.compare-tray-actions .button {
+  min-width: 145px;
+}
+.compare-status {
+  grid-column: 1/-1;
+  font-size: 10px;
+  color: var(--muted);
+}
+.compare-dialog {
+  width: min(1380px, calc(100% - 40px));
+  max-height: calc(100dvh - 48px);
+  padding: 26px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--ink);
+  background: white;
+}
+.compare-dialog[open] {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.compare-dialog::backdrop {
+  background: #12264780;
+}
+.compare-dialog-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 22px;
+  flex-shrink: 0;
+}
+.compare-dialog-heading h2 {
+  font-size: 32px;
+  margin: 8px 0 10px;
+}
+.compare-dialog-heading p {
+  font-size: 12px;
+  color: var(--muted);
+}
+.compare-dialog-heading .icon-button {
+  min-width: 44px;
+  min-height: 44px;
+}
+.compare-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+.compare-toolbar label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  cursor: pointer;
+}
+.compare-toolbar input {
+  accent-color: var(--primary);
+  width: 16px;
+  height: 16px;
+}
+.compare-toolbar > span {
+  color: var(--primary);
+  font-weight: 600;
+}
+.compare-table-scroll {
+  overflow: auto;
+  min-height: 0;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.compare-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  table-layout: fixed;
+  text-align: left;
+  font-size: 12px;
+}
+.compare-table th,
+.compare-table td {
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 14px 16px;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+.compare-table th:first-child {
+  width: 140px;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: #f7f9fd;
+}
+.compare-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #edf2ff;
+  font-weight: 600;
+}
+.compare-table thead th:first-child {
+  z-index: 3;
+}
+.compare-product-heading a {
+  display: block;
+  line-height: 1.6;
+}
+.compare-product-heading .text-button {
+  color: var(--primary);
+  font-size: 11px;
+  min-height: 44px;
+  margin-top: 8px;
+}
+.compare-table tbody th {
+  color: var(--muted);
+  font-weight: 500;
+}
+.compare-table th small {
+  display: block;
+  color: var(--primary);
+  font-size: 9px;
+  margin-top: 5px;
+}
+.compare-different td {
+  background: #f0f6ff;
+}
+.compare-updated-note {
+  font-size: 10px;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+.compare-dialog-status:empty {
+  display: none;
+}
+.compare-mobile-hint {
+  display: none;
+  font-size: 10px;
+  color: var(--muted);
+}
+@media (max-width: 760px) {
+  .compare-mobile-hint {
+    display: block;
+  }
+}
+.compare-dialog-status {
+  font-size: 12px;
+  color: var(--muted);
+}
+@media (max-width: 760px) {
+  .compare-active {
+    padding-bottom: 205px;
+  }
+  .compare-tray {
+    bottom: 8px;
+    width: calc(100% - 20px);
+    padding: 12px;
+    gap: 7px 10px;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .compare-tray-heading {
+    grid-column: 1/-1;
+    justify-content: space-between;
+  }
+  .compare-tray-heading .text-button {
+    min-height: 44px;
+  }
+  .compare-tray-items {
+    grid-row: 2;
+    align-self: center;
+  }
+  .compare-tray-actions {
+    grid-row: 2;
+  }
+  .compare-tray-actions .button {
+    min-width: 110px;
+    padding: 10px;
+    font-size: 11px;
+  }
+  .compare-tray .text-button {
+    min-height: 44px;
+  }
+  .compare-status {
+    font-size: 9px;
+  }
+  .compare-dialog {
+    width: calc(100% - 16px);
+    max-height: calc(100dvh - 24px);
+    padding: 17px;
+    gap: 12px;
+  }
+  .compare-dialog-heading h2 {
+    font-size: 26px;
+  }
+  .compare-dialog-heading p {
+    font-size: 11px;
+  }
+  .compare-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    font-size: 11px;
+  }
+  .compare-table th,
+  .compare-table td {
+    padding: 12px;
+    font-size: 11px;
+  }
+  .compare-table th:first-child {
+    width: 140px;
+  }
+  .compare-updated-note {
+    font-size: 9px;
+  }
+}

@@ -1,0 +1,248 @@
+/*
+ * Shared motion layer. Component appearance stays in client.css/admin.css.
+ * Loaded after those recipes. All content remains visible without JavaScript.
+ */
+:root {
+  --motion-fast: 160ms;
+  --motion-ui: 240ms;
+  --motion-reveal: 620ms;
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-distance: 18px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .motion-enabled .campaign-copy > * {
+    animation: motion-rise 720ms var(--motion-ease) both;
+  }
+  .motion-enabled .campaign-copy > :nth-child(2) {
+    animation-delay: 80ms;
+  }
+  .motion-enabled .campaign-copy > :nth-child(3) {
+    animation-delay: 160ms;
+  }
+  .motion-enabled .campaign-copy > :nth-child(4) {
+    animation-delay: 240ms;
+  }
+  .motion-enabled .campaign-visual img {
+    animation: motion-machine-start 1100ms var(--motion-ease) both;
+  }
+  .motion-enabled .campaign-visual::after {
+    content: "";
+    position: absolute;
+    inset: -40% 0 auto;
+    height: 25%;
+    background: linear-gradient(
+      180deg,
+      transparent,
+      rgb(112 216 242 / 0.18),
+      transparent
+    );
+    border-bottom: 1px solid rgb(112 216 242 / 0.5);
+    pointer-events: none;
+    animation: motion-boot-scan 1400ms 120ms ease-out both;
+  }
+  .motion-enabled .campaign-config {
+    animation: motion-rise 700ms 220ms var(--motion-ease) both;
+  }
+  .motion-enabled .campaign-side > a {
+    animation: motion-rise 720ms 120ms var(--motion-ease) both;
+  }
+  .motion-enabled .campaign-side > a:nth-child(2) {
+    animation-delay: 220ms;
+  }
+  .motion-enabled .motion-reveal {
+    opacity: 0;
+    transform: translate3d(0, var(--motion-distance), 0);
+    transition:
+      opacity var(--motion-reveal) var(--motion-ease),
+      transform var(--motion-reveal) var(--motion-ease),
+      border-color var(--motion-ui),
+      box-shadow var(--motion-ui);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  .motion-enabled .motion-reveal.is-revealed {
+    opacity: 1;
+    transform: none;
+  }
+  .motion-reveal:focus-within {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0ms;
+  }
+  .button,
+  .search-submit,
+  .icon-button {
+    transition:
+      background var(--motion-fast),
+      color var(--motion-fast),
+      border-color var(--motion-fast),
+      box-shadow var(--motion-ui);
+  }
+  .button > span,
+  .product-details-link > span,
+  .promo-action > span {
+    display: inline-block;
+    transition: transform var(--motion-ui) var(--motion-ease);
+  }
+  .button:hover > span,
+  .button:focus-visible > span,
+  .product-details-link:hover > span,
+  .promo-action:hover > span {
+    transform: translateX(4px);
+  }
+  .button:active,
+  .search-submit:active {
+    box-shadow: inset 0 2px 5px rgb(0 0 0 / 0.14);
+  }
+  .primary-nav > a:not(.catalog-nav-link) {
+    position: relative;
+  }
+  .primary-nav > a:not(.catalog-nav-link)::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 17px;
+    right: 17px;
+    height: 2px;
+    background: var(--primary);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--motion-ui) var(--motion-ease);
+  }
+  .primary-nav > a:hover::after,
+  .primary-nav > a:focus-visible::after {
+    transform: scaleX(1);
+  }
+  .product-image img {
+    transition: transform 650ms var(--motion-ease);
+  }
+  .shop-product {
+    transition:
+      border-color var(--motion-ui),
+      box-shadow var(--motion-ui);
+  }
+  .shop-product:hover,
+  .shop-product:focus-within {
+    box-shadow: 0 8px 22px rgb(24 61 130 / 0.08);
+    border-color: #9ab2ee;
+  }
+  .shop-product:hover .product-image img {
+    transform: scale(1.045);
+  }
+  .need-card > i,
+  .component-links i,
+  .category-directory > a > i {
+    transition:
+      transform 320ms var(--motion-ease),
+      color var(--motion-ui);
+  }
+  .need-card:hover > i,
+  .component-links a:hover i {
+    transform: translateY(-3px);
+  }
+  .category-directory > a:hover > i {
+    transform: translateX(2px);
+    color: var(--primary);
+  }
+  .mobile-menu:not([hidden]),
+  .account-menu[open] > div {
+    animation: motion-panel-in var(--motion-ui) var(--motion-ease) both;
+    transform-origin: top;
+  }
+  .catalog-dropdown[open] > .catalog-dropdown-panel {
+    animation: motion-panel-in var(--motion-ui) var(--motion-ease) both;
+    transform-origin: top;
+  }
+  .feature-dialog[open] {
+    animation: motion-dialog-in 260ms var(--motion-ease) both;
+  }
+  .feature-dialog[open]::backdrop {
+    animation: motion-backdrop-in 220ms ease-out both;
+  }
+  .auth-form-area,
+  .dashboard-heading {
+    animation: motion-rise 620ms var(--motion-ease) both;
+  }
+  .match-result,
+  .flash {
+    animation: motion-panel-in 220ms var(--motion-ease) both;
+  }
+  .match-result:focus-within {
+    animation: none;
+  }
+}
+/* Touch users get the same actions without hover/continuous pointer effects. */
+@media (hover: none) {
+  .shop-product:hover .product-image img {
+    transform: none;
+  }
+}
+@keyframes motion-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes motion-machine-start {
+  from {
+    opacity: 0.35;
+    transform: scale(1.06);
+  }
+  to {
+    opacity: 0.87;
+    transform: scale(1);
+  }
+}
+@keyframes motion-boot-scan {
+  from {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 0.7;
+  }
+  to {
+    transform: translateY(650%);
+    opacity: 0;
+  }
+}
+@keyframes motion-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes motion-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes motion-backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .motion-reveal {
+    opacity: 1;
+    transform: none;
+  }
+}

@@ -29,9 +29,17 @@ Dự án được xây dựng theo kiến trúc **Modular MVC (Model - View - Co
 
 ## Giao diện hiện tại
 
-Frontend được xây lại bằng PHP views + CSS/JS riêng, phong cách sáng với xanh olive và nền giấy.
+Frontend dùng PHP views + CSS/JS riêng theo phong cách cửa hàng phần cứng: nền trắng/xám lạnh, xanh cobalt, tiêu đề Barlow Condensed và nội dung Roboto.
 Trang chủ, catalog, chi tiết sản phẩm, đăng nhập/đăng ký, 404 và dashboard dùng chung hệ thiết kế tại [DESIGN.md](./DESIGN.md).
-Backend, route và database giữ nguyên. Các chức năng chưa có controller (giỏ hàng, thanh toán, PC Builder, profile và CRUD) chưa thể thao tác nghiệp vụ; UI hiển thị trạng thái rõ ràng.
+Motion dùng chung nằm ở `public/assets/css/motion.css` và `public/assets/js/motion.js`, được nạp qua master layouts.
+Hiệu ứng không chứa logic nghiệp vụ; view/model/controller tiếp tục theo cấu trúc Modular MVC.
+Chạy `node scripts/verify-motion.cjs` để kiểm tra animation, reduced-motion, bàn phím và chế độ không JavaScript.
+Skeleton dùng `loading.css/loading.js` và partial `views/layouts/client_loading.php`.
+Chạy `node scripts/verify-loading.cjs` để kiểm tra skeleton khi mạng chậm, lỗi ảnh và hiển thị mobile.
+So sánh 2–4 PC dùng chung trên card, trang chi tiết và bàn chọn cấu hình: `pc-compare.js/css`,
+`views/layouts/pc_compare.php` và `pc_compare_button.php`. Lưu ID vào trình duyệt, tải lại thông số
+qua API chỉ đọc `GET /api/compare?ids=1,2,3` trong module Product. Kiểm tra: `node scripts/verify-pc-compare.cjs`.
+Các nghiệp vụ backend hiện có và database được giữ nguyên; riêng tính năng so sánh bổ sung API chỉ đọc trong module Product. Các chức năng chưa có controller (giỏ hàng, thanh toán, PC Builder, profile và CRUD) chưa thể thao tác nghiệp vụ; UI hiển thị trạng thái rõ ràng.
 
 Kiểm tra trực quan và tương tác: [scripts/verify-frontend.cjs](./scripts/verify-frontend.cjs).
 Đặt biến `PLAYWRIGHT_PATH` trỏ tới package Playwright, `CHROME_PATH` tới Chrome nếu cần và `WEBPC_QA_URL` tới URL ứng dụng; chạy `node scripts/verify-frontend.cjs`.

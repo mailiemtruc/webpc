@@ -7,16 +7,6 @@
  * ========================================================
  */
 
-// Bật hiển thị lỗi trong môi trường phát triển
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-// Khởi tạo Session an toàn
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
 // Đường dẫn gốc ứng dụng
 define('ROOT_DIR', dirname(__DIR__));
 define('APP_DIR', ROOT_DIR . '/app');
@@ -25,6 +15,23 @@ define('PUBLIC_DIR', __DIR__);
 
 // Nạp các hàm Helper toàn cục
 require_once APP_DIR . '/Core/Helper.php';
+
+// Cấu hình hiển thị lỗi an toàn theo biến môi trường APP_DEBUG
+$isDebug = filter_var(env('APP_DEBUG', true), FILTER_VALIDATE_BOOLEAN);
+if ($isDebug) {
+    ini_set('display_errors', '1');
+    ini_set('display_startup_errors', '1');
+    error_reporting(E_ALL);
+} else {
+    ini_set('display_errors', '0');
+    ini_set('display_startup_errors', '0');
+    error_reporting(0);
+}
+
+// Khởi tạo Session an toàn
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Thiết lập múi giờ
 date_default_timezone_set(env('TIMEZONE', 'Asia/Ho_Chi_Minh'));

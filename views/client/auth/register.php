@@ -1,7 +1,7 @@
 <?php require VIEWS_DIR . '/layouts/client_header.php'; ?>
 <div class="page-width auth-layout">
-    <aside class="auth-aside"><img src="<?= asset('images/desk-detail.jpg') ?>" alt="Không gian học tập với máy tính" width="600" height="800"><div class="auth-aside-caption"><span class="eyebrow">Một khởi đầu mới</span><h2>Góc máy mới.<br>Những ý tưởng mới.</h2><p>Tạo tài khoản và khám phá chiếc máy phù hợp với bạn.</p></div></aside>
-    <section class="auth-form-area" aria-labelledby="auth-title"><span class="eyebrow">Gia nhập PCMarket</span><h1 id="auth-title">Bắt đầu từ đây.</h1><p>Chỉ vài thông tin để tạo tài khoản của bạn.</p>
+    <aside class="auth-aside"><img src="<?= asset('images/gaming-tower.jpg') ?>" alt="Bộ máy tính gaming minh họa" width="600" height="800"><div class="auth-aside-caption"><span class="eyebrow">Một khởi đầu mới</span><h2>MỘT TÀI KHOẢN.<br>CẢ THẾ GIỚI PC.</h2><p>Tạo tài khoản và khám phá chiếc máy phù hợp với bạn.</p></div></aside>
+    <section class="auth-form-area" aria-labelledby="auth-title"><span class="eyebrow">Gia nhập PCMarket</span><h1 id="auth-title">ĐĂNG KÝ THÀNH VIÊN</h1><p>Chỉ vài thông tin để tạo tài khoản của bạn.</p>
         <form action="<?= base_url('dang-ky') ?>" method="post" data-validate-form novalidate>
             <?= csrf_field() ?>
             <div class="field"><label for="register-name">Họ và tên</label><input id="register-name" type="text" name="full_name" autocomplete="name" placeholder="Nguyễn Minh Anh" required><span class="field-error" id="register-name-error" hidden></span></div>
