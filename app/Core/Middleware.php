@@ -6,9 +6,14 @@ class Middleware {
      * Bắt buộc phải là Admin mới được truy cập
      */
     public static function admin(): void {
-        if (!Auth::check() || !Auth::isAdmin()) {
-            set_flash('error', 'Bạn không có quyền truy cập vào trang Quản trị!');
+        if (!Auth::check()) {
+            set_flash('warning', 'Vui lòng đăng nhập với tài khoản Quản trị viên!');
             redirect('/dang-nhap');
+        }
+        if (!Auth::isAdmin()) {
+            http_response_code(403);
+            view('client.errors.403', ['title' => '403 - Quyền truy cập bị từ chối']);
+            exit;
         }
     }
 
@@ -16,9 +21,14 @@ class Middleware {
      * Bắt buộc phải là Nhân viên hoặc Admin
      */
     public static function staff(): void {
-        if (!Auth::check() || !Auth::isStaff()) {
-            set_flash('error', 'Bạn không có quyền thực hiện thao tác này!');
+        if (!Auth::check()) {
+            set_flash('warning', 'Vui lòng đăng nhập!');
             redirect('/dang-nhap');
+        }
+        if (!Auth::isStaff()) {
+            http_response_code(403);
+            view('client.errors.403', ['title' => '403 - Quyền truy cập bị từ chối']);
+            exit;
         }
     }
 

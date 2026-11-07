@@ -5,7 +5,9 @@
 /vendor/
 
 # Temporary files & uploads
-/public/uploads/temp/
+/public/uploads/*
+!/public/uploads/*/
+!/public/uploads/*/.gitkeep
 *.log
 /artifacts/
 
