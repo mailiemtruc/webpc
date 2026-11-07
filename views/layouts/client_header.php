@@ -30,10 +30,12 @@ if (preg_match('#/san-pham/?$#', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH
     <link rel="stylesheet" href="<?= asset('css/motion.css') ?>?v=1">
     <link rel="stylesheet" href="<?= asset('css/loading.css') ?>?v=1">
     <link rel="stylesheet" href="<?= asset('css/pc-compare.css') ?>?v=1">
+    <link rel="stylesheet" href="<?= asset('css/pcm-showcase.css') ?>?v=1">
     <script src="<?= asset('js/ui.js') ?>?v=4" defer></script>
     <script src="<?= asset('js/motion.js') ?>?v=1" defer></script>
     <script src="<?= asset('js/loading.js') ?>?v=1" defer></script>
     <script src="<?= asset('js/pc-compare.js') ?>?v=1" defer></script>
+    <script src="<?= asset('js/pcm-homepage.js') ?>?v=1" defer></script>
 </head>
 <body data-app-base="<?= htmlspecialchars(base_url()) ?>">
 <a class="skip-link" href="#main-content">Đến nội dung chính</a>
@@ -50,7 +52,7 @@ if (preg_match('#/san-pham/?$#', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH
             <?php if ($visitor): ?>
             <details class="account-menu"><summary><i class="fa-regular fa-user" aria-hidden="true"></i><span><?= htmlspecialchars($visitor['full_name'] ?? 'Tài khoản') ?></span></summary><div><?php if (is_staff()): ?><a href="<?= base_url('admin') ?>">Quản trị cửa hàng</a><?php endif; ?><a href="<?= base_url('dang-xuat') ?>">Đăng xuất</a></div></details>
             <?php else: ?><a class="account-link" href="<?= base_url('dang-nhap') ?>"><i class="fa-regular fa-user" aria-hidden="true"></i><span>Tài khoản<small>Đăng nhập / Đăng ký</small></span></a><?php endif; ?>
-            <button type="button" class="bag-button" data-feature="cart"><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i><span class="bag-label">Giỏ hàng</span><span class="bag-count"><?= count($_SESSION['cart'] ?? []) ?></span></button>
+            <a href="<?= base_url('gio-hang') ?>" class="bag-button" aria-label="Giỏ hàng"><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i><span class="bag-label">Giỏ hàng</span><span class="bag-count"><?= count($_SESSION['cart'] ?? []) ?></span></a>
         </div>
     </div>
     <div class="nav-line"><nav class="page-width primary-nav" aria-label="Điều hướng chính"><details class="catalog-dropdown" data-catalog-dropdown><summary class="catalog-nav-link" aria-controls="catalog-menu"><i class="fa-solid fa-bars" aria-hidden="true"></i> Danh mục sản phẩm <i class="fa-solid fa-chevron-down catalog-caret" aria-hidden="true"></i></summary><div class="catalog-dropdown-panel category-directory" id="catalog-menu"><a class="catalog-all-link" href="<?= base_url('san-pham') ?>"><i class="fa-solid fa-layer-group" aria-hidden="true"></i><span>Tất cả sản phẩm</span><span class="category-chevron" aria-hidden="true">→</span></a><?php foreach ($catalogCategories as $slug => $category): ?><a href="<?= base_url('san-pham?danh-muc=' . $slug) ?>"><i class="fa-solid fa-<?= $category[2] ?>" aria-hidden="true"></i><span><?= $category[0] ?></span><span class="category-chevron" aria-hidden="true">›</span></a><?php endforeach; ?></div></details><a href="<?= base_url('san-pham?danh-muc=pc-gaming') ?>">PC Gaming</a><a href="<?= base_url('san-pham?danh-muc=pc-livestream') ?>">PC Livestream</a><a href="<?= base_url('san-pham?danh-muc=pc-do-hoa') ?>">Đồ họa & Render</a><a href="<?= base_url('san-pham?danh-muc=pc-van-phong') ?>">Văn phòng</a><a href="<?= base_url('san-pham?danh-muc=linh-kien-may-tinh') ?>">Linh kiện</a><button type="button" class="nav-builder" data-feature="builder"><i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i> Build PC</button></nav></div>

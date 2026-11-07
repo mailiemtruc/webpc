@@ -1,0 +1,617 @@
+/**
+ * PCMarket Showcase Layout CSS - Giao diện siêu thị bán lẻ PC chuẩn cao cấp
+ * Tương thích 100% với layout thực tế: PCMarket / PCM / GearVN / HACOM
+ */
+
+:root {
+    --pcm-red: #e51a24;
+    --pcm-red-dark: #b91c1c;
+    --pcm-cyan: #0284c7;
+    --pcm-navy: #1e3a8a;
+    --pcm-magenta: #c2185b;
+    --pcm-cart-cyan: #00a2e8;
+    --pcm-gray-bg: #f4f6fa;
+    --pcm-card-border: #e2e8f0;
+    --pcm-text-dark: #1e293b;
+    --pcm-text-muted: #64748b;
+}
+
+body {
+    background-color: var(--pcm-gray-bg);
+}
+
+.pcm-homepage-wrapper {
+    padding-top: 16px;
+    padding-bottom: 48px;
+}
+
+/* ==========================================================
+   1. HERO SHOWCASE: SLIDER & 3 SUB-BANNERS
+   ========================================================== */
+.pcm-hero-section {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.pcm-slider-container {
+    position: relative;
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    background: #0a0e1a;
+    aspect-ratio: 1003 / 350;
+    max-height: 420px;
+}
+
+.pcm-slider-track {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.pcm-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
+}
+
+.pcm-slide.active {
+    opacity: 1;
+    visibility: visible;
+    z-index: 1;
+}
+
+.pcm-slide a {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.pcm-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.pcm-slider-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.45);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 5;
+    transition: background 0.2s, transform 0.15s;
+    backdrop-filter: blur(4px);
+}
+
+.pcm-slider-arrow:hover {
+    background: rgba(0, 0, 0, 0.85);
+    transform: translateY(-50%) scale(1.08);
+}
+
+.pcm-slider-prev {
+    left: 14px;
+}
+
+.pcm-slider-next {
+    right: 14px;
+}
+
+.pcm-slider-dots {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 5;
+}
+
+.pcm-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.pcm-dot.active {
+    width: 24px;
+    background: #00e5ff;
+    box-shadow: 0 0 8px rgba(0, 229, 255, 0.8);
+}
+
+/* 3 Sub-Banners */
+.pcm-sub-banners {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.pcm-sub-banner-item {
+    display: block;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.pcm-sub-banner-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+}
+
+.pcm-sub-banner-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    aspect-ratio: 330 / 185;
+    object-fit: cover;
+}
+
+/* ==========================================================
+   2. HOT SALE MỖI NGÀY (FLASH SALE)
+   ========================================================== */
+.pcm-hotsale-section {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 16px 16px 18px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    border: 1px solid var(--pcm-card-border);
+    margin-top: 24px;
+}
+
+.pcm-hotsale-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #f1f5f9;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.pcm-hotsale-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #e51a24, #b91c1c);
+    color: #ffffff;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 800;
+    box-shadow: 0 4px 10px rgba(229, 26, 36, 0.3);
+}
+
+.pcm-hotsale-badge i {
+    font-size: 18px;
+    color: #ffeb3b;
+    animation: pcmFlame 1.2s infinite alternate ease-in-out;
+}
+
+@keyframes pcmFlame {
+    0% { transform: scale(1); filter: brightness(1); }
+    100% { transform: scale(1.15); filter: brightness(1.2); }
+}
+
+.pcm-hotsale-badge h2 {
+    font-size: 17px;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: 0.5px;
+    color: #ffffff;
+}
+
+.pcm-hotsale-tabs {
+    display: flex;
+    gap: 8px;
+}
+
+.pcm-tab-btn {
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #475569;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pcm-tab-btn:hover {
+    border-color: #94a3b8;
+    color: #1e293b;
+}
+
+.pcm-tab-btn.active {
+    background: #fbbf24;
+    color: #0f172a;
+    border-color: #fbbf24;
+    font-weight: 700;
+    box-shadow: 0 2px 6px rgba(251, 191, 36, 0.35);
+}
+
+.pcm-tab-content {
+    display: none;
+}
+
+.pcm-tab-content.active {
+    display: block;
+}
+
+.pcm-full-more-bar {
+    display: block;
+    width: 100%;
+    background: linear-gradient(90deg, #4f46e5, #6366f1, #2563eb);
+    color: #ffffff;
+    text-align: center;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 10px;
+    border-radius: 6px;
+    margin-top: 14px;
+    transition: opacity 0.2s, transform 0.15s;
+    text-decoration: none;
+}
+
+.pcm-full-more-bar:hover {
+    opacity: 0.92;
+    transform: translateY(-1px);
+    color: #ffffff;
+}
+
+/* ==========================================================
+   3. CATEGORY SHOWCASE SECTIONS (ANGLED RIBBON HEADERS)
+   ========================================================== */
+.pcm-section {
+    margin-top: 26px;
+}
+
+.pcm-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8fafc;
+    border: 1px solid var(--pcm-card-border);
+    border-radius: 8px 8px 0 0;
+    position: relative;
+    padding-right: 16px;
+    overflow: hidden;
+    min-height: 44px;
+}
+
+.pcm-section-badge {
+    position: relative;
+    padding: 10px 28px 10px 18px;
+    color: #ffffff;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 100%, 0 100%);
+}
+
+.pcm-section-badge h2 {
+    font-size: 16px;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: 0.5px;
+    color: #ffffff;
+    text-transform: uppercase;
+}
+
+/* Header Color Variants */
+.pcm-header-red .pcm-section-badge {
+    background: linear-gradient(135deg, #e51a24, #b91c1c);
+}
+
+.pcm-header-cyan .pcm-section-badge {
+    background: linear-gradient(135deg, #0284c7, #0369a1);
+}
+
+.pcm-header-navy .pcm-section-badge {
+    background: linear-gradient(135deg, #1e3a8a, #172554);
+}
+
+.pcm-header-magenta .pcm-section-badge {
+    background: linear-gradient(135deg, #c2185b, #9d174d);
+}
+
+.pcm-section-subtags {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    color: var(--pcm-text-muted);
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 0 12px;
+}
+
+.pcm-section-subtags a {
+    color: var(--pcm-text-muted);
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.pcm-section-subtags a:hover {
+    color: var(--pcm-cyan);
+    text-decoration: underline;
+}
+
+.pcm-tag-sep {
+    color: #cbd5e1;
+    font-size: 11px;
+}
+
+.pcm-section-more {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--pcm-cyan);
+    white-space: nowrap;
+    text-decoration: none;
+    transition: transform 0.15s, color 0.15s;
+}
+
+.pcm-section-more:hover {
+    color: #0369a1;
+    transform: translateX(2px);
+}
+
+/* ==========================================================
+   4. PRODUCT GRID & CARD STYLES
+   ========================================================== */
+.pcm-product-grid {
+    background: #ffffff;
+    border: 1px solid var(--pcm-card-border);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    padding: 14px;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+}
+
+.pcm-card {
+    background: #ffffff;
+    border: 1px solid #f1f5f9;
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.pcm-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+    border-color: #cbd5e1;
+}
+
+/* Discount Ribbon Tag */
+.pcm-ribbon-discount {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: #2563eb;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 4px 0 4px 0;
+    z-index: 2;
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.35);
+}
+
+/* Card Thumbnail */
+.pcm-card-thumb {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 165px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+.pcm-card-thumb img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.pcm-card:hover .pcm-card-thumb img {
+    transform: scale(1.06);
+}
+
+/* Card Content */
+.pcm-card-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.pcm-card-title {
+    font-size: 12.5px;
+    font-weight: 600;
+    line-height: 1.4;
+    height: 35px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    margin: 0 0 10px 0;
+}
+
+.pcm-card-title a {
+    color: var(--pcm-text-dark);
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.pcm-card-title a:hover {
+    color: var(--pcm-cyan);
+}
+
+/* Price Box & Quick Cart Button */
+.pcm-card-bottom {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 6px;
+}
+
+.pcm-price-box {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.pcm-price-current {
+    font-size: 13.5px;
+    font-weight: 800;
+    color: var(--pcm-red);
+    line-height: 1.2;
+}
+
+.pcm-price-old {
+    font-size: 11px;
+    color: #94a3b8;
+    text-decoration: line-through;
+    line-height: 1.2;
+}
+
+.pcm-cart-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--pcm-cart-cyan);
+    color: #ffffff;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    box-shadow: 0 2px 6px rgba(0, 162, 232, 0.35);
+    flex-shrink: 0;
+}
+
+.pcm-cart-btn:hover {
+    background: #0284c7;
+    transform: scale(1.12);
+}
+
+.pcm-cart-btn:active {
+    transform: scale(0.95);
+}
+
+/* ==========================================================
+   5. PCM ASSURANCE BANNER (CAM KẾT DỊCH VỤ)
+   ========================================================== */
+.pcm-assurance-banner {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    background: #ffffff;
+    border: 1px solid var(--pcm-card-border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-top: 32px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+.pcm-assurance-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.pcm-assurance-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #e0f2fe;
+    color: var(--pcm-cyan);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.pcm-assurance-text strong {
+    display: block;
+    font-size: 14px;
+    color: var(--pcm-text-dark);
+    margin-bottom: 2px;
+}
+
+.pcm-assurance-text span {
+    font-size: 12px;
+    color: var(--pcm-text-muted);
+    line-height: 1.3;
+}
+
+/* ==========================================================
+   6. RESPONSIVE BREAKPOINTS
+   ========================================================== */
+@media (max-width: 1200px) {
+    .pcm-product-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    .pcm-assurance-banner {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .pcm-product-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .pcm-sub-banners {
+        grid-template-columns: 1fr;
+    }
+    .pcm-section-subtags {
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .pcm-product-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        padding: 8px;
+    }
+    .pcm-hotsale-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .pcm-assurance-banner {
+        grid-template-columns: 1fr;
+    }
+}

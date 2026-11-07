@@ -11,14 +11,26 @@ class ProductController extends Controller {
     }
 
     public function home(): void {
-        $featuredProducts = $this->productModel->getFeaturedProducts(8);
-        $gamingPCs = $this->productModel->getHotGamingPCs(4);
-        $components = $this->productModel->getHotComponents(8);
+        $hotSaleGaming = $this->productModel->getHotSaleGaming(6);
+        $hotSaleComponents = $this->productModel->getHotSaleComponents(6);
+        $gamingPCs = $this->productModel->getGamingPCs(6);
+        $workstationPCs = $this->productModel->getWorkstationPCs(6);
+        $amdGamingPCs = $this->productModel->getAmdGamingPCs(6);
+        $officePCs = $this->productModel->getOfficePCs(6);
+        $monitors = $this->productModel->getMonitors(6);
+        $aiPCs = $this->productModel->getAiPCs(6);
+        $components = $this->productModel->getComponents(6);
 
         $this->view('client.home.index', [
-            'title' => 'PCMART.VN - Máy Tính Gaming, PC Đồ Họa & Linh Kiện Chính Hãng',
-            'featuredProducts' => $featuredProducts,
+            'title' => 'PCMarket — Siêu Thị Máy Tính Gaming, Workstation & Linh Kiện Chính Hãng',
+            'hotSaleGaming' => $hotSaleGaming,
+            'hotSaleComponents' => $hotSaleComponents,
             'gamingPCs' => $gamingPCs,
+            'workstationPCs' => $workstationPCs,
+            'amdGamingPCs' => $amdGamingPCs,
+            'officePCs' => $officePCs,
+            'monitors' => $monitors,
+            'aiPCs' => $aiPCs,
             'components' => $components,
         ]);
     }
@@ -26,7 +38,7 @@ class ProductController extends Controller {
     public function index(): void {
         $products = $this->productModel->all();
         $this->view('client.product.list', [
-            'title' => 'Danh sách sản phẩm - PCMART',
+            'title' => 'Danh sách sản phẩm - PCMarket',
             'products' => $products,
         ]);
     }
@@ -40,7 +52,7 @@ class ProductController extends Controller {
         }
 
         $this->view('client.product.detail', [
-            'title' => $product['name'] . ' - PCMART',
+            'title' => $product['name'] . ' - PCMarket',
             'product' => $product,
         ]);
     }
@@ -57,4 +69,3 @@ class ProductController extends Controller {
         $this->json($results);
     }
 }
-
