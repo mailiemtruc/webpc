@@ -1,6 +1,12 @@
 <?php
 $matchProducts = [];
-foreach (array_merge($gamingPCs, $featuredProducts) as $matchItem) {
+$pool = array_merge(
+    $gamingPCs ?? [],
+    $featuredProducts ?? [],
+    $workstationPCs ?? [],
+    $officePCs ?? []
+);
+foreach ($pool as $matchItem) {
     if ((int)($matchItem['category_id'] ?? 0) < 1 || (int)$matchItem['category_id'] > 3 || (int)($matchItem['quantity'] ?? 0) < 1) continue;
     $matchRegular = (float)$matchItem['price'];
     $matchSale = (float)($matchItem['discount_price'] ?? 0);

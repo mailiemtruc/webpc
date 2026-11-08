@@ -13,6 +13,7 @@ class ProductController extends Controller {
     public function home(): void {
         $hotSaleGaming = $this->productModel->getHotSaleGaming(6);
         $hotSaleComponents = $this->productModel->getHotSaleComponents(6);
+        $featuredProducts = $this->productModel->getFeaturedProducts(8);
         $gamingPCs = $this->productModel->getGamingPCs(6);
         $workstationPCs = $this->productModel->getWorkstationPCs(6);
         $amdGamingPCs = $this->productModel->getAmdGamingPCs(6);
@@ -25,6 +26,7 @@ class ProductController extends Controller {
             'title' => 'PCMarket — Siêu Thị Máy Tính Gaming, Workstation & Linh Kiện Chính Hãng',
             'hotSaleGaming' => $hotSaleGaming,
             'hotSaleComponents' => $hotSaleComponents,
+            'featuredProducts' => $featuredProducts,
             'gamingPCs' => $gamingPCs,
             'workstationPCs' => $workstationPCs,
             'amdGamingPCs' => $amdGamingPCs,
