@@ -615,3 +615,574 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+
+
+/* ==========================================================
+   7. CATALOG & ADVANCED FILTER STYLES (TRANG DANH MỤC SẢN PHẨM)
+   ========================================================== */
+.pcm-catalog-wrapper {
+    padding-top: 16px;
+    padding-bottom: 48px;
+}
+
+.pcm-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--pcm-text-muted);
+    margin-bottom: 16px;
+}
+
+.pcm-breadcrumb a {
+    color: var(--pcm-text-muted);
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.pcm-breadcrumb a:hover {
+    color: var(--pcm-cyan);
+}
+
+.pcm-breadcrumb-active {
+    color: var(--pcm-text-dark);
+    font-weight: 700;
+}
+
+.pcm-catalog-layout {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+/* Sidebar Lọc Sản Phẩm */
+.pcm-filter-sidebar {
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid var(--pcm-card-border);
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.pcm-sidebar-btn-head {
+    background: #f1f5f9;
+    border-bottom: 1px solid var(--pcm-card-border);
+    padding: 12px 16px;
+    font-size: 14.5px;
+    font-weight: 800;
+    color: var(--pcm-text-dark);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.5px;
+}
+
+.pcm-filter-group {
+    padding: 14px 16px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.pcm-filter-group:last-child {
+    border-bottom: none;
+}
+
+.pcm-filter-group-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--pcm-text-dark);
+    margin: 0 0 10px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.pcm-subcat-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.pcm-subcat-list li a {
+    font-size: 12.5px;
+    color: #475569;
+    text-decoration: none;
+    display: block;
+    padding: 3px 0;
+    transition: color 0.15s;
+}
+
+.pcm-subcat-list li a:hover {
+    color: var(--pcm-cyan);
+    font-weight: 600;
+}
+
+.pcm-subcat-list li a.is-active {
+    color: var(--pcm-red);
+    font-weight: 700;
+}
+
+.pcm-checkbox-list {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    max-height: 230px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.pcm-checkbox-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.pcm-checkbox-list::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.pcm-checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    color: #334155;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.15s;
+}
+
+.pcm-checkbox-item:hover {
+    color: var(--pcm-cyan);
+}
+
+.pcm-checkbox-item input[type="checkbox"] {
+    accent-color: var(--pcm-cyan);
+    cursor: pointer;
+    width: 15px;
+    height: 15px;
+    border-radius: 3px;
+}
+
+.pcm-chk-label {
+    flex-grow: 1;
+}
+
+.pcm-chk-count {
+    color: #94a3b8;
+    font-size: 11.5px;
+    font-weight: 600;
+}
+
+/* Khu vực danh sách sản phẩm bên phải */
+.pcm-catalog-main {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.pcm-catalog-toolbar {
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid var(--pcm-card-border);
+    padding: 10px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+}
+
+.pcm-toolbar-count {
+    font-size: 14px;
+    color: var(--pcm-text-dark);
+}
+
+.pcm-toolbar-count strong {
+    color: var(--pcm-cyan);
+    font-weight: 800;
+    font-size: 16px;
+}
+
+.pcm-toolbar-sort {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--pcm-text-muted);
+}
+
+.pcm-toolbar-sort select {
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 13px;
+    background: #ffffff;
+    color: var(--pcm-text-dark);
+    cursor: pointer;
+}
+
+/* Thanh các bộ lọc đang chọn */
+.pcm-active-tags-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid var(--pcm-card-border);
+    padding: 10px 14px;
+}
+
+.pcm-active-tags-label {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--pcm-text-muted);
+}
+
+.pcm-filter-tag {
+    background: #e0f2fe;
+    color: #0369a1;
+    border: 1px solid #bae6fd;
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.15s;
+}
+
+.pcm-filter-tag:hover {
+    background: #bae6fd;
+    color: #0284c7;
+}
+
+.pcm-clear-all-tag {
+    color: var(--pcm-red);
+    font-size: 12.5px;
+    font-weight: 700;
+    text-decoration: underline;
+    margin-left: 8px;
+}
+
+/* Lưới sản phẩm 5 cột chuẩn PCMarket */
+.pcm-catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+}
+
+/* Phân trang */
+.pcm-pagination-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-top: 24px;
+}
+
+.pcm-page-link {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background: #ffffff;
+    color: var(--pcm-text-dark);
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.15s ease;
+}
+
+.pcm-page-link:hover {
+    border-color: var(--pcm-cyan);
+    color: var(--pcm-cyan);
+}
+
+.pcm-page-link.is-active {
+    background: var(--pcm-cyan);
+    color: #ffffff;
+    border-color: var(--pcm-cyan);
+}
+
+/* Trạng thái rỗng */
+.pcm-empty-catalog {
+    background: #ffffff;
+    border-radius: 8px;
+    border: 1px solid var(--pcm-card-border);
+    padding: 48px 24px;
+    text-align: center;
+}
+
+.pcm-empty-catalog i {
+    font-size: 52px;
+    color: #cbd5e1;
+    margin-bottom: 16px;
+}
+
+.pcm-empty-catalog h3 {
+    font-size: 18px;
+    color: var(--pcm-text-dark);
+    margin-bottom: 8px;
+}
+
+.pcm-empty-catalog p {
+    font-size: 14px;
+    color: var(--pcm-text-muted);
+    margin-bottom: 20px;
+}
+
+.pcm-btn-reset-filters {
+    display: inline-block;
+    background: var(--pcm-cyan);
+    color: #ffffff;
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    transition: background 0.15s;
+}
+
+.pcm-btn-reset-filters:hover {
+    background: #0369a1;
+}
+
+/* Responsive Catalog */
+@media (max-width: 1200px) {
+    .pcm-catalog-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .pcm-catalog-layout {
+        grid-template-columns: 1fr;
+    }
+    .pcm-catalog-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .pcm-catalog-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+    .pcm-catalog-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}
+
+
+/* ==========================================================
+   8. MEGA MENU HEADER COMPONENT (ẢNH 4 MẪU)
+   ========================================================== */
+.nav-line {
+    background: #0284c7;
+    position: relative;
+    z-index: 100;
+}
+
+.pcm-nav-inner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: relative;
+}
+
+.pcm-mega-menu-container {
+    position: relative;
+}
+
+.pcm-mega-menu-trigger {
+    background: #00a2e8;
+    color: #ffffff;
+    padding: 11px 18px;
+    font-weight: 800;
+    font-size: 13.5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: background 0.2s;
+    user-select: none;
+}
+
+.pcm-mega-menu-trigger:hover {
+    background: #0369a1;
+}
+
+.pcm-caret {
+    font-size: 11px;
+    transition: transform 0.2s ease;
+}
+
+.pcm-mega-menu-container:hover .pcm-caret,
+.pcm-mega-menu-container.is-open .pcm-caret {
+    transform: rotate(180deg);
+}
+
+.pcm-quick-cat-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 6px 0;
+}
+
+.pcm-quick-cat-nav::-webkit-scrollbar {
+    display: none;
+}
+
+.pcm-quick-pill {
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.14);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+}
+
+.pcm-quick-pill:hover {
+    background: rgba(255, 255, 255, 0.28);
+    transform: translateY(-1px);
+    color: #ffffff;
+}
+
+/* Mega Dropdown Panel */
+.pcm-mega-menu-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 1020px;
+    background: #ffffff;
+    border-radius: 0 0 8px 8px;
+    border: 1px solid var(--pcm-card-border);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.18);
+    display: none;
+    grid-template-columns: 240px 1fr;
+    z-index: 999;
+}
+
+.pcm-mega-menu-container:hover .pcm-mega-menu-dropdown,
+.pcm-mega-menu-container.is-open .pcm-mega-menu-dropdown {
+    display: grid;
+}
+
+.pcm-mega-cats-list {
+    background: #f8fafc;
+    border-right: 1px solid var(--pcm-card-border);
+    list-style: none;
+    padding: 6px 0;
+    margin: 0;
+}
+
+.pcm-mega-cat-item a {
+    display: flex;
+    align-items: center;
+    padding: 9px 14px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--pcm-text-dark);
+    transition: all 0.15s ease;
+}
+
+.pcm-mega-cat-item:hover a,
+.pcm-mega-cat-item.is-active a {
+    background: #ffffff;
+    color: var(--pcm-red);
+}
+
+.pcm-mega-icon {
+    width: 22px;
+    display: inline-flex;
+    justify-content: center;
+    font-size: 13.5px;
+}
+
+.pcm-mega-name {
+    flex-grow: 1;
+    margin-left: 6px;
+}
+
+.pcm-mega-arrow {
+    font-size: 10px;
+    color: #94a3b8;
+}
+
+.pcm-mega-content-area {
+    padding: 18px 22px;
+    min-height: 380px;
+    background: #ffffff;
+}
+
+.pcm-mega-subpanel {
+    display: none;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+}
+
+.pcm-mega-subpanel.is-active {
+    display: grid;
+}
+
+.pcm-mega-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.pcm-mega-group-title {
+    font-size: 12.5px;
+    font-weight: 800;
+    margin: 0 0 8px 0;
+    text-transform: uppercase;
+}
+
+.pcm-mega-group-title a {
+    color: var(--pcm-red);
+    text-decoration: none;
+}
+
+.pcm-mega-group-title a:hover {
+    text-decoration: underline;
+}
+
+.pcm-mega-col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.pcm-mega-col ul li a {
+    color: #475569;
+    text-decoration: none;
+    font-size: 12px;
+    transition: color 0.15s;
+    line-height: 1.35;
+}
+
+.pcm-mega-col ul li a:hover {
+    color: var(--pcm-cyan);
+    font-weight: 600;
+}

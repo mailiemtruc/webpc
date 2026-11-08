@@ -36,10 +36,40 @@ class ProductController extends Controller {
     }
 
     public function index(): void {
-        $products = $this->productModel->all();
+        $categorySlug = trim($_GET['danh-muc'] ?? '');
+        $result = $this->productModel->filterCatalog($_GET, 15);
+
+        $titles = [
+            'pc-gaming' => 'PC Gaming & Streaming',
+            'pc-workstation' => 'PC Workstation, Đồ Họa & Render',
+            'pc-amd-gaming' => 'PC AMD Gaming',
+            'pc-van-phong' => 'PC Văn Phòng & Doanh Nghiệp',
+            'man-hinh-may-tinh' => 'Màn Hình Máy Tính',
+            'pc-ai-tri-tue-nhan-tao' => 'PC AI - Trí Tuệ Nhân Tạo',
+            'linh-kien-may-tinh' => 'Linh Kiện Máy Tính Chính Hãng',
+            'cpu-vi-xu-ly' => 'Vi Xử Lý (CPU)',
+            'vga-card-man-hinh' => 'Card Màn Hình (VGA)',
+            'mainboard-bo-mach-chu' => 'Bo Mạch Chủ (Mainboard)',
+            'ram-bo-nho-trong' => 'Bộ Nhớ Trong (RAM)',
+            'o-cung-ssd-hdd' => 'Ổ Cứng SSD/HDD',
+        ];
+
+        $pageTitle = $titles[$categorySlug] ?? 'Tất cả sản phẩm';
+        if (!empty($_GET['q'])) {
+            $pageTitle = 'Tìm kiếm: ' . htmlspecialchars($_GET['q']);
+        }
+
         $this->view('client.product.list', [
-            'title' => 'Danh sách sản phẩm - PCMarket',
-            'products' => $products,
+            'title' => $pageTitle . ' — PCMarket',
+            'categorySlug' => $categorySlug,
+            'pageTitle' => $pageTitle,
+            'products' => $result['products'],
+            'total' => $result['total'],
+            'page' => $result['page'],
+            'perPage' => $result['perPage'],
+            'totalPages' => $result['totalPages'],
+            'facets' => $result['facets'],
+            'params' => $_GET
         ]);
     }
 

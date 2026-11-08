@@ -14,7 +14,9 @@ Router::get('/api/search', 'App\Modules\Product\ProductController@liveSearch');
 Router::get('/admin/products', 'App\Modules\Product\AdminProductController@index');
 Router::get('/admin/products/create', 'App\Modules\Product\AdminProductController@create');
 Router::post('/admin/products/store', 'App\Modules\Product\AdminProductController@store');
+Router::get('/admin/products/edit/{id}', 'App\Modules\Product\AdminProductController@edit');
+Router::post('/admin/products/update/{id}', 'App\Modules\Product\AdminProductController@update');
+Router::post('/admin/products/delete/{id}', 'App\Modules\Product\AdminProductController@delete');
 
 Router::get('/admin/categories', 'App\Modules\Product\CategoryController@index');
 Router::get('/admin/brands', 'App\Modules\Product\BrandController@index');
-

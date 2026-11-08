@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initHeroSlider();
     initHotSaleTabs();
     initQuickCart();
+    initMegaMenu();
 });
 
 /**
@@ -241,4 +242,49 @@ function escapeHtml(str) {
     const div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
+}
+
+
+
+/**
+ * 4. Khởi tạo Mega Menu Đa Cấp
+ */
+function initMegaMenu() {
+    const container = document.querySelector('.pcm-mega-menu-container');
+    if (!container) return;
+
+    const trigger = container.querySelector('.pcm-mega-menu-trigger');
+    const catItems = container.querySelectorAll('.pcm-mega-cat-item');
+    const subPanels = container.querySelectorAll('.pcm-mega-subpanel');
+
+    // Chuyển đổi panel khi rê chuột qua danh mục lớn
+    catItems.forEach(item => {
+        item.addEventListener('mouseenter', () => {
+            catItems.forEach(i => i.classList.remove('is-active'));
+            item.classList.add('is-active');
+
+            const targetSelector = item.getAttribute('data-target');
+            if (targetSelector) {
+                subPanels.forEach(p => p.classList.remove('is-active'));
+                const activePanel = container.querySelector(targetSelector);
+                if (activePanel) {
+                    activePanel.classList.add('is-active');
+                }
+            }
+        });
+    });
+
+    // Toggle menu khi click trên mobile/tablet
+    if (trigger) {
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            container.classList.toggle('is-open');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!container.contains(e.target)) {
+                container.classList.remove('is-open');
+            }
+        });
+    }
 }

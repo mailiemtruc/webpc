@@ -48,7 +48,12 @@ INSERT INTO `brands` (`id`, `name`, `slug`, `logo`, `status`) VALUES
 (6, 'CORSAIR', 'corsair', 'assets/images/brands/corsair.png', 1),
 (7, 'KINGSTON', 'kingston', 'assets/images/brands/kingston.png', 1),
 (8, 'DEEPCOOL', 'deepcool', 'assets/images/brands/deepcool.png', 1),
-(9, 'LIAN LI', 'lian-li', 'assets/images/brands/lian-li.png', 1);
+(9, 'LIAN LI', 'lian-li', 'assets/images/brands/lian-li.png', 1),
+(10, 'ZOTAC', 'zotac', 'assets/images/brands/zotac.png', 1),
+(11, 'COLORFUL', 'colorful', 'assets/images/brands/colorful.png', 1),
+(12, 'AOC', 'aoc', 'assets/images/brands/aoc.png', 1),
+(13, 'LG', 'lg', 'assets/images/brands/lg.png', 1),
+(14, 'SSTC', 'sstc', 'assets/images/brands/sstc.png', 1);
 
 -- 4. SEED SẢN PHẨM (PRODUCTS - 48 cấu hình và linh kiện chuẩn siêu thị PC)
 TRUNCATE TABLE `products`;

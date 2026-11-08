@@ -55,7 +55,19 @@ if (preg_match('#/san-pham/?$#', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH
             <a href="<?= base_url('gio-hang') ?>" class="bag-button" aria-label="Giỏ hàng"><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i><span class="bag-label">Giỏ hàng</span><span class="bag-count"><?= count($_SESSION['cart'] ?? []) ?></span></a>
         </div>
     </div>
-    <div class="nav-line"><nav class="page-width primary-nav" aria-label="Điều hướng chính"><details class="catalog-dropdown" data-catalog-dropdown><summary class="catalog-nav-link" aria-controls="catalog-menu"><i class="fa-solid fa-bars" aria-hidden="true"></i> Danh mục sản phẩm <i class="fa-solid fa-chevron-down catalog-caret" aria-hidden="true"></i></summary><div class="catalog-dropdown-panel category-directory" id="catalog-menu"><a class="catalog-all-link" href="<?= base_url('san-pham') ?>"><i class="fa-solid fa-layer-group" aria-hidden="true"></i><span>Tất cả sản phẩm</span><span class="category-chevron" aria-hidden="true">→</span></a><?php foreach ($catalogCategories as $slug => $category): ?><a href="<?= base_url('san-pham?danh-muc=' . $slug) ?>"><i class="fa-solid fa-<?= $category[2] ?>" aria-hidden="true"></i><span><?= $category[0] ?></span><span class="category-chevron" aria-hidden="true">›</span></a><?php endforeach; ?></div></details><a href="<?= base_url('san-pham?danh-muc=pc-gaming') ?>">PC Gaming</a><a href="<?= base_url('san-pham?danh-muc=pc-livestream') ?>">PC Livestream</a><a href="<?= base_url('san-pham?danh-muc=pc-do-hoa') ?>">Đồ họa & Render</a><a href="<?= base_url('san-pham?danh-muc=pc-van-phong') ?>">Văn phòng</a><a href="<?= base_url('san-pham?danh-muc=linh-kien-may-tinh') ?>">Linh kiện</a><button type="button" class="nav-builder" data-feature="builder"><i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i> Build PC</button></nav></div>
+    <div class="nav-line">
+        <div class="page-width pcm-nav-inner">
+            <?php require VIEWS_DIR . '/layouts/mega_menu.php'; ?>
+            <nav class="pcm-quick-cat-nav" aria-label="Danh mục nổi bật">
+                <a href="<?= base_url('san-pham?danh-muc=pc-gaming') ?>" class="pcm-quick-pill"><i class="fa-solid fa-gamepad" aria-hidden="true"></i> PC GAMING, STREAMING</a>
+                <a href="<?= base_url('san-pham?danh-muc=pc-workstation') ?>" class="pcm-quick-pill"><i class="fa-solid fa-calculator" aria-hidden="true"></i> PC WORKSTATION</a>
+                <a href="<?= base_url('san-pham?danh-muc=pc-amd-gaming') ?>" class="pcm-quick-pill"><i class="fa-solid fa-fire" aria-hidden="true"></i> PC AMD GAMING</a>
+                <a href="<?= base_url('san-pham?danh-muc=pc-van-phong') ?>" class="pcm-quick-pill"><i class="fa-solid fa-briefcase" aria-hidden="true"></i> PC VĂN PHÒNG</a>
+                <a href="<?= base_url('san-pham?danh-muc=man-hinh-may-tinh') ?>" class="pcm-quick-pill"><i class="fa-solid fa-tv" aria-hidden="true"></i> MÀN HÌNH MÁY TÍNH</a>
+                <a href="<?= base_url('san-pham?danh-muc=pc-ai-tri-tue-nhan-tao') ?>" class="pcm-quick-pill"><i class="fa-solid fa-brain" aria-hidden="true"></i> PC AI</a>
+            </nav>
+        </div>
+    </div>
     <nav class="mobile-menu page-width" id="mobile-menu" aria-label="Danh mục di động" hidden><a href="<?= base_url('san-pham') ?>">Tất cả sản phẩm <span>→</span></a><?php foreach ($catalogCategories as $slug => $category): ?><a href="<?= base_url('san-pham?danh-muc=' . $slug) ?>"><span><i class="fa-solid fa-<?= $category[2] ?>" aria-hidden="true"></i> <?= $category[0] ?></span><span>→</span></a><?php endforeach; ?></nav>
 </header>
 <main id="main-content" tabindex="-1">

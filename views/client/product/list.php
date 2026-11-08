@@ -1,37 +1,339 @@
 <?php
 require VIEWS_DIR . '/layouts/client_header.php';
-$searchQuery = is_string($_GET['q'] ?? null) ? trim($_GET['q']) : '';
-$categorySlug = is_string($_GET['danh-muc'] ?? null) ? $_GET['danh-muc'] : '';
-$sort = is_string($_GET['sort'] ?? null) ? $_GET['sort'] : 'newest';
-$categoryId = $catalogCategories[$categorySlug][1] ?? null;
-$visibleProducts = array_values(array_filter($products, static function ($product) use ($searchQuery, $categorySlug, $categoryId) {
-    if ((int)($product['status'] ?? 0) !== 1) return false;
-    if ($searchQuery !== '' && mb_stripos($product['name'] . ' ' . ($product['sku'] ?? ''), $searchQuery, 0, 'UTF-8') === false) return false;
-    if ($categorySlug === 'linh-kien-may-tinh') return (int)$product['category_id'] >= 4 && (int)$product['category_id'] <= 12;
-    return !$categoryId || (int)$product['category_id'] === $categoryId;
-}));
-if (in_array($sort, ['price-asc', 'price-desc'], true)) {
-    usort($visibleProducts, static function ($a, $b) use ($sort) {
-        $aPrice = (float)(!empty($a['discount_price']) ? $a['discount_price'] : $a['price']);
-        $bPrice = (float)(!empty($b['discount_price']) ? $b['discount_price'] : $b['price']);
-        return $sort === 'price-asc' ? $aPrice <=> $bPrice : $bPrice <=> $aPrice;
-    });
+
+$curCat = $categorySlug ?? '';
+$selectedPriceRanges = (array)($params['price_range'] ?? []);
+$selectedBrands = (array)($params['brand'] ?? []);
+$selectedCpus = (array)($params['cpu'] ?? []);
+$selectedRams = (array)($params['ram'] ?? []);
+$selectedVgas = (array)($params['vga'] ?? []);
+$selectedSort = $params['sort'] ?? 'newest';
+$selectedSubCat = $params['sub_cat'] ?? '';
+$searchQ = $params['q'] ?? '';
+
+// Build active filter list for the tags bar
+$activeFilters = [];
+if (!empty($selectedPriceRanges)) {
+    foreach ($selectedPriceRanges as $pr) {
+        $label = $facets['price_ranges'][$pr]['label'] ?? $pr;
+        $activeFilters[] = ['type' => 'price_range', 'val' => $pr, 'label' => $label];
+    }
 }
-$catalogLabel = $categorySlug === 'linh-kien-may-tinh' ? 'Linh kiện máy tính' : ($catalogCategories[$categorySlug][0] ?? 'Tất cả sản phẩm');
-$totalResults = count($visibleProducts);
-$perPage = 12;
-$totalPages = max(1, (int)ceil($totalResults / $perPage));
-$currentPage = min($totalPages, max(1, (int)($_GET['page'] ?? 1)));
-$visibleProducts = array_slice($visibleProducts, ($currentPage - 1) * $perPage, $perPage);
-$pageQuery = array_filter(['q' => $searchQuery, 'danh-muc' => $categorySlug, 'sort' => $sort]);
+if (!empty($selectedBrands)) {
+    foreach ($selectedBrands as $b) {
+        $label = $facets['brands'][$b]['name'] ?? $b;
+        $activeFilters[] = ['type' => 'brand', 'val' => $b, 'label' => 'Hãng: ' . $label];
+    }
+}
+if (!empty($selectedCpus)) {
+    foreach ($selectedCpus as $c) {
+        $label = $facets['cpus'][$c]['label'] ?? $c;
+        $activeFilters[] = ['type' => 'cpu', 'val' => $c, 'label' => 'CPU: ' . $label];
+    }
+}
+if (!empty($selectedRams)) {
+    foreach ($selectedRams as $r) {
+        $activeFilters[] = ['type' => 'ram', 'val' => $r, 'label' => 'RAM: ' . $r];
+    }
+}
+if (!empty($selectedVgas)) {
+    foreach ($selectedVgas as $v) {
+        $label = $facets['vgas'][$v]['label'] ?? $v;
+        $activeFilters[] = ['type' => 'vga', 'val' => $v, 'label' => 'VGA: ' . $label];
+    }
+}
+if ($selectedSubCat !== '') {
+    $activeFilters[] = ['type' => 'sub_cat', 'val' => $selectedSubCat, 'label' => 'Phân loại: ' . $selectedSubCat];
+}
+if ($searchQ !== '') {
+    $activeFilters[] = ['type' => 'q', 'val' => $searchQ, 'label' => 'Tìm: "' . $searchQ . '"'];
+}
+
+// Subcategory definitions for specific main categories
+$subCategories = [
+    'pc-gaming' => [
+        'MÁY TÍNH CHƠI GAME PCM',
+        'PC ĐẸP - LUXURY',
+        'PC GAMING PREMIUM',
+        'PC Core Ultra',
+        'PC STREAMER, YOUTUBER',
+        'PC GAMING DDR5',
+        'Full Bộ PC Kèm Màn Hình'
+    ],
+    'pc-workstation' => [
+        'PC WORKSTATION 2D',
+        'PC WORKSTATION 3D',
+        'PC Dựng Phim - Edit Video',
+        'Workstation Render 8K'
+    ],
+    'pc-amd-gaming' => [
+        'AMD Ryzen 5',
+        'AMD Ryzen 7',
+        'AMD Ryzen 9 3D V-Cache',
+        'AM5 Socket'
+    ],
+    'pc-van-phong' => [
+        'PC DOANH NGHIỆP - Windows Bản Quyền',
+        'PC Văn Phòng Theo Nhu Cầu',
+        'PC Kế Toán Xử Lý Dữ Liệu',
+        'PC Trọn Bộ M OFFICE'
+    ],
+    'man-hinh-may-tinh' => [
+        'Màn Hình Gaming 144Hz - 300Hz',
+        'Màn Hình Đồ Họa 2K/4K Nano IPS',
+        'Màn Hình Văn Phòng 24 - 27 Inch'
+    ],
+    'pc-ai-tri-tue-nhan-tao' => [
+        'AI Local Starter',
+        'AI Local Creator',
+        'LLaMA & Stable Diffusion Offline',
+        'VRAM Khủng 16GB - 24GB'
+    ],
+    'linh-kien-may-tinh' => [
+        'CPU - Bộ vi xử lý',
+        'Mainboard - Bo mạch chủ',
+        'VGA - Card màn hình',
+        'RAM - Bộ nhớ trong',
+        'Case - Vỏ máy tính',
+        'PSU - Nguồn máy tính',
+        'Ổ cứng SSD / HDD',
+        'TẢN NHIỆT - COOLING'
+    ]
+];
+$currentSubCats = $subCategories[$curCat] ?? [];
 ?>
-<div class="page-width">
-    <nav class="breadcrumb" aria-label="Đường dẫn"><a href="<?= base_url() ?>">Trang chủ</a><span>/</span><span>Cửa hàng</span></nav>
-    <div class="catalog-heading"><div><span class="eyebrow">Tìm điều phù hợp với bạn</span><h1><?= htmlspecialchars($catalogLabel) ?></h1><p><?= $searchQuery !== '' ? 'Kết quả cho “' . htmlspecialchars($searchQuery) . '”' : 'Máy tính và linh kiện cho công việc, học tập và những giờ thư giãn.' ?></p></div></div>
-    <div class="catalog-layout">
-        <nav class="catalog-sidebar" aria-label="Lọc danh mục"><h2>Danh mục sản phẩm</h2><a href="<?= base_url('san-pham') ?>" <?= $categorySlug === '' ? 'aria-current="page"' : '' ?>>Tất cả sản phẩm</a><?php foreach ($catalogCategories as $slug => $category): ?><a href="<?= base_url('san-pham?danh-muc=' . $slug) ?>" <?= $categorySlug === $slug ? 'aria-current="page"' : '' ?>><?= $category[0] ?></a><?php endforeach; ?><a href="<?= base_url('san-pham?danh-muc=linh-kien-may-tinh') ?>" <?= $categorySlug === 'linh-kien-may-tinh' ? 'aria-current="page"' : '' ?>>Tất cả linh kiện</a></nav>
-        <section aria-label="Kết quả sản phẩm"><div class="catalog-toolbar"><span><?= $totalResults ?> sản phẩm</span><form class="sort-form" novalidate method="get" action="<?= base_url('san-pham') ?>"><?php if ($categorySlug): ?><input type="hidden" name="danh-muc" value="<?= htmlspecialchars($categorySlug) ?>"><?php endif; ?><?php if ($searchQuery): ?><input type="hidden" name="q" value="<?= htmlspecialchars($searchQuery) ?>"><?php endif; ?><label for="catalog-sort">Sắp xếp</label><select id="catalog-sort" name="sort"><option value="newest" <?= $sort === 'newest' ? 'selected' : '' ?>>Mới nhất</option><option value="price-asc" <?= $sort === 'price-asc' ? 'selected' : '' ?>>Giá: thấp đến cao</option><option value="price-desc" <?= $sort === 'price-desc' ? 'selected' : '' ?>>Giá: cao đến thấp</option></select><button type="submit">Áp dụng</button></form></div><div class="product-grid catalog-grid"><?php foreach ($visibleProducts as $item) { require VIEWS_DIR . '/client/partials/product_card.php'; } ?><?php if (!$visibleProducts): ?><div class="empty-state"><h2>Chưa tìm thấy sản phẩm phù hợp.</h2><p>Thử một tên ngắn hơn hoặc xem các danh mục khác.</p><a class="button button-outline" href="<?= base_url('san-pham') ?>">Xem tất cả sản phẩm ↗</a></div><?php endif; ?></div></section>
+
+<div class="pcm-catalog-wrapper">
+    <div class="page-width">
+        <!-- BREADCRUMB -->
+        <nav class="pcm-breadcrumb" aria-label="Đường dẫn">
+            <a href="<?= base_url() ?>">Trang chủ</a>
+            <span>/</span>
+            <a href="<?= base_url('san-pham') ?>">Sản phẩm</a>
+            <?php if ($curCat): ?>
+                <span>/</span>
+                <span class="pcm-breadcrumb-active"><?= htmlspecialchars($pageTitle) ?></span>
+            <?php endif; ?>
+        </nav>
+
+        <div class="pcm-catalog-layout">
+            <!-- SIDEBAR BỘ LỌC CHUYÊN SÂU (CHUẨN PCMARKET) -->
+            <aside class="pcm-filter-sidebar">
+                <form id="pcmFilterForm" action="<?= base_url('san-pham') ?>" method="GET">
+                    <?php if ($curCat): ?>
+                        <input type="hidden" name="danh-muc" value="<?= htmlspecialchars($curCat) ?>">
+                    <?php endif; ?>
+                    <?php if ($searchQ): ?>
+                        <input type="hidden" name="q" value="<?= htmlspecialchars($searchQ) ?>">
+                    <?php endif; ?>
+
+                    <div class="pcm-sidebar-btn-head">
+                        <i class="fa-solid fa-filter" aria-hidden="true"></i> LỌC SẢN PHẨM
+                    </div>
+
+                    <!-- 1. DANH MỤC CON / NHU CẦU THEO TRANG -->
+                    <?php if (!empty($currentSubCats)): ?>
+                        <div class="pcm-filter-group">
+                            <h3 class="pcm-filter-group-title"><?= htmlspecialchars($pageTitle) ?></h3>
+                            <ul class="pcm-subcat-list">
+                                <?php foreach ($currentSubCats as $sc): ?>
+                                    <li>
+                                        <a href="<?= base_url('san-pham?' . http_build_query(array_merge($params, ['sub_cat' => $sc, 'page' => 1]))) ?>" 
+                                           class="<?= $selectedSubCat === $sc ? 'is-active' : '' ?>">
+                                            » <?= htmlspecialchars($sc) ?>
+                                        </a>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    <?php endif; ?>
+
+                    <!-- 2. BỘ LỌC KHOẢNG GIÁ -->
+                    <div class="pcm-filter-group">
+                        <h3 class="pcm-filter-group-title">KHOẢNG GIÁ</h3>
+                        <div class="pcm-checkbox-list">
+                            <?php foreach ($facets['price_ranges'] as $pKey => $pData): ?>
+                                <label class="pcm-checkbox-item">
+                                    <input type="checkbox" 
+                                           name="price_range[]" 
+                                           value="<?= $pKey ?>" 
+                                           <?= in_array($pKey, $selectedPriceRanges, true) ? 'checked' : '' ?>
+                                           onchange="this.form.submit()">
+                                    <span class="pcm-chk-label"><?= $pData['label'] ?></span>
+                                    <span class="pcm-chk-count">(<?= $pData['count'] ?>)</span>
+                                </label>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+
+                    <!-- 3. BỘ LỌC HÃNG SẢN XUẤT -->
+                    <?php if (!empty($facets['brands'])): ?>
+                        <div class="pcm-filter-group">
+                            <h3 class="pcm-filter-group-title">HÃNG SẢN XUẤT</h3>
+                            <div class="pcm-checkbox-list">
+                                <?php foreach ($facets['brands'] as $bSlug => $bData): ?>
+                                    <label class="pcm-checkbox-item">
+                                        <input type="checkbox" 
+                                               name="brand[]" 
+                                               value="<?= $bSlug ?>" 
+                                               <?= in_array($bSlug, $selectedBrands, true) ? 'checked' : '' ?>
+                                               onchange="this.form.submit()">
+                                        <span class="pcm-chk-label"><?= htmlspecialchars($bData['name']) ?></span>
+                                        <span class="pcm-chk-count">(<?= $bData['count'] ?>)</span>
+                                    </label>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                    <!-- 4. BỘ LỌC CPU -->
+                    <?php if (!empty($facets['cpus'])): ?>
+                        <div class="pcm-filter-group">
+                            <h3 class="pcm-filter-group-title">VI XỬ LÝ (CPU)</h3>
+                            <div class="pcm-checkbox-list">
+                                <?php foreach ($facets['cpus'] as $cKey => $cData): ?>
+                                    <label class="pcm-checkbox-item">
+                                        <input type="checkbox" 
+                                               name="cpu[]" 
+                                               value="<?= $cKey ?>" 
+                                               <?= in_array($cKey, $selectedCpus, true) ? 'checked' : '' ?>
+                                               onchange="this.form.submit()">
+                                        <span class="pcm-chk-label"><?= htmlspecialchars($cData['label']) ?></span>
+                                        <span class="pcm-chk-count">(<?= $cData['count'] ?>)</span>
+                                    </label>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                    <!-- 5. BỘ LỌC RAM -->
+                    <?php if (!empty($facets['rams'])): ?>
+                        <div class="pcm-filter-group">
+                            <h3 class="pcm-filter-group-title">BỘ NHỚ (RAM)</h3>
+                            <div class="pcm-checkbox-list">
+                                <?php foreach ($facets['rams'] as $rKey => $rData): ?>
+                                    <label class="pcm-checkbox-item">
+                                        <input type="checkbox" 
+                                               name="ram[]" 
+                                               value="<?= $rKey ?>" 
+                                               <?= in_array($rKey, $selectedRams, true) ? 'checked' : '' ?>
+                                               onchange="this.form.submit()">
+                                        <span class="pcm-chk-label"><?= htmlspecialchars($rData['label']) ?></span>
+                                        <span class="pcm-chk-count">(<?= $rData['count'] ?>)</span>
+                                    </label>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                    <!-- 6. BỘ LỌC VGA -->
+                    <?php if (!empty($facets['vgas'])): ?>
+                        <div class="pcm-filter-group">
+                            <h3 class="pcm-filter-group-title">CARD ĐỒ HỌA (VGA)</h3>
+                            <div class="pcm-checkbox-list">
+                                <?php foreach ($facets['vgas'] as $vKey => $vData): ?>
+                                    <label class="pcm-checkbox-item">
+                                        <input type="checkbox" 
+                                               name="vga[]" 
+                                               value="<?= $vKey ?>" 
+                                               <?= in_array($vKey, $selectedVgas, true) ? 'checked' : '' ?>
+                                               onchange="this.form.submit()">
+                                        <span class="pcm-chk-label"><?= htmlspecialchars($vData['label']) ?></span>
+                                        <span class="pcm-chk-count">(<?= $vData['count'] ?>)</span>
+                                    </label>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </form>
+            </aside>
+
+            <!-- KHU VỰC SẢN PHẨM CHÍNH -->
+            <main class="pcm-catalog-main">
+                <!-- TOOLBAR -->
+                <div class="pcm-catalog-toolbar">
+                    <div class="pcm-toolbar-count">
+                        Tìm thấy <strong><?= number_format($total) ?></strong> sản phẩm
+                    </div>
+
+                    <div class="pcm-toolbar-sort">
+                        <label for="pcmSortSelect">Sắp xếp theo:</label>
+                        <select id="pcmSortSelect" onchange="applySort(this.value)">
+                            <option value="newest" <?= $selectedSort === 'newest' ? 'selected' : '' ?>>Mới nhất</option>
+                            <option value="price-asc" <?= $selectedSort === 'price-asc' ? 'selected' : '' ?>>Giá tăng dần</option>
+                            <option value="price-desc" <?= $selectedSort === 'price-desc' ? 'selected' : '' ?>>Giá giảm dần</option>
+                            <option value="popular" <?= $selectedSort === 'popular' ? 'selected' : '' ?>>Xem nhiều nhất</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- THANH BỘ LỌC ĐANG CHỌN (ACTIVE FILTER TAGS) -->
+                <?php if (!empty($activeFilters)): ?>
+                    <div class="pcm-active-tags-bar">
+                        <span class="pcm-active-tags-label">Đang lọc:</span>
+                        <?php foreach ($activeFilters as $af): ?>
+                            <?php
+                                // Link to remove this specific filter
+                                $removeParams = $params;
+                                if (is_array($removeParams[$af['type']] ?? null)) {
+                                    $removeParams[$af['type']] = array_diff($removeParams[$af['type']], [$af['val']]);
+                                } else {
+                                    unset($removeParams[$af['type']]);
+                                }
+                                $removeUrl = base_url('san-pham?' . http_build_query($removeParams));
+                            ?>
+                            <a class="pcm-filter-tag" href="<?= $removeUrl ?>">
+                                <?= htmlspecialchars($af['label']) ?> <i class="fa-solid fa-xmark"></i>
+                            </a>
+                        <?php endforeach; ?>
+                        
+                        <a class="pcm-clear-all-tag" href="<?= base_url('san-pham' . ($curCat ? '?danh-muc=' . urlencode($curCat) : '')) ?>">
+                            Xóa tất cả bộ lọc
+                        </a>
+                    </div>
+                <?php endif; ?>
+
+                <!-- LƯỚI SẢN PHẨM 5 CỘT CHUẨN PCMARKET -->
+                <?php if (!empty($products)): ?>
+                    <div class="pcm-catalog-grid">
+                        <?php foreach ($products as $item): ?>
+                            <?php require VIEWS_DIR . '/client/partials/pcm_card.php'; ?>
+                        <?php endforeach; ?>
+                    </div>
+
+                    <!-- PHÂN TRANG -->
+                    <?php if ($totalPages > 1): ?>
+                        <div class="pcm-pagination-wrap">
+                            <?php for ($p = 1; $p <= $totalPages; $p++): ?>
+                                <?php $pageUrl = base_url('san-pham?' . http_build_query(array_merge($params, ['page' => $p]))); ?>
+                                <a href="<?= $pageUrl ?>" class="pcm-page-link <?= $p === (int)$page ? 'is-active' : '' ?>">
+                                    <?= $p ?>
+                                </a>
+                            <?php endfor; ?>
+                        </div>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <div class="pcm-empty-catalog">
+                        <i class="fa-solid fa-box-open" aria-hidden="true"></i>
+                        <h3>Không tìm thấy sản phẩm phù hợp với bộ lọc</h3>
+                        <p>Bạn hãy thử giảm bớt các tiêu chí lọc hoặc xóa bộ lọc để xem toàn bộ sản phẩm.</p>
+                        <a href="<?= base_url('san-pham' . ($curCat ? '?danh-muc=' . urlencode($curCat) : '')) ?>" class="pcm-btn-reset-filters">
+                            Xóa bộ lọc và tải lại
+                        </a>
+                    </div>
+                <?php endif; ?>
+            </main>
+        </div>
     </div>
-    <?php if ($totalPages > 1): ?><nav class="pagination" aria-label="Phân trang sản phẩm"><?php for ($number = 1; $number <= $totalPages; $number++): ?><a href="<?= base_url('san-pham?' . http_build_query(array_merge($pageQuery, ['page' => $number]))) ?>" <?= $number === $currentPage ? 'aria-current="page"' : '' ?>><?= $number ?></a><?php endfor; ?></nav><?php endif; ?>
 </div>
+
+<script>
+function applySort(val) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('sort', val);
+    url.searchParams.set('page', '1');
+    window.location.href = url.toString();
+}
+</script>
+
 <?php require VIEWS_DIR . '/layouts/client_footer.php'; ?>
