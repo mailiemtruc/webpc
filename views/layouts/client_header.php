@@ -26,7 +26,6 @@ if (preg_match('#/san-pham/?$#', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Roboto:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="<?= asset('css/client.css') ?>?v=5">
-    <link rel="stylesheet" href="<?= asset('css/pc-match.css') ?>?v=1">
     <link rel="stylesheet" href="<?= asset('css/motion.css') ?>?v=1">
     <link rel="stylesheet" href="<?= asset('css/loading.css') ?>?v=1">
     <link rel="stylesheet" href="<?= asset('css/pc-compare.css') ?>?v=1">

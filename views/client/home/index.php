@@ -295,10 +295,7 @@ require VIEWS_DIR . '/layouts/client_header.php';
             </div>
         </section>
 
-        <!-- 10. PC CONFIG MATCHING WIDGET (TÌM CẤU HÌNH THEO NHU CẦU) -->
-        <?php require VIEWS_DIR . '/client/partials/pc_match.php'; ?>
-
-        <!-- 11. DỊCH VỤ & CAM KẾT CHÍNH HÃNG PCM -->
+        <!-- 10. DỊCH VỤ & CAM KẾT CHÍNH HÃNG PCM -->
         <section class="pcm-assurance-banner" aria-label="Cam kết dịch vụ">
             <div class="pcm-assurance-item">
                 <div class="pcm-assurance-icon"><i class="fa-solid fa-truck-fast"></i></div>
