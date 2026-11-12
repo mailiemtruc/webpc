@@ -9,7 +9,7 @@
             <div class="forgot-link"><a href="<?= base_url('quen-mat-khau') ?>">Quên mật khẩu?</a></div>
             <button class="button button-primary form-submit" type="submit">Đăng nhập <span aria-hidden="true">↗</span></button>
         </form>
-        <div class="auth-switch">Lần đầu ghé PCMarket? <a href="<?= base_url('dang-ky') ?>">Tạo tài khoản</a></div>
+        <div class="auth-switch">Lần đầu ghé PCMarket? <a href="<?= base_url('dang-ky') ?>">Tạo tài khoản</a> · <a href="<?= base_url('gui-lai-xac-nhan') ?>">Xác nhận email</a></div>
     </section>
 </div>
 <?php require VIEWS_DIR . '/layouts/client_footer.php'; ?>

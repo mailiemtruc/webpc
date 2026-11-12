@@ -2,9 +2,44 @@
 namespace App\Core;
 
 /**
- * Trình gửi email hệ thống (hỗ trợ SMTP chuẩn STARTTLS/SSL, PHP mail() và log nội bộ local).
+ * Trình gửi email hệ thống (hỗ trợ SMTP Gmail STARTTLS/SSL, PHP mail() và log nội bộ local).
  */
 class Mailer {
+
+    /**
+     * Gửi email xác nhận địa chỉ email khi đăng ký tài khoản mới.
+     *
+     * @return array{sent: bool, driver: string, error: ?string}
+     */
+    public static function sendAccountVerification(string $toEmail, string $toName, string $verifyLink): array {
+        $appName  = env('APP_NAME', 'PCMarket');
+        $subject  = "[{$appName}] Xác nhận tài khoản email của bạn";
+        $safeName = htmlspecialchars($toName !== '' ? $toName : 'Quý khách', ENT_QUOTES, 'UTF-8');
+        $safeUrl  = htmlspecialchars($verifyLink, ENT_QUOTES, 'UTF-8');
+
+        $body = <<<HTML
+<h2 style="margin:0 0 12px; color:#1d4ed8; font-size:20px;">Xác nhận địa chỉ email</h2>
+<p style="margin:0 0 14px; font-size:14px; line-height:1.6;">Xin chào <strong>{$safeName}</strong>,</p>
+<p style="margin:0 0 18px; font-size:14px; line-height:1.6;">
+  Cảm ơn bạn đã đăng ký tài khoản tại <strong>PCMarket</strong>. Vui lòng nhấn nút bên dưới để kích hoạt tài khoản
+  (liên kết có hiệu lực trong <strong>24 giờ</strong>):
+</p>
+<p style="margin:0 0 22px; text-align:center;">
+  <a href="{$safeUrl}" style="display:inline-block; background:#2454d6; color:#ffffff; text-decoration:none; padding:12px 24px; border-radius:6px; font-weight:700; font-size:14px;">
+    Xác nhận tài khoản
+  </a>
+</p>
+<p style="margin:0 0 10px; font-size:12.5px; color:#64748b; line-height:1.5; word-break:break-all;">
+  Nếu nút không hoạt động, hãy sao chép liên kết sau vào trình duyệt:<br>{$safeUrl}
+</p>
+HTML;
+
+        return self::send(
+            $toEmail,
+            $subject,
+            self::wrapHtmlTemplate($body, 'Nếu bạn không thực hiện đăng ký tại PCMarket, vui lòng bỏ qua email này.')
+        );
+    }
 
     /**
      * Gửi email đặt lại mật khẩu.
@@ -12,41 +47,78 @@ class Mailer {
      * @return array{sent: bool, driver: string, error: ?string}
      */
     public static function sendPasswordReset(string $toEmail, string $toName, string $resetLink): array {
-        $appName = env('APP_NAME', 'PCMarket');
-        $subject = "[{$appName}] Hướng dẫn đặt lại mật khẩu tài khoản";
+        $appName  = env('APP_NAME', 'PCMarket');
+        $subject  = "[{$appName}] Hướng dẫn đặt lại mật khẩu tài khoản";
         $safeName = htmlspecialchars($toName !== '' ? $toName : 'Quý khách', ENT_QUOTES, 'UTF-8');
         $safeUrl  = htmlspecialchars($resetLink, ENT_QUOTES, 'UTF-8');
 
-        $htmlBody = <<<HTML
-<!DOCTYPE html>
-<html lang="vi">
-<head><meta charset="UTF-8"></head>
-<body style="font-family: Arial, Helvetica, sans-serif; background:#f8fafc; margin:0; padding:24px; color:#1e293b;">
-  <div style="max-width:560px; margin:0 auto; background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; padding:28px;">
-    <h2 style="margin:0 0 12px; color:#1d4ed8; font-size:20px;">Yêu cầu đặt lại mật khẩu</h2>
-    <p style="margin:0 0 14px; font-size:14px; line-height:1.6;">Xin chào <strong>{$safeName}</strong>,</p>
-    <p style="margin:0 0 18px; font-size:14px; line-height:1.6;">
-      Chúng tôi nhận được yêu cầu đặt lại mật khẩu cho tài khoản PCMarket liên kết với email này.
-      Vui lòng nhấn nút bên dưới để thiết lập mật khẩu mới (liên kết có hiệu lực trong <strong>30 phút</strong>):
-    </p>
-    <p style="margin:0 0 22px; text-align:center;">
-      <a href="{$safeUrl}" style="display:inline-block; background:#2454d6; color:#ffffff; text-decoration:none; padding:12px 24px; border-radius:6px; font-weight:700; font-size:14px;">
-        Đặt lại mật khẩu
-      </a>
-    </p>
-    <p style="margin:0 0 10px; font-size:12.5px; color:#64748b; line-height:1.5; word-break:break-all;">
-      Nếu nút không hoạt động, hãy sao chép liên kết sau vào trình duyệt:<br>{$safeUrl}
-    </p>
-    <hr style="border:none; border-top:1px solid #e2e8f0; margin:18px 0;">
-    <p style="margin:0; font-size:12px; color:#94a3b8;">
-      Nếu bạn không thực hiện yêu cầu này, hãy bỏ qua email để giữ an toàn cho tài khoản.
-    </p>
-  </div>
-</body>
-</html>
+        $body = <<<HTML
+<h2 style="margin:0 0 12px; color:#1d4ed8; font-size:20px;">Yêu cầu đặt lại mật khẩu</h2>
+<p style="margin:0 0 14px; font-size:14px; line-height:1.6;">Xin chào <strong>{$safeName}</strong>,</p>
+<p style="margin:0 0 18px; font-size:14px; line-height:1.6;">
+  Chúng tôi nhận được yêu cầu đặt lại mật khẩu cho tài khoản PCMarket liên kết với email này.
+  Vui lòng nhấn nút bên dưới để thiết lập mật khẩu mới (liên kết có hiệu lực trong <strong>30 phút</strong>):
+</p>
+<p style="margin:0 0 22px; text-align:center;">
+  <a href="{$safeUrl}" style="display:inline-block; background:#2454d6; color:#ffffff; text-decoration:none; padding:12px 24px; border-radius:6px; font-weight:700; font-size:14px;">
+    Đặt lại mật khẩu
+  </a>
+</p>
+<p style="margin:0 0 10px; font-size:12.5px; color:#64748b; line-height:1.5; word-break:break-all;">
+  Nếu nút không hoạt động, hãy sao chép liên kết sau vào trình duyệt:<br>{$safeUrl}
+</p>
 HTML;
 
-        return self::send($toEmail, $subject, $htmlBody);
+        return self::send(
+            $toEmail,
+            $subject,
+            self::wrapHtmlTemplate($body, 'Nếu bạn không thực hiện yêu cầu này, hãy bỏ qua email để giữ an toàn cho tài khoản.')
+        );
+    }
+
+    /**
+     * Gửi email cảnh báo bảo mật (đăng nhập mới, đổi mật khẩu, bật/tắt 2FA, đổi mã dự phòng).
+     *
+     * @param array{ip?:string, user_agent?:string, time?:string} $meta
+     * @return array{sent: bool, driver: string, error: ?string}
+     */
+    public static function sendSecurityAlert(
+        string $toEmail,
+        string $toName,
+        string $eventTitle,
+        string $detailsText,
+        array $meta = []
+    ): array {
+        $appName     = env('APP_NAME', 'PCMarket');
+        $subject     = "[{$appName}] Cảnh báo bảo mật: {$eventTitle}";
+        $safeName    = htmlspecialchars($toName !== '' ? $toName : 'Quý khách', ENT_QUOTES, 'UTF-8');
+        $safeTitle   = htmlspecialchars($eventTitle, ENT_QUOTES, 'UTF-8');
+        $safeDetails = nl2br(htmlspecialchars($detailsText, ENT_QUOTES, 'UTF-8'));
+        $time        = htmlspecialchars($meta['time'] ?? date('d/m/Y H:i:s'), ENT_QUOTES, 'UTF-8');
+        $ip          = htmlspecialchars($meta['ip'] ?? ($_SERVER['REMOTE_ADDR'] ?? 'Không xác định'), ENT_QUOTES, 'UTF-8');
+        $agent       = htmlspecialchars(mb_substr((string)($meta['user_agent'] ?? ($_SERVER['HTTP_USER_AGENT'] ?? 'Trình duyệt web')), 0, 140), ENT_QUOTES, 'UTF-8');
+        $securityUrl = htmlspecialchars(base_url('tai-khoan/bao-mat'), ENT_QUOTES, 'UTF-8');
+
+        $body = <<<HTML
+<h2 style="margin:0 0 12px; color:#1d4ed8; font-size:20px;">{$safeTitle}</h2>
+<p style="margin:0 0 14px; font-size:14px; line-height:1.6;">Xin chào <strong>{$safeName}</strong>,</p>
+<p style="margin:0 0 14px; font-size:14px; line-height:1.6;">{$safeDetails}</p>
+<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:12px 14px; font-size:13px; line-height:1.6; margin:0 0 18px;">
+  <div><strong>Thời gian:</strong> {$time}</div>
+  <div><strong>Địa chỉ IP:</strong> {$ip}</div>
+  <div><strong>Thiết bị / Trình duyệt:</strong> {$agent}</div>
+</div>
+<p style="margin:0 0 10px; font-size:13px; color:#475569; line-height:1.6;">
+  Nếu đây chính là bạn, không cần thực hiện thêm thao tác nào. Nếu bạn không nhận ra hoạt động này, hãy đổi mật khẩu và kiểm tra ngay tại
+  <a href="{$securityUrl}" style="color:#2454d6; font-weight:600;">Trung tâm bảo mật PCMarket</a>.
+</p>
+HTML;
+
+        return self::send(
+            $toEmail,
+            $subject,
+            self::wrapHtmlTemplate($body, 'Email tự động từ hệ thống bảo mật tài khoản PCMarket.')
+        );
     }
 
     /**
@@ -60,12 +132,17 @@ HTML;
         $username = trim((string)env('MAIL_USERNAME', ''));
         $password = (string)env('MAIL_PASSWORD', '');
 
-        if ($driver === '') {
+        if ($driver === '' || ($driver === 'smtp' && ($host === '' || $username === '' || $password === ''))) {
             $driver = ($host !== '' && $username !== '' && $password !== '') ? 'smtp' : 'log';
         }
 
-        $fromAddress = trim((string)env('MAIL_FROM_ADDRESS', $username !== '' ? $username : 'no-reply@pcmart.vn'));
-        $fromName    = trim((string)env('MAIL_FROM_NAME', 'PCMarket'));
+        $configuredFrom = trim((string)env('MAIL_FROM_ADDRESS', ''));
+        if ($configuredFrom === '' || ($host !== '' && stripos($host, 'gmail.com') !== false && $configuredFrom === 'no-reply@pcmart.vn' && filter_var($username, FILTER_VALIDATE_EMAIL))) {
+            $fromAddress = $username !== '' ? $username : 'no-reply@pcmart.vn';
+        } else {
+            $fromAddress = $configuredFrom;
+        }
+        $fromName = trim((string)env('MAIL_FROM_NAME', 'PCMarket'));
 
         if ($driver === 'smtp') {
             try {
@@ -93,6 +170,23 @@ HTML;
 
         self::writeLogFile($toEmail, $subject, $htmlBody, 'LOCAL_MAIL_LOG');
         return ['sent' => true, 'driver' => 'log', 'error' => null];
+    }
+
+    private static function wrapHtmlTemplate(string $innerHtml, string $footerNote): string {
+        $safeFooter = htmlspecialchars($footerNote, ENT_QUOTES, 'UTF-8');
+        return <<<HTML
+<!DOCTYPE html>
+<html lang="vi">
+<head><meta charset="UTF-8"></head>
+<body style="font-family: Arial, Helvetica, sans-serif; background:#f8fafc; margin:0; padding:24px; color:#1e293b;">
+  <div style="max-width:560px; margin:0 auto; background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; padding:28px;">
+    {$innerHtml}
+    <hr style="border:none; border-top:1px solid #e2e8f0; margin:18px 0;">
+    <p style="margin:0; font-size:12px; color:#94a3b8;">{$safeFooter}</p>
+  </div>
+</body>
+</html>
+HTML;
     }
 
     private static function sendViaSmtp(
@@ -173,9 +267,12 @@ HTML;
         $response = '';
         while (($line = fgets($socket, 512)) !== false) {
             $response .= $line;
-            if (strlen($line) >= 4 && $line[3] === ' ') {
+            if (!isset($line[3]) || $line[3] === ' ' || $line[3] === "\r" || $line[3] === "\n") {
                 break;
             }
+        }
+        if ($response === '') {
+            throw new \RuntimeException('SMTP không phản hồi hoặc hết thời gian chờ.');
         }
         $code = (int)substr($response, 0, 3);
         if (!in_array($code, $expectedCodes, true)) {

@@ -20,10 +20,31 @@ CREATE TABLE `users` (
     `role` ENUM('admin', 'staff', 'customer') DEFAULT 'customer',
     `avatar` VARCHAR(255) DEFAULT 'assets/images/default-avatar.png',
     `status` TINYINT(1) DEFAULT 1 COMMENT '1: Hoạt động, 0: Bị khóa',
+    `email_verified_at` DATETIME NULL,
+    `verification_token` VARCHAR(100) NULL,
+    `verification_expires` DATETIME NULL,
     `reset_token` VARCHAR(100) NULL,
     `reset_expires` DATETIME NULL,
+    `two_factor_enabled` TINYINT(1) NOT NULL DEFAULT 0,
+    `two_factor_secret` VARCHAR(255) NULL,
+    `two_factor_confirmed_at` DATETIME NULL,
+    `last_totp_slice` INT UNSIGNED NULL,
+    `last_login_at` DATETIME NULL,
+    `last_login_ip` VARCHAR(45) NULL,
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 1B. BẢNG MÃ DỰ PHÒNG 2FA (USER_BACKUP_CODES - Kiểu Discord, dùng 1 lần)
+DROP TABLE IF EXISTS `user_backup_codes`;
+CREATE TABLE `user_backup_codes` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `user_id` INT NOT NULL,
+    `code_hash` VARCHAR(255) NOT NULL,
+    `used_at` DATETIME NULL,
+    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    INDEX `idx_backup_codes_user_unused` (`user_id`, `used_at`),
+    CONSTRAINT `fk_backup_codes_user` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 2. BẢNG DANH MỤC SẢN PHẨM (CATEGORIES - Đa cấp)

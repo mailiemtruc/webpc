@@ -26,12 +26,12 @@ if (preg_match('#/san-pham/?$#', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Roboto:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="<?= asset('css/client.css') ?>?v=7">
+    <link rel="stylesheet" href="<?= asset('css/client.css') ?>?v=8">
     <link rel="stylesheet" href="<?= asset('css/motion.css') ?>?v=1">
     <link rel="stylesheet" href="<?= asset('css/loading.css') ?>?v=1">
     <link rel="stylesheet" href="<?= asset('css/pc-compare.css') ?>?v=1">
     <link rel="stylesheet" href="<?= asset('css/pcm-showcase.css') ?>?v=2">
-    <script src="<?= asset('js/ui.js') ?>?v=5" defer></script>
+    <script src="<?= asset('js/ui.js') ?>?v=6" defer></script>
     <script src="<?= asset('js/motion.js') ?>?v=1" defer></script>
     <script src="<?= asset('js/loading.js') ?>?v=1" defer></script>
     <script src="<?= asset('js/pc-compare.js') ?>?v=1" defer></script>
@@ -50,7 +50,7 @@ if (preg_match('#/san-pham/?$#', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH
         </form>
         <div class="header-tools">
             <?php if ($visitor): ?>
-            <details class="account-menu"><summary><i class="fa-regular fa-user" aria-hidden="true"></i><span><?= htmlspecialchars($visitor['full_name'] ?? 'Tài khoản') ?></span></summary><div><?php if (is_staff()): ?><a href="<?= base_url('admin') ?>">Quản trị cửa hàng</a><?php endif; ?><a href="<?= base_url('dang-xuat') ?>">Đăng xuất</a></div></details>
+            <details class="account-menu"><summary><i class="fa-regular fa-user" aria-hidden="true"></i><span><?= htmlspecialchars($visitor['full_name'] ?? 'Tài khoản') ?></span></summary><div><a href="<?= base_url('tai-khoan/bao-mat') ?>">Bảo mật &amp; 2FA</a><?php if (is_staff()): ?><a href="<?= base_url('admin') ?>">Quản trị cửa hàng</a><?php endif; ?><form class="logout-form" action="<?= base_url('dang-xuat') ?>" method="post"><?= csrf_field() ?><button class="menu-action" type="submit">Đăng xuất</button></form></div></details>
             <?php else: ?><a class="account-link" href="<?= base_url('dang-nhap') ?>"><i class="fa-regular fa-user" aria-hidden="true"></i><span>Tài khoản<small>Đăng nhập / Đăng ký</small></span></a><?php endif; ?>
             <a href="<?= base_url('gio-hang') ?>" class="bag-button" aria-label="Giỏ hàng"><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i><span class="bag-label">Giỏ hàng</span><span class="bag-count"><?= array_sum(array_map('intval', array_column($_SESSION['cart'] ?? [], 'quantity'))) ?></span></a>
         </div>

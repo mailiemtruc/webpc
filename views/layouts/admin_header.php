@@ -4,12 +4,13 @@
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#2454D6">
+    <meta name="csrf-token" content="<?= htmlspecialchars(csrf_token()) ?>">
     <title><?= htmlspecialchars($title ?? 'Quản trị — PCMarket') ?></title>
     <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Roboto:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="<?= asset('css/client.css') ?>?v=5"><link rel="stylesheet" href="<?= asset('css/admin.css') ?>?v=4">
-    <script src="<?= asset('js/ui.js') ?>?v=4" defer></script>
+    <link rel="stylesheet" href="<?= asset('css/client.css') ?>?v=8"><link rel="stylesheet" href="<?= asset('css/admin.css') ?>?v=5">
+    <script src="<?= asset('js/ui.js') ?>?v=6" defer></script>
     <link rel="stylesheet" href="<?= asset('css/motion.css') ?>?v=1">
     <script src="<?= asset('js/motion.js') ?>?v=1" defer></script>
 </head>

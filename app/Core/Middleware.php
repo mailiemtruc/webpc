@@ -37,6 +37,17 @@ class Middleware {
      */
     public static function auth(): void {
         if (!Auth::check()) {
+            if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET') {
+                $uri = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?: '';
+                $scriptBase = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
+                if ($scriptBase !== '/' && strpos($uri, $scriptBase) === 0) {
+                    $uri = substr($uri, strlen($scriptBase));
+                }
+                $uri = '/' . ltrim($uri, '/');
+                if ($uri !== '/' && strpos($uri, '//') !== 0) {
+                    $_SESSION['_intended_url'] = $uri;
+                }
+            }
             set_flash('info', 'Vui lòng đăng nhập để tiếp tục!');
             redirect('/dang-nhap');
         }

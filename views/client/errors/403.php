@@ -6,7 +6,14 @@
     <p>Khu vực này yêu cầu tài khoản Quản trị viên hoặc Nhân viên được phân quyền.<br>Vui lòng đăng nhập bằng tài khoản có thẩm quyền hoặc quay về trang chủ.</p>
     <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 24px;">
         <a class="button button-primary" href="<?= base_url() ?>">Về trang chủ <span aria-hidden="true">↗</span></a>
-        <a class="button button-outline" href="<?= base_url('dang-xuat') ?>">Đăng nhập tài khoản khác</a>
+        <?php if (is_logged_in()): ?>
+            <form action="<?= base_url('dang-xuat') ?>" method="post" style="display:inline;">
+                <?= csrf_field() ?>
+                <button class="button button-outline" type="submit">Đăng nhập tài khoản khác</button>
+            </form>
+        <?php else: ?>
+            <a class="button button-outline" href="<?= base_url('dang-nhap') ?>">Đăng nhập</a>
+        <?php endif; ?>
     </div>
 </section>
 <?php require VIEWS_DIR . '/layouts/client_footer.php'; ?>

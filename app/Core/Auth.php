@@ -10,11 +10,27 @@ class Auth {
 
     public static function login(array $user): void {
         self::init();
-        // Không lưu password vào session để bảo mật
-        unset($user['password']);
+        // Không lưu password hay secret/token nhạy cảm vào session
+        unset(
+            $user['password'],
+            $user['two_factor_secret'],
+            $user['reset_token'],
+            $user['verification_token']
+        );
         $_SESSION['user'] = $user;
         session_regenerate_id(true);
         $_SESSION['_csrf_token'] = bin2hex(random_bytes(32));
+    }
+
+    public static function refreshUser(array $user): void {
+        self::init();
+        unset(
+            $user['password'],
+            $user['two_factor_secret'],
+            $user['reset_token'],
+            $user['verification_token']
+        );
+        $_SESSION['user'] = $user;
     }
 
     public static function logout(): void {

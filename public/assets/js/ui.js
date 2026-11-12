@@ -322,4 +322,61 @@
       }
     });
   }
+
+  /* Chuyển đổi giữa mã Authenticator (TOTP) và mã dự phòng (kiểu Discord) ở trang 2FA. */
+  var tfaTabs = document.querySelectorAll("[data-tfa-tab]");
+  if (tfaTabs.length) {
+    var tfaPanels = document.querySelectorAll("[data-tfa-panel]");
+    tfaTabs.forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        var mode = tab.getAttribute("data-tfa-tab");
+        tfaTabs.forEach(function (t) {
+          var active = t === tab;
+          t.classList.toggle("is-active", active);
+          t.setAttribute("aria-selected", String(active));
+        });
+        tfaPanels.forEach(function (panel) {
+          var match = panel.getAttribute("data-tfa-panel") === mode;
+          panel.hidden = !match;
+          if (match) {
+            var input = panel.querySelector('input:not([type="hidden"])');
+            if (input) input.focus();
+          }
+        });
+      });
+    });
+  }
+
+  /* Nút sao chép khóa bí mật / bộ 10 mã dự phòng & tải file .txt. */
+  document.querySelectorAll("[data-copy-text]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var text = btn.getAttribute("data-copy-text") || "";
+      if (!text || !navigator.clipboard) return;
+      var orig = btn.innerHTML;
+      navigator.clipboard.writeText(text).then(function () {
+        btn.textContent = "Đã sao chép ✓";
+        setTimeout(function () {
+          btn.innerHTML = orig;
+        }, 1800);
+      });
+    });
+  });
+
+  document.querySelectorAll("[data-download-text]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var text = btn.getAttribute("data-download-text") || "";
+      var filename = btn.getAttribute("data-download-name") || "pcmarket-backup-codes.txt";
+      var blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+      var url = URL.createObjectURL(blob);
+      var link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(function () {
+        URL.revokeObjectURL(url);
+      }, 1000);
+    });
+  });
 })();

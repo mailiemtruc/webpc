@@ -47,7 +47,7 @@ class Request {
     public static function validateCsrf(): bool {
         $token = $_POST['_csrf'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
         $sessionToken = $_SESSION['_csrf_token'] ?? '';
-        return !empty($token) && hash_equals($sessionToken, $token);
+        return !empty($token) && !empty($sessionToken) && hash_equals($sessionToken, $token);
     }
 
     private static function sanitize(array $data): array {

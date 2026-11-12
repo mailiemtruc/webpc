@@ -23,5 +23,5 @@
             <span class="sidebar-link is-unavailable" title="Phân hệ chưa được kết nối"><i class="fa-solid <?= $icon ?>" aria-hidden="true"></i><?= $label ?><span class="module-dot" aria-label="Đang phát triển"></span></span>
         <?php endforeach; ?>
     </nav>
-    <div class="sidebar-bottom"><span class="sidebar-project">PCMarket / Quản trị vận hành</span><a class="sidebar-link" href="<?= base_url('dang-xuat') ?>"><i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>Đăng xuất</a></div>
+    <div class="sidebar-bottom"><span class="sidebar-project">PCMarket / Quản trị vận hành</span><a class="sidebar-link" href="<?= base_url('tai-khoan/bao-mat') ?>"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i>Bảo mật &amp; 2FA</a><form class="sidebar-logout-form" action="<?= base_url('dang-xuat') ?>" method="post"><?= csrf_field() ?><button class="sidebar-link sidebar-logout-btn" type="submit"><i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>Đăng xuất</button></form></div>
 </aside>

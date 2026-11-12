@@ -642,3 +642,17 @@
     font-size: 7px;
   }
 }
+
+
+.sidebar-logout-form {
+  margin: 0;
+}
+.sidebar-logout-btn {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}

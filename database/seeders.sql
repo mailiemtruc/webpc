@@ -9,12 +9,13 @@ USE `webpc_db`;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- 1. SEED TÀI KHOẢN NGƯỜI DÙNG (USERS)
+TRUNCATE TABLE `user_backup_codes`;
 TRUNCATE TABLE `users`;
-INSERT INTO `users` (`id`, `full_name`, `email`, `phone`, `password`, `role`, `avatar`, `status`, `created_at`) VALUES
-(1, 'Quản Trị Viên (Admin)', 'admin@pcmart.vn', '0901234567', '$2y$10$MvuJB1x63HA3xDtZWVO0kumVgCUVsPv7GR4eB4DrG.oZtTA3TOuQi', 'admin', 'assets/images/admin-avatar.png', 1, NOW()),
-(2, 'Nhân Viên Bán Hàng', 'staff@pcmart.vn', '0907654321', '$2y$10$MvuJB1x63HA3xDtZWVO0kumVgCUVsPv7GR4eB4DrG.oZtTA3TOuQi', 'staff', 'assets/images/staff-avatar.png', 1, NOW()),
-(3, 'Nguyễn Văn Khách', 'customer@pcmart.vn', '0988889999', '$2y$10$jR/m6NHNjPbaLrywknKgB.Y7JXRnAoiE4oW4qj7SugwrCsjU862Ku', 'customer', 'assets/images/default-avatar.png', 1, NOW()),
-(4, 'Trần Minh Tuấn', 'tuan.tran@gmail.com', '0912345678', '$2y$10$jR/m6NHNjPbaLrywknKgB.Y7JXRnAoiE4oW4qj7SugwrCsjU862Ku', 'customer', 'assets/images/default-avatar.png', 1, NOW());
+INSERT INTO `users` (`id`, `full_name`, `email`, `phone`, `password`, `role`, `avatar`, `status`, `email_verified_at`, `created_at`) VALUES
+(1, 'Quản Trị Viên (Admin)', 'admin@pcmart.vn', '0901234567', '$2y$10$MvuJB1x63HA3xDtZWVO0kumVgCUVsPv7GR4eB4DrG.oZtTA3TOuQi', 'admin', 'assets/images/admin-avatar.png', 1, NOW(), NOW()),
+(2, 'Nhân Viên Bán Hàng', 'staff@pcmart.vn', '0907654321', '$2y$10$MvuJB1x63HA3xDtZWVO0kumVgCUVsPv7GR4eB4DrG.oZtTA3TOuQi', 'staff', 'assets/images/staff-avatar.png', 1, NOW(), NOW()),
+(3, 'Nguyễn Văn Khách', 'customer@pcmart.vn', '0988889999', '$2y$10$jR/m6NHNjPbaLrywknKgB.Y7JXRnAoiE4oW4qj7SugwrCsjU862Ku', 'customer', 'assets/images/default-avatar.png', 1, NOW(), NOW()),
+(4, 'Trần Minh Tuấn', 'tuan.tran@gmail.com', '0912345678', '$2y$10$jR/m6NHNjPbaLrywknKgB.Y7JXRnAoiE4oW4qj7SugwrCsjU862Ku', 'customer', 'assets/images/default-avatar.png', 1, NOW(), NOW());
 
 -- 2. SEED DANH MỤC (CATEGORIES)
 TRUNCATE TABLE `categories`;
