@@ -5,13 +5,11 @@
         <i class="fa-solid fa-credit-card" style="color: #0284c7;"></i> THÔNG TIN THANH TOÁN
     </h1>
 
-    <?php if (!empty($_SESSION['error'])): ?>
-        <div style="background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; padding: 12px 16px; border-radius: 6px; margin-bottom: 20px; font-weight: 600;">
-            <?= $_SESSION['error']; unset($_SESSION['error']); ?>
-        </div>
-    <?php endif; ?>
+    <?php /* Flash errors/info rendered automatically by client_header.php */ ?>
 
-    <form action="<?= base_url('thanh-toan/process') ?>" method="POST">
+    <form action="<?= base_url('thanh-toan/process') ?>" method="POST" id="checkout-form">
+        <?= csrf_field() ?>
+        <input type="hidden" name="checkout_nonce" value="<?= htmlspecialchars($checkoutNonce ?? '') ?>">
         <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px;">
             
             <!-- Cột trái: Thông tin nhận hàng -->
@@ -20,7 +18,7 @@
                 
                 <div style="margin-bottom: 14px;">
                     <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; color: #475569;">Họ và tên người nhận (*)</label>
-                    <input type="text" name="customer_name" required value="<?= htmlspecialchars($user['name'] ?? '') ?>" placeholder="Nguyễn Văn A" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px;">
+                    <input type="text" name="customer_name" required value="<?= htmlspecialchars($user['full_name'] ?? $user['name'] ?? '') ?>" placeholder="Nguyễn Văn A" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px;">
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
@@ -59,9 +57,14 @@
                         <input type="radio" name="payment_method" value="banking">
                         <div>
                             <strong style="display: block; font-size: 14px;">Chuyển khoản Ngân hàng (QR Code)</strong>
-                            <small style="color: #64748b;">Quét mã VietQR chuyển khoản nhanh 24/7</small>
+                            <small style="color: #64748b;">Quét mã VietQR chuyển khoản nhanh 24/7 — hiển thị QR ngay sau khi đặt hàng</small>
                         </div>
                     </label>
+                    <div id="banking-preview-note" style="display: none; background: #eff6ff; border: 1px solid #bfdbfe; color: #1e3a8a; border-radius: 6px; padding: 12px 14px; font-size: 13px; line-height: 1.5;">
+                        <strong>Thông tin tài khoản nhận thanh toán:</strong><br>
+                        Ngân hàng: <strong>MB Bank</strong> · Số TK: <strong>0987654321</strong> · Chủ TK: <strong>CONG TY PCMARKET</strong><br>
+                        Sau khi bấm <em>Xác nhận đặt hàng</em>, hệ thống sẽ tạo mã đơn và mã QR kèm đúng số tiền cần chuyển. Trạng thái thanh toán giữ ở <em>Chưa thanh toán</em> cho tới khi nhân viên đối soát.
+                    </div>
                 </div>
             </div>
 
@@ -72,7 +75,7 @@
                 <div style="max-height: 280px; overflow-y: auto; margin-bottom: 16px; padding-right: 4px;">
                     <?php foreach ($cart as $item): ?>
                         <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #e2e8f0;">
-                            <img src="<?= asset($item['thumbnail']) ?>" width="48" height="48" style="object-fit: contain; border-radius: 4px; border: 1px solid #cbd5e1;">
+                            <img src="<?= htmlspecialchars(product_image_url($item['thumbnail'] ?? '')) ?>" width="48" height="48" style="object-fit: contain; border-radius: 4px; border: 1px solid #cbd5e1;">
                             <div style="flex: 1;">
                                 <div style="font-size: 13px; font-weight: 700; color: #1e293b;" class="text-line-2"><?= htmlspecialchars($item['name']) ?></div>
                                 <small style="color: #64748b;"><?= number_format($item['price'], 0, ',', '.') ?> đ × <?= $item['quantity'] ?></small>
@@ -106,7 +109,7 @@
                     <strong style="color: #dc2626; font-size: 18px;"><?= number_format($finalTotal, 0, ',', '.') ?> VNĐ</strong>
                 </div>
 
-                <button type="submit" style="width: 100%; background: #dc2626; color: #fff; font-weight: 800; padding: 14px; border: none; border-radius: 6px; cursor: pointer; font-size: 15px; box-shadow: 0 4px 12px rgba(220,38,38,0.3);">
+                <button type="submit" id="checkout-submit-btn" style="width: 100%; background: #dc2626; color: #fff; font-weight: 800; padding: 14px; border: none; border-radius: 6px; cursor: pointer; font-size: 15px; box-shadow: 0 4px 12px rgba(220,38,38,0.3);">
                     XÁC NHẬN ĐẶT HÀNG ↗
                 </button>
             </div>
@@ -114,5 +117,29 @@
         </div>
     </form>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const noteBox = document.getElementById('banking-preview-note');
+    const radios = document.querySelectorAll('input[name="payment_method"]');
+    function syncBankingNote() {
+        const checked = document.querySelector('input[name="payment_method"]:checked');
+        if (noteBox) {
+            noteBox.style.display = (checked && checked.value === 'banking') ? 'block' : 'none';
+        }
+    }
+    radios.forEach(r => r.addEventListener('change', syncBankingNote));
+    syncBankingNote();
+
+    const form = document.getElementById('checkout-form');
+    const submitBtn = document.getElementById('checkout-submit-btn');
+    if (form && submitBtn) {
+        form.addEventListener('submit', function () {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'ĐANG XỬ LÝ ĐƠN HÀNG...';
+        });
+    }
+});
+</script>
 
 <?php require VIEWS_DIR . '/layouts/client_footer.php'; ?>

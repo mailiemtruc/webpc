@@ -41,11 +41,8 @@ $finalTotal = max(0, $subtotal - $discountAmount);
                         </thead>
                         <tbody>
                             <?php foreach ($cartItems as $c): ?>
-                                <?php 
-                                    $itemThumb = !empty($c['thumbnail']) ? asset($c['thumbnail']) : asset('images/product-placeholder.svg');
-                                    if (str_starts_with($c['thumbnail'] ?? '', 'http')) {
-                                        $itemThumb = $c['thumbnail'];
-                                    }
+                                <?php
+                                    $itemThumb = product_image_url($c['thumbnail'] ?? '');
                                     $itemSubtotal = $c['price'] * $c['quantity'];
                                 ?>
                                 <tr id="cart-row-<?= $c['id'] ?>" style="border-bottom: 1px solid #f1f5f9;">
@@ -96,9 +93,10 @@ $finalTotal = max(0, $subtotal - $discountAmount);
                     <div style="margin: 16px 0; padding-top: 12px; border-top: 1px dashed #cbd5e1;">
                         <label style="font-size: 13px; font-weight: 700; color: #475569; display: block; margin-bottom: 6px;">Mã giảm giá:</label>
                         <div style="display: flex; gap: 8px;">
-                            <input type="text" id="coupon-code-input" placeholder="Nhập mã (VD: TECH2026)" value="<?= htmlspecialchars($appliedCoupon['code'] ?? '') ?>" style="flex: 1; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-weight: 700; text-transform: uppercase;">
+                            <input type="text" id="coupon-code-input" placeholder="Nhập mã (VD: WELCOME50K)" value="<?= htmlspecialchars($appliedCoupon['code'] ?? '') ?>" style="flex: 1; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-weight: 700; text-transform: uppercase;">
                             <button type="button" id="btn-apply-coupon" style="background: #0284c7; color: #fff; border: none; padding: 8px 14px; border-radius: 6px; font-weight: 700; cursor: pointer;">Áp dụng</button>
                         </div>
+                        <div id="coupon-feedback" style="margin-top: 8px; font-size: 13px; font-weight: 600; display: none;"></div>
                     </div>
 
                     <!-- Dòng Giảm Giá (Hiển thị khi có mã) -->
@@ -126,151 +124,6 @@ $finalTotal = max(0, $subtotal - $discountAmount);
     </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const getBaseUrl = () => {
-        const path = window.location.pathname;
-        if (path.includes('/webpc/public')) {
-            return window.location.origin + '/webpc/public';
-        }
-        return window.location.origin;
-    };
-    const baseUrl = getBaseUrl();
-
-    // 1. Áp dụng mã giảm giá
-    const btnApplyCoupon = document.getElementById('btn-apply-coupon');
-    if (btnApplyCoupon) {
-        btnApplyCoupon.addEventListener('click', function () {
-            const codeInput = document.getElementById('coupon-code-input');
-            const code = codeInput ? codeInput.value.trim() : '';
-
-            if (!code) {
-                alert('Vui lòng nhập mã giảm giá!');
-                return;
-            }
-
-            fetch(`${baseUrl}/api/coupon/apply`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `code=${encodeURIComponent(code)}`
-            })
-            .then(async response => {
-                const data = await response.json();
-                if (!response.ok) throw new Error(data.message || 'Mã giảm giá không hợp lệ.');
-                return data;
-            })
-            .then(data => {
-                if (data.success) {
-                    alert(data.message);
-                    document.getElementById('applied-coupon-code').innerText = data.couponCode;
-                    document.getElementById('cart-discount-amount').innerText = '-' + formatVND(data.discountAmount) + ' VNĐ';
-                    document.getElementById('coupon-discount-row').style.display = 'flex';
-                    document.getElementById('cart-grand-total').innerText = formatVND(data.finalTotal) + ' VNĐ';
-                }
-            })
-            .catch(error => alert(error.message));
-        });
-    }
-
-    // 2. Hủy mã giảm giá
-    const btnRemoveCoupon = document.getElementById('btn-remove-coupon');
-    if (btnRemoveCoupon) {
-        btnRemoveCoupon.addEventListener('click', function () {
-            fetch(`${baseUrl}/api/coupon/remove`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-            })
-            .then(async response => {
-                const data = await response.json();
-                if (!response.ok) throw new Error(data.message || 'Hủy thất bại.');
-                return data;
-            })
-            .then(data => {
-                if (data.success) {
-                    alert(data.message);
-                    document.getElementById('coupon-code-input').value = '';
-                    document.getElementById('coupon-discount-row').style.display = 'none';
-                    document.getElementById('cart-grand-total').innerText = formatVND(data.finalTotal) + ' VNĐ';
-                }
-            })
-            .catch(error => alert(error.message));
-        });
-    }
-
-    // 3. Xử lý xóa & sửa số lượng giỏ hàng
-    document.addEventListener('click', function (e) {
-        const removeBtn = e.target.closest('.btn-remove-item');
-        if (removeBtn) {
-            e.preventDefault();
-            const productId = removeBtn.getAttribute('data-id');
-            if (productId && confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?')) {
-                removeItem(productId);
-            }
-        }
-    });
-
-    document.addEventListener('change', function (e) {
-        if (e.target.classList.contains('cart-qty-input')) {
-            const input = e.target;
-            const productId = input.getAttribute('data-id');
-            const newQty = parseInt(input.value);
-            const oldQty = parseInt(input.getAttribute('data-old-val') || 1);
-
-            if (isNaN(newQty) || newQty <= 0) {
-                if (confirm('Bạn có muốn xóa sản phẩm này khỏi giỏ hàng?')) {
-                    removeItem(productId);
-                } else {
-                    input.value = oldQty;
-                }
-                return;
-            }
-
-            fetch(`${baseUrl}/api/cart/update`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: `product_id=${productId}&quantity=${newQty}`
-            })
-            .then(async response => {
-                const data = await response.json();
-                if (!response.ok) throw new Error(data.message || 'Không thể cập nhật số lượng');
-                return data;
-            })
-            .then(data => {
-                if (data.success) {
-                    input.setAttribute('data-old-val', newQty);
-                    location.reload(); // Reload để tính toán lại Coupon & Subtotal chính xác nhất
-                }
-            })
-            .catch(error => {
-                alert(error.message);
-                input.value = oldQty;
-            });
-        }
-    });
-
-    function removeItem(productId) {
-        fetch(`${baseUrl}/api/cart/remove`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: `product_id=${productId}`
-        })
-        .then(async response => {
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.message || 'Xóa sản phẩm thất bại');
-            return data;
-        })
-        .then(data => {
-            if (data.success) {
-                location.reload();
-            }
-        })
-        .catch(error => alert(error.message));
-    }
-
-    function formatVND(amount) {
-        return new Intl.NumberFormat('vi-VN').format(amount);
-    }
-});
-</script>
+<script src="<?= asset('js/cart.js') ?>?v=2" defer></script>
 
 <?php require VIEWS_DIR . '/layouts/client_footer.php'; ?>

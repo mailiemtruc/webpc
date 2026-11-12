@@ -132,7 +132,8 @@ function initQuickCart() {
     if (!cartButtons.length) return;
 
     const baseEl = document.body;
-    const appBase = baseEl ? baseEl.getAttribute('data-app-base') : '';
+    const appBase = (baseEl ? baseEl.getAttribute('data-app-base') : '') || '';
+    const csrfMeta = document.querySelector('meta[name="csrf-token"]');
 
     cartButtons.forEach(btn => {
         btn.addEventListener('click', async (e) => {
@@ -141,9 +142,11 @@ function initQuickCart() {
 
             const productId = btn.getAttribute('data-pcm-add-cart');
             const productName = btn.getAttribute('data-name') || 'Sản phẩm';
+            const csrfToken = csrfMeta ? csrfMeta.getAttribute('content') : '';
 
             const origHtml = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            const hasLabel = btn.textContent.trim().length > 0;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>' + (hasLabel ? ' Đang thêm...' : '');
             btn.disabled = true;
 
             try {
@@ -151,21 +154,36 @@ function initQuickCart() {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': csrfToken
                     },
-                    body: `product_id=${encodeURIComponent(productId)}&quantity=1`
+                    body: `product_id=${encodeURIComponent(productId)}&quantity=1&_csrf=${encodeURIComponent(csrfToken)}`
                 });
 
-                // Cập nhật số lượng giỏ hàng trên Header nếu có badge
-                const bagCount = document.querySelector('.bag-count');
-                if (bagCount) {
-                    const current = parseInt(bagCount.textContent || '0', 10);
-                    bagCount.textContent = (current + 1).toString();
+                const data = await res.json().catch(() => null);
+                if (!res.ok || !data || !data.success) {
+                    const errMsg = (data && data.message) ? data.message : 'Không thể thêm sản phẩm vào giỏ hàng.';
+                    showToast(errMsg, true);
+                    btn.innerHTML = origHtml;
+                    btn.disabled = false;
+                    return;
                 }
 
-                btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+                // Cập nhật số lượng giỏ hàng trên Header từ server
+                const bagCount = document.querySelector('.bag-count');
+                if (bagCount) {
+                    const countVal = typeof data.cartCount === 'number'
+                        ? data.cartCount
+                        : (parseInt(bagCount.textContent || '0', 10) + 1);
+                    bagCount.textContent = countVal.toString();
+                }
+
+                btn.innerHTML = hasLabel
+                    ? '<i class="fa-solid fa-check"></i> Đã thêm vào giỏ'
+                    : '<i class="fa-solid fa-check"></i>';
                 btn.style.backgroundColor = '#16a34a';
 
-                showToast(`Đã thêm vào giỏ: ${productName}`);
+                showToast(data.message || `Đã thêm vào giỏ: ${productName}`);
 
                 setTimeout(() => {
                     btn.innerHTML = origHtml;
@@ -174,16 +192,10 @@ function initQuickCart() {
                 }, 1500);
 
             } catch (err) {
-                console.warn('Cart API fallback:', err);
-                // Fallback nếu route API của Dev 3 chưa bật: điều hướng đến chi tiết sản phẩm
-                const parentCard = btn.closest('.pcm-card');
-                const link = parentCard ? parentCard.querySelector('.pcm-card-thumb') : null;
-                if (link && link.href) {
-                    window.location.href = link.href;
-                } else {
-                    btn.innerHTML = origHtml;
-                    btn.disabled = false;
-                }
+                console.warn('Cart API error:', err);
+                showToast('Lỗi kết nối máy chủ khi thêm vào giỏ hàng.', true);
+                btn.innerHTML = origHtml;
+                btn.disabled = false;
             }
         });
     });
@@ -192,7 +204,7 @@ function initQuickCart() {
 /**
  * Toast thông báo nhanh góc màn hình
  */
-function showToast(message) {
+function showToast(message, isError = false) {
     let container = document.getElementById('pcmToastContainer');
     if (!container) {
         container = document.createElement('div');
@@ -208,7 +220,7 @@ function showToast(message) {
     }
 
     const toast = document.createElement('div');
-    toast.style.background = '#1e293b';
+    toast.style.background = isError ? '#991b1b' : '#1e293b';
     toast.style.color = '#ffffff';
     toast.style.padding = '12px 20px';
     toast.style.borderRadius = '8px';
@@ -222,7 +234,9 @@ function showToast(message) {
     toast.style.transform = 'translateY(12px)';
     toast.style.transition = 'all 0.3s ease';
 
-    toast.innerHTML = `<i class="fa-solid fa-circle-check" style="color: #22c55e; font-size: 16px;"></i> <span>${escapeHtml(message)}</span>`;
+    const iconClass = isError ? 'fa-circle-exclamation' : 'fa-circle-check';
+    const iconColor = isError ? '#fecaca' : '#22c55e';
+    toast.innerHTML = `<i class="fa-solid ${iconClass}" style="color: ${iconColor}; font-size: 16px;"></i> <span>${escapeHtml(message)}</span>`;
 
     container.appendChild(toast);
 

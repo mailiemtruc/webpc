@@ -94,10 +94,7 @@ $searchQ = $_GET['q'] ?? '';
                 </tr>
             <?php else: ?>
                 <?php foreach ($products as $p): ?>
-                    <?php
-                        $thumb = !empty($p['thumbnail']) ? asset($p['thumbnail']) : asset('images/product-placeholder.svg');
-                        if (str_starts_with($p['thumbnail'] ?? '', 'http')) $thumb = $p['thumbnail'];
-                    ?>
+                    <?php $thumb = product_image_url($p['thumbnail'] ?? ''); ?>
                     <tr style="border-bottom: 1px solid #f1f5f9; font-size: 13.5px; transition: background 0.15s;">
                         <td style="padding: 12px 16px; font-weight: 700; color: #94a3b8;">#<?= $p['id'] ?></td>
                         <td style="padding: 12px 16px;">

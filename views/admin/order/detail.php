@@ -6,12 +6,6 @@
         <h1 style="font-size: 22px; font-weight: 800; color: #1e293b; margin-top: 8px;">CHI TIẾT ĐƠN HÀNG #<?= htmlspecialchars($order['order_code']) ?></h1>
     </div>
 
-    <?php if (!empty($_SESSION['admin_success'])): ?>
-        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; color: #16a34a; padding: 12px 16px; border-radius: 6px; margin-bottom: 20px; font-weight: 600;">
-            <?= $_SESSION['admin_success']; unset($_SESSION['admin_success']); ?>
-        </div>
-    <?php endif; ?>
-
     <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
         
         <!-- Cột trái: Chi tiết sản phẩm & Địa chỉ giao hàng -->
@@ -47,7 +41,7 @@
                         <?php foreach ($order['items'] as $item): ?>
                             <tr style="border-bottom: 1px solid #f1f5f9;">
                                 <td style="padding: 12px 8px; display: flex; align-items: center; gap: 10px;">
-                                    <img src="<?= asset($item['product_thumbnail']) ?>" width="40" height="40" style="object-fit: contain; border: 1px solid #e2e8f0; border-radius: 4px;">
+                                    <img src="<?= htmlspecialchars(product_image_url($item['product_thumbnail'] ?? '')) ?>" width="40" height="40" style="object-fit: contain; border: 1px solid #e2e8f0; border-radius: 4px;">
                                     <strong><?= htmlspecialchars($item['product_name']) ?></strong>
                                 </td>
                                 <td style="padding: 12px 8px; text-align: center; font-weight: 700; color: #dc2626;">
@@ -89,13 +83,15 @@
                 <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 16px; color: #0f172a;">Cập nhật đơn hàng</h3>
 
                 <form action="<?= base_url('admin/orders/' . $order['id'] . '/status') ?>" method="POST">
+                    <?= csrf_field() ?>
                     <div style="margin-bottom: 16px;">
                         <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; color: #475569;">Trạng thái đơn hàng:</label>
                         <select name="status" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; font-weight: 700;">
-                            <option value="pending" <?= $order['status'] === 'pending' ? 'selected' : '' ?>>Chờ xử lý (Pending)</option>
-                            <option value="processing" <?= $order['status'] === 'processing' ? 'selected' : '' ?>>Đang xử lý (Processing)</option>
-                            <option value="completed" <?= $order['status'] === 'completed' ? 'selected' : '' ?>>Hoàn tất (Completed)</option>
-                            <option value="cancelled" <?= $order['status'] === 'cancelled' ? 'selected' : '' ?>>Đã hủy (Cancelled)</option>
+                            <option value="pending" <?= $order['status'] === 'pending' ? 'selected' : '' ?>>Chờ xác nhận (pending)</option>
+                            <option value="confirmed" <?= $order['status'] === 'confirmed' ? 'selected' : '' ?>>Đã xác nhận (confirmed)</option>
+                            <option value="shipping" <?= $order['status'] === 'shipping' ? 'selected' : '' ?>>Đang giao hàng (shipping)</option>
+                            <option value="completed" <?= $order['status'] === 'completed' ? 'selected' : '' ?>>Hoàn tất (completed)</option>
+                            <option value="cancelled" <?= $order['status'] === 'cancelled' ? 'selected' : '' ?>>Đã hủy (cancelled)</option>
                         </select>
                     </div>
 

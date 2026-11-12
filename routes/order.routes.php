@@ -17,15 +17,8 @@ Router::get('/thanh-toan', 'App\Modules\Order\CheckoutController@index');
 Router::post('/thanh-toan/process', 'App\Modules\Order\CheckoutController@process');
 Router::get('/dat-hang-thanh-cong', 'App\Modules\Order\CheckoutController@success');
 
-// Admin Orders & Coupons
+// Admin Orders
 Router::get('/admin/orders', 'App\Modules\Order\AdminOrderController@index');
 Router::get('/admin/orders/{id}', 'App\Modules\Order\AdminOrderController@detail');
 Router::post('/admin/orders/{id}/status', 'App\Modules\Order\AdminOrderController@updateStatus');
-
-Router::get('/admin/coupons', 'App\Modules\Order\AdminCouponController@index');
-Router::get('/admin/coupons/create', 'App\Modules\Order\AdminCouponController@create');
-Router::post('/admin/coupons/store', 'App\Modules\Order\AdminCouponController@store');
-Router::get('/admin/coupons/{id}/edit', 'App\Modules\Order\AdminCouponController@edit');
-Router::post('/admin/coupons/{id}/update', 'App\Modules\Order\AdminCouponController@update');
-Router::post('/admin/coupons/{id}/delete', 'App\Modules\Order\AdminCouponController@delete');
 

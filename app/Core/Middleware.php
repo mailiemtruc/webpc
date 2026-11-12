@@ -65,7 +65,10 @@ class Middleware {
             
             if (empty($token) || empty($sessionToken) || !hash_equals($sessionToken, $token)) {
                 http_response_code(403);
-                if (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false) {
+                $wantsJson = (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false)
+                    || !empty($_SERVER['HTTP_X_REQUESTED_WITH'])
+                    || strpos($_SERVER['REQUEST_URI'] ?? '', '/api/') !== false;
+                if ($wantsJson) {
                     json_response([
                         'success' => false,
                         'message' => 'Lỗi bảo mật CSRF: Phiên làm việc đã hết hạn hoặc yêu cầu không hợp lệ. Vui lòng tải lại trang!'

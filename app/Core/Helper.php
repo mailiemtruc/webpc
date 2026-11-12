@@ -43,12 +43,39 @@ if (!function_exists('asset')) {
 if (!function_exists('upload_url')) {
     function upload_url(string $path = ''): string {
         if (empty($path)) {
-            return asset('images/no-image.png');
+            return asset('images/product-placeholder.svg');
         }
         if (strpos($path, 'http://') === 0 || strpos($path, 'https://') === 0) {
             return $path;
         }
         return base_url('uploads/' . ltrim($path, '/'));
+    }
+}
+
+if (!function_exists('product_image_url')) {
+    /**
+     * Chuẩn hóa đường dẫn ảnh sản phẩm (hỗ trợ URL ngoài, assets/..., uploads/... và file upload từ Admin)
+     */
+    function product_image_url(?string $path = ''): string {
+        $clean = ltrim(trim((string)$path), '/');
+        if ($clean === '') {
+            return asset('images/product-placeholder.svg');
+        }
+        if (strpos($clean, 'http://') === 0 || strpos($clean, 'https://') === 0) {
+            return $clean;
+        }
+        if (strpos($clean, 'assets/') === 0 || strpos($clean, 'uploads/') === 0) {
+            return base_url($clean);
+        }
+        if (
+            strpos($clean, 'products/') === 0 ||
+            strpos($clean, 'banners/') === 0 ||
+            strpos($clean, 'blogs/') === 0 ||
+            strpos($clean, 'avatars/') === 0
+        ) {
+            return base_url('uploads/' . $clean);
+        }
+        return asset($clean);
     }
 }
 

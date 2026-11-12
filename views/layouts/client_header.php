@@ -20,6 +20,7 @@ if (preg_match('#/san-pham/?$#', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#2454D6">
+    <meta name="csrf-token" content="<?= htmlspecialchars(csrf_token()) ?>">
     <title><?= htmlspecialchars($title ?? 'PCMarket — PC Gaming, Workstation & Linh kiện') ?></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,7 +35,7 @@ if (preg_match('#/san-pham/?$#', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH
     <script src="<?= asset('js/motion.js') ?>?v=1" defer></script>
     <script src="<?= asset('js/loading.js') ?>?v=1" defer></script>
     <script src="<?= asset('js/pc-compare.js') ?>?v=1" defer></script>
-    <script src="<?= asset('js/pcm-homepage.js') ?>?v=1" defer></script>
+    <script src="<?= asset('js/pcm-homepage.js') ?>?v=2" defer></script>
 </head>
 <body data-app-base="<?= htmlspecialchars(base_url()) ?>">
 <a class="skip-link" href="#main-content">Đến nội dung chính</a>
@@ -51,7 +52,7 @@ if (preg_match('#/san-pham/?$#', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH
             <?php if ($visitor): ?>
             <details class="account-menu"><summary><i class="fa-regular fa-user" aria-hidden="true"></i><span><?= htmlspecialchars($visitor['full_name'] ?? 'Tài khoản') ?></span></summary><div><?php if (is_staff()): ?><a href="<?= base_url('admin') ?>">Quản trị cửa hàng</a><?php endif; ?><a href="<?= base_url('dang-xuat') ?>">Đăng xuất</a></div></details>
             <?php else: ?><a class="account-link" href="<?= base_url('dang-nhap') ?>"><i class="fa-regular fa-user" aria-hidden="true"></i><span>Tài khoản<small>Đăng nhập / Đăng ký</small></span></a><?php endif; ?>
-            <a href="<?= base_url('gio-hang') ?>" class="bag-button" aria-label="Giỏ hàng"><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i><span class="bag-label">Giỏ hàng</span><span class="bag-count"><?= count($_SESSION['cart'] ?? []) ?></span></a>
+            <a href="<?= base_url('gio-hang') ?>" class="bag-button" aria-label="Giỏ hàng"><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i><span class="bag-label">Giỏ hàng</span><span class="bag-count"><?= array_sum(array_map('intval', array_column($_SESSION['cart'] ?? [], 'quantity'))) ?></span></a>
         </div>
     </div>
     <div class="nav-line">

@@ -8,18 +8,6 @@
         </a>
     </div>
 
-    <?php if (!empty($_SESSION['admin_success'])): ?>
-        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; color: #16a34a; padding: 12px 16px; border-radius: 6px; margin-bottom: 16px; font-weight: 600;">
-            <?= $_SESSION['admin_success']; unset($_SESSION['admin_success']); ?>
-        </div>
-    <?php endif; ?>
-
-    <?php if (!empty($_SESSION['admin_error'])): ?>
-        <div style="background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; padding: 12px 16px; border-radius: 6px; margin-bottom: 16px; font-weight: 600;">
-            <?= $_SESSION['admin_error']; unset($_SESSION['admin_error']); ?>
-        </div>
-    <?php endif; ?>
-
     <div style="background: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
         <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
             <thead>
@@ -84,6 +72,7 @@
                             <td style="padding: 14px 16px; text-align: center;">
                                 <a href="<?= base_url('admin/coupons/' . $c['id'] . '/edit') ?>" style="display: inline-block; background: #0284c7; color: #fff; padding: 6px 12px; border-radius: 4px; font-size: 13px; font-weight: 700; text-decoration: none; margin-right: 4px;">Sửa</a>
                                 <form action="<?= base_url('admin/coupons/' . $c['id'] . '/delete') ?>" method="POST" style="display: inline-block;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa mã này?');">
+                                    <?= csrf_field() ?>
                                     <button type="submit" style="background: #dc2626; color: #fff; padding: 6px 12px; border: none; border-radius: 4px; font-size: 13px; font-weight: 700; cursor: pointer;">Xóa</button>
                                 </form>
                             </td>

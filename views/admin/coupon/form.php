@@ -8,14 +8,9 @@
         <h1 style="font-size: 22px; font-weight: 800; color: #1e293b; margin-top: 8px;"><?= $isEdit ? 'CHỈNH SỬA MÃ GIẢM GIÁ' : 'THÊM MÃ GIẢM GIÁ MỚI' ?></h1>
     </div>
 
-    <?php if (!empty($_SESSION['admin_error'])): ?>
-        <div style="background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; padding: 12px 16px; border-radius: 6px; margin-bottom: 20px; font-weight: 600;">
-            <?= $_SESSION['admin_error']; unset($_SESSION['admin_error']); ?>
-        </div>
-    <?php endif; ?>
-
     <div style="background: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
         <form action="<?= $isEdit ? base_url('admin/coupons/' . $coupon['id'] . '/update') : base_url('admin/coupons/store') ?>" method="POST">
+            <?= csrf_field() ?>
             
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
                 <div>
@@ -38,25 +33,25 @@
                 </div>
                 <div>
                     <label style="display: block; font-size: 14px; font-weight: 700; color: #334155; margin-bottom: 6px;">Mức giảm (discount_value): <span style="color:red;">*</span></label>
-                    <input type="number" name="discount_value" step="any" value="<?= $coupon['discount_value'] ?? '' ?>" required style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-weight: 600;" placeholder="Nhập số tiền hoặc %">
+                    <input type="number" name="discount_value" step="any" min="1" value="<?= $coupon['discount_value'] ?? '' ?>" required style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-weight: 600;" placeholder="Nhập số tiền hoặc %">
                 </div>
             </div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
                 <div>
                     <label style="display: block; font-size: 14px; font-weight: 700; color: #334155; margin-bottom: 6px;">Đơn hàng tối thiểu (min_order_amount):</label>
-                    <input type="number" name="min_order_amount" value="<?= $coupon['min_order_amount'] ?? 0 ?>" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px;" placeholder="0 là áp dụng mọi đơn">
+                    <input type="number" name="min_order_amount" min="0" value="<?= $coupon['min_order_amount'] ?? 0 ?>" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px;" placeholder="0 là áp dụng mọi đơn">
                 </div>
                 <div>
                     <label style="display: block; font-size: 14px; font-weight: 700; color: #334155; margin-bottom: 6px;">Giảm tối đa (max_discount):</label>
-                    <input type="number" name="max_discount" value="<?= $coupon['max_discount'] ?? '' ?>" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px;" placeholder="Áp dụng khi chọn loại %">
+                    <input type="number" name="max_discount" min="1" value="<?= $coupon['max_discount'] ?? '' ?>" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px;" placeholder="Áp dụng khi chọn loại % (tùy chọn)">
                 </div>
             </div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px;">
                 <div>
                     <label style="display: block; font-size: 14px; font-weight: 700; color: #334155; margin-bottom: 6px;">Giới hạn lượt dùng:</label>
-                    <input type="number" name="usage_limit" value="<?= $coupon['usage_limit'] ?? 100 ?>" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px;">
+                    <input type="number" name="usage_limit" min="1" value="<?= $isEdit ? htmlspecialchars((string)($coupon['usage_limit'] ?? '')) : '100' ?>" placeholder="Để trống = Không giới hạn" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px;">
                 </div>
                 <div>
                     <label style="display: block; font-size: 14px; font-weight: 700; color: #334155; margin-bottom: 6px;">Ngày bắt đầu: <span style="color:red;">*</span></label>

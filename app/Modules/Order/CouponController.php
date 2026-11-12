@@ -2,148 +2,88 @@
 namespace App\Modules\Order;
 
 use App\Core\Controller;
-use App\Core\Database;
-use PDO;
-use Exception;
+use App\Core\Middleware;
+use App\Modules\Coupon\CouponModel;
+use Throwable;
 
 class CouponController extends Controller {
 
+    private OrderModel $orderModel;
+    private CouponModel $couponModel;
+
+    public function __construct() {
+        $this->orderModel = new OrderModel();
+        $this->couponModel = new CouponModel();
+    }
+
     /**
-     * Áp dụng mã giảm giá (API Ajax)
+     * Áp dụng mã giảm giá (POST /api/coupon/apply)
      */
     public function apply(): void {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        
-        ob_start(); // Bắt đầu đệm bộ nhớ để xóa sạch các cảnh báo HTML nếu có
+        Middleware::csrf();
 
         try {
             $code = trim($_POST['code'] ?? '');
             $cart = $_SESSION['cart'] ?? [];
 
             if (empty($cart)) {
-                $this->sendJson(['success' => false, 'message' => 'Giỏ hàng đang trống, không thể áp dụng mã.']);
+                $this->json(['success' => false, 'message' => 'Giỏ hàng đang trống, không thể áp dụng mã.'], 422);
+                return;
             }
 
-            if (empty($code)) {
-                $this->sendJson(['success' => false, 'message' => 'Vui lòng nhập mã giảm giá.']);
+            $eval = $this->orderModel->evaluateCart($cart);
+            if (!empty($eval['errors'])) {
+                $this->json(['success' => false, 'message' => implode(' ', $eval['errors'])], 422);
+                return;
             }
 
-            $subtotal = 0;
-            foreach ($cart as $item) {
-                $subtotal += ($item['price'] * $item['quantity']);
+            $subtotal = (float)$eval['subtotal'];
+            $result = $this->couponModel->validateAndCalculate($code, $subtotal);
+
+            if (!$result['valid']) {
+                $this->json(['success' => false, 'message' => $result['message']], 422);
+                return;
             }
 
-            $db = Database::getInstance();
-            $stmt = $db->prepare("SELECT * FROM coupons WHERE code = ? AND status = 1 LIMIT 1");
-            $stmt->execute([strtoupper($code)]);
-            $coupon = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if (!$coupon) {
-                $this->sendJson(['success' => false, 'message' => 'Mã giảm giá không tồn tại hoặc đã bị khóa.']);
-            }
-
-            $now = date('Y-m-d H:i:s');
-            if (!empty($coupon['start_date']) && $coupon['start_date'] > $now) {
-                $this->sendJson(['success' => false, 'message' => 'Mã giảm giá chưa đến thời gian sử dụng.']);
-            }
-
-            if (!empty($coupon['end_date']) && $coupon['end_date'] < $now) {
-                $this->sendJson(['success' => false, 'message' => 'Mã giảm giá đã hết hạn sử dụng.']);
-            }
-
-            $usedCount = (int)($coupon['used_count'] ?? 0);
-            $usageLimit = (int)($coupon['usage_limit'] ?? 0);
-            if ($usageLimit > 0 && $usedCount >= $usageLimit) {
-                $this->sendJson(['success' => false, 'message' => 'Mã giảm giá đã hết lượt sử dụng.']);
-            }
-
-            $minOrderAmount = (float)($coupon['min_order_amount'] ?? $coupon['min_order_value'] ?? 0);
-            if ($subtotal < $minOrderAmount) {
-                $minAmountFormatted = number_format($minOrderAmount, 0, ',', '.');
-                $this->sendJson([
-                    'success' => false, 
-                    'message' => "Đơn hàng tối thiểu phải từ {$minAmountFormatted} VNĐ mới áp dụng được mã này."
-                ]);
-            }
-
-            // Đọc linh hoạt tên cột discount_type / type trong DB
-            $discountType = $coupon['discount_type'] ?? $coupon['type'] ?? 'fixed';
-            $discountValue = (float)($coupon['discount_value'] ?? $coupon['value'] ?? $coupon['discount'] ?? 0);
-
-            $discountAmount = 0;
-            if ($discountType === 'percent' || $discountType === 'percentage') {
-                $discountAmount = ($subtotal * $discountValue) / 100;
-                $maxDiscount = (float)($coupon['max_discount_amount'] ?? $coupon['max_discount'] ?? 0);
-                if ($maxDiscount > 0 && $discountAmount > $maxDiscount) {
-                    $discountAmount = $maxDiscount;
-                }
-            } else {
-                $discountAmount = $discountValue;
-            }
-
-            if ($discountAmount > $subtotal) {
-                $discountAmount = $subtotal;
-            }
-
+            $coupon = $result['coupon'];
             $_SESSION['coupon'] = [
-                'id'              => $coupon['id'],
+                'id'              => (int)$coupon['id'],
                 'code'            => $coupon['code'],
-                'discount_type'   => $discountType,
-                'discount_value'  => $discountValue,
-                'discount_amount' => $discountAmount
+                'discount_type'   => $coupon['type'],
+                'discount_value'  => (float)$coupon['discount_value'],
+                'discount_amount' => (float)$result['discount_amount'],
             ];
 
-            $finalTotal = max(0, $subtotal - $discountAmount);
-
-            $this->sendJson([
+            $this->json([
                 'success'        => true,
-                'message'        => 'Áp dụng mã giảm giá thành công!',
+                'message'        => $result['message'],
                 'couponCode'     => $coupon['code'],
-                'discountAmount' => $discountAmount,
+                'discountAmount' => (float)$result['discount_amount'],
                 'subtotal'       => $subtotal,
-                'finalTotal'     => $finalTotal
+                'finalTotal'     => (float)$result['final_total'],
             ]);
-
-        } catch (Exception $e) {
-            $this->sendJson(['success' => false, 'message' => 'Lỗi Server: ' . $e->getMessage()]);
+        } catch (Throwable $e) {
+            $this->json(['success' => false, 'message' => 'Không thể kiểm tra mã giảm giá lúc này.'], 500);
         }
     }
 
     /**
-     * Hủy mã giảm giá (API Ajax)
+     * Hủy mã giảm giá (POST /api/coupon/remove)
      */
     public function remove(): void {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
+        Middleware::csrf();
 
         unset($_SESSION['coupon']);
 
         $cart = $_SESSION['cart'] ?? [];
-        $subtotal = 0;
-        foreach ($cart as $item) {
-            $subtotal += ($item['price'] * $item['quantity']);
-        }
+        $eval = $this->orderModel->evaluateCart($cart);
+        $subtotal = (float)$eval['subtotal'];
 
-        $this->sendJson([
+        $this->json([
             'success'    => true,
             'message'    => 'Đã hủy mã giảm giá.',
             'subtotal'   => $subtotal,
-            'finalTotal' => $subtotal
+            'finalTotal' => $subtotal,
         ]);
-    }
-
-    /**
-     * Dọn dẹp bộ đệm và xuất dữ liệu JSON chuẩn
-     */
-    private function sendJson(array $data): void {
-        if (ob_get_length()) {
-            ob_clean();
-        }
-        header('Content-Type: application/json; charset=utf-8');
-        echo json_encode($data);
-        exit;
     }
 }

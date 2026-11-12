@@ -1,7 +1,7 @@
 # BÁO CÁO TIẾN ĐỘ THỰC HIỆN DỰ ÁN WEBPC
 
 **Phân hệ phụ trách:** Dev 3 – Giỏ hàng, Mã giảm giá, Thanh toán & Quản lý Đơn hàng  
-**Phiên bản cập nhật:** 1.0  
+**Phiên bản cập nhật:** 1.1  
 **Trạng thái phân hệ:** Hoàn thành 100% phạm vi công việc được giao (Definition of Done)
 
 ---
@@ -22,62 +22,65 @@ Theo tài liệu *Kế hoạch phát triển và bàn giao dự án WebPC*, Dev 
 
 ### 2.1 Backend Models & Controllers (`app/Modules/Order/` & `app/Modules/Coupon/`)
 * **`OrderModel.php`**: 
-  * Truy vấn thông tin đơn hàng, danh sách chi tiết đơn (`order_items`).
-  * Thực thi `beginTransaction()`, `commit()`, `rollBack()` khi tạo đơn.
-  * Tự động trừ tồn kho (`UPDATE products SET quantity = quantity - ?`).
-  * Cập nhật trạng thái đơn và thanh toán với Prepared Statements an toàn.
-* **`CouponModel.php`**:
-  * Kiểm tra tính hợp lệ của coupon (thời hạn `start_date` / `end_date`, giới hạn `usage_limit`, đơn tối thiểu `min_order_amount`).
+  * Truy vấn thông tin đơn hàng, danh sách chi tiết đơn (`order_items`) và kiểm tra lại toàn bộ giá/tồn kho trực tiếp từ DB (`evaluateCart()`).
+  * Thực thi `beginTransaction()`, `commit()`, `rollBack()` khi tạo đơn: kiểm tra & trừ tồn kho nguyên tử (`status = 1 AND quantity >= ?`), tăng lượt dùng coupon có điều kiện (`used_count < usage_limit`).
+  * Cập nhật trạng thái đơn và thanh toán (`pending`, `confirmed`, `shipping`, `completed`, `cancelled`; `unpaid`, `paid`) với cơ chế tự động hoàn tồn kho & lượt dùng coupon khi hủy đơn (`cancelled`) và trừ lại khi mở lại đơn.
+* **`CouponModel.php`**: 
+  * Kiểm tra tính hợp lệ của coupon qua `validateAndCalculate()` (so sánh ngày `Y-m-d`, `min_order_amount`, `usage_limit`, giảm cố định/phần trăm kèm trần `max_discount`).
   * Thực hiện CRUD mã giảm giá khớp chuẩn 100% với cấu trúc CSDL thực tế.
-* **`CartController.php` & `CheckoutController.php`**:
-  * Thêm/sửa/xóa sản phẩm giỏ hàng via Session & Ajax API.
-  * Tự động tính toán lại tổng tiền từ Database (không tin tưởng dữ liệu giá do Client gửi lên).
-* **`AdminOrderController.php`**:
-  * Hiển thị danh sách đơn hàng, chi tiết sản phẩm khách đặt.
-  * Cập nhật trạng thái giao hàng (`pending`, `processing`, `completed`, `cancelled`) và thanh toán (`unpaid`, `paid`).
-* **`AdminCouponController.php`**:
-  * Quản trị toàn bộ mã giảm giá, xử lý validate trùng mã, loại giảm (`fixed` / `percentage`), mức giảm tối đa.
+* **`CartController.php`, `CouponController.php` & `CheckoutController.php`**: 
+  * Thêm/sửa/xóa sản phẩm giỏ hàng via Session & Ajax API, đồng bộ lại mã giảm giá khi giỏ thay đổi, kiểm tra CSRF (`Middleware::csrf()`).
+  * Tự động tính toán lại toàn bộ giá & mã giảm giá từ Database khi Checkout, chống submit lặp qua `checkout_nonce`, giữ `payment_status = 'unpaid'` cho cả COD và Banking chờ đối soát, và kiểm tra quyền xem trang thành công.
+* **`AdminOrderController.php`**: 
+  * Bảo vệ truy cập bằng `Middleware::staff()` và `Middleware::csrf()`.
+  * Hiển thị danh sách đơn hàng, chi tiết sản phẩm khách đặt, cập nhật trạng thái (`pending`, `confirmed`, `shipping`, `completed`, `cancelled`) và thanh toán (`unpaid`, `paid`).
+* **`AdminCouponController.php`**: 
+  * Bảo vệ truy cập bằng `Middleware::staff()` và `Middleware::csrf()`.
+  * Quản trị toàn bộ mã giảm giá, kiểm tra trùng mã, định dạng ngày `end_date >= start_date`, loại giảm (`fixed` / `percentage`), giá trị hợp lệ và giới hạn lượt dùng.
 
 ### 2.2 Frontend Views (`views/`)
 * **Client Side:**
-  * `views/client/cart/index.php`: Giao diện giỏ hàng, nhập mã giảm giá Ajax.
-  * `views/client/cart/checkout.php`: Form đặt hàng và hướng dẫn thanh toán.
-  * `views/client/cart/success.php`: Thông báo đặt hàng thành công.
+  * `views/client/order/cart.php`: Giao diện giỏ hàng, cập nhật số lượng và áp dụng mã giảm giá Ajax qua `cart.js`.
+  * `views/client/order/checkout.php`: Form đặt hàng, `csrf_field()`, `checkout_nonce` và hướng dẫn thanh toán COD/Banking.
+  * `views/client/order/success.php`: Thông báo đặt hàng thành công, hiển thị bảng sản phẩm đã đặt và mã VietQR kèm nội dung chuyển khoản khi chọn Banking.
+  * Kết nối đồng bộ trên `client_header.php`, `client_footer.php`, `views/client/product/detail.php` (nút Thêm vào giỏ hàng), `views/client/partials/pcm_card.php` (`product_image_url()`).
 * **Admin Side:**
-  * `views/admin/orders/index.php`: Danh sách đơn hàng toàn hệ thống.
-  * `views/admin/orders/detail.php`: Xem chi tiết đơn hàng & form cập nhật trạng thái.
-  * `views/admin/coupon/index.php`: Danh sách mã giảm giá, hiển thị lượt dùng, hạn dùng, giá trị giảm.
-  * `views/admin/coupon/form.php`: Form thêm mới & chỉnh sửa mã giảm giá dùng chung linh hoạt.
+  * `views/admin/order/index.php`: Danh sách đơn hàng toàn hệ thống.
+  * `views/admin/order/detail.php`: Xem chi tiết đơn hàng & form cập nhật trạng thái kèm CSRF token.
+  * `views/admin/coupon/index.php`: Danh sách mã giảm giá, hiển thị lượt dùng, hạn dùng, giá trị giảm và form xóa có CSRF.
+  * `views/admin/coupon/form.php`: Form thêm mới & chỉnh sửa mã giảm giá dùng chung có CSRF token.
+  * Mở khóa liên kết **Đơn hàng** và **Khuyến mãi** trong `views/layouts/admin_sidebar.php`.
 
 ### 2.3 JavaScript & Routes
-* **`public/assets/js/cart.js`**: Xử lý tăng giảm số lượng, xóa giỏ hàng và áp dụng mã giảm giá bằng Fetch API/Ajax mượt mà.
-* **`routes/order.routes.php` & `routes/coupon.routes.php`**: Khai báo đầy đủ các định tuyến cho cả Client và Admin.
+* **`public/assets/js/cart.js` & `public/assets/js/pcm-homepage.js`**: Gửi kèm `X-CSRF-TOKEN`, cập nhật đồng bộ `.bag-count`, xử lý lỗi HTTP 403/422 rõ ràng và tính lại tổng tiền / mã giảm giá mượt mà.
+* **`routes/order.routes.php` & `routes/coupon.routes.php`**: Khai báo chuẩn xác và không trùng lặp các định tuyến cho cả Client, Ajax API và Admin.
 
 ---
 
 ## 3. KẾT QUẢ ĐỒNG BỘ VÀ TỐI ƯU KỸ THUẬT
 
 1. **Đồng bộ Schema Cơ sở dữ liệu (`coupons` & `orders`):**
-   * Khớp các cột thực tế: `code`, `description`, `type` (`percentage`, `fixed`), `discount_value`, `min_order_amount`, `max_discount`, `usage_limit`, `used_count`, `start_date`, `end_date`, `status`.
-   * Khắc phục triệt để lỗi MySQL Strict Mode khi cập nhật cột trạng thái `status` trong bảng `orders`.
+   * Khớp chính xác ENUM bảng `orders`: `status` (`pending`, `confirmed`, `shipping`, `completed`, `cancelled`) và `payment_status` (`unpaid`, `paid`).
+   * Khớp các cột thực tế bảng `coupons`: `code`, `description`, `type` (`percentage`, `fixed`), `discount_value`, `min_order_amount`, `max_discount`, `usage_limit`, `used_count`, `start_date`, `end_date`, `status`.
 
-2. **Tương thích PHP 8.1+ / PHP 8.4+:**
-   * Xử lý triệt để các cảnh báo `Deprecated: number_format()` khi gặp giá trị `null`.
-   * Bọc kiểm tra an toàn `Undefined array key` cho các trường mảng và truy vấn CSDL.
+2. **Tương thích PHP 8.1+ / PHP 8.4+ & Hiển thị ảnh:**
+   * Bổ sung `product_image_url()` trong `app/Core/Helper.php` để xử lý nhất quán đường dẫn `assets/images/products/...`, `uploads/...`, URL ngoài và ảnh dự phòng.
+   * Xử lý an toàn kiểu dữ liệu, kiểm tra mảng và định dạng tiền tệ.
 
 3. **Bảo mật & An toàn dữ liệu:**
-   * 100% câu lệnh SQL sử dụng PDO Prepared Statements (Named parameters `:status`, `:id`) chống lỗi SQL Injection.
-   * Tất cả giá trị tiền tệ và số lượng đều được tính toán lại tại Server-side trước khi ghi vào Database.
+   * Áp dụng `Middleware::staff()` cho toàn bộ trang Admin Đơn hàng & Mã giảm giá; áp dụng `Middleware::csrf()` cho mọi form POST và API (`/api/cart/*`, `/api/coupon/*`).
+   * 100% câu lệnh SQL sử dụng PDO Prepared Statements và giao dịch nguyên tử (Transaction + Row Lock) khi đặt hàng hoặc hủy đơn.
+   * Tất cả giá trị tiền tệ, tồn kho và mã giảm giá đều được xác thực lại tại Server-side trước khi ghi vào Database.
 
 ---
 
 ## 4. TIÊU CHÍ NGHIỆM THU THEO KẾ HOẠCH DỰ ÁN (DEFINITION OF DONE)
 
-| Tiêu chí nghiệm初 theo Kế hoạch | Kết quả thực tế | Trạng thái |
+| Tiêu chí nghiệm thu theo Kế hoạch | Kết quả thực tế | Trạng thái |
 | :--- | :--- | :---: |
 | Giỏ hàng Session/Ajax, tăng/giảm/xóa | Thêm, sửa số lượng, xóa sản phẩm mượt mà không reload trang | **ĐẠT** |
 | Áp dụng Mã giảm giá (Coupon) | Kiểm tra chuẩn đơn tối thiểu, hạn dùng, trần giảm % tối đa | **ĐẠT** |
-| Checkout COD & QR Banking | Đặt hàng thành công, lưu đầy đủ thông tin khách hàng | **ĐẠT** |
+| Checkout COD & QR Banking | Đặt hàng thành công, lưu đầy đủ thông tin khách hàng, QR thanh toán | **ĐẠT** |
 | Ràng buộc Transaction SQL | Đơn hàng, chi tiết đơn, trừ tồn kho và tăng lượt coupon chạy trong 1 Transaction | **ĐẠT** |
 | Admin Quản lý Đơn hàng | Xem danh sách, chi tiết đơn, chuyển trạng thái đơn và thanh toán thành công | **ĐẠT** |
 | Admin Quản lý Mã giảm giá | CRUD mã giảm giá hoàn thiện, giao diện trực quan, không phát sinh lỗi PHP | **ĐẠT** |

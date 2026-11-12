@@ -9,10 +9,7 @@ $hasSale = $salePrice > 0 && $salePrice < $regPrice;
 $currentPrice = $hasSale ? $salePrice : $regPrice;
 $discountPercent = $hasSale ? round((1 - ($salePrice / $regPrice)) * 100) : 0;
 $productUrl = base_url('san-pham/' . rawurlencode($item['slug'] ?? ''));
-$thumbnail = !empty($item['thumbnail']) ? asset($item['thumbnail']) : asset('images/product-placeholder.svg');
-if (str_starts_with($item['thumbnail'] ?? '', 'http')) {
-    $thumbnail = $item['thumbnail'];
-}
+$thumbnail = product_image_url($item['thumbnail'] ?? '');
 ?>
 <div class="pcm-card" data-product-id="<?= (int)($item['id'] ?? 0) ?>">
     <?php if ($hasSale): ?>

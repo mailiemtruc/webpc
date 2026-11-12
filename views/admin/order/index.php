@@ -5,18 +5,6 @@
         <h1 style="font-size: 22px; font-weight: 800; color: #1e293b; margin: 0;">QUẢN LÝ ĐƠN HÀNG</h1>
     </div>
 
-    <?php if (!empty($_SESSION['admin_success'])): ?>
-        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; color: #16a34a; padding: 12px 16px; border-radius: 6px; margin-bottom: 16px; font-weight: 600;">
-            <?= $_SESSION['admin_success']; unset($_SESSION['admin_success']); ?>
-        </div>
-    <?php endif; ?>
-
-    <?php if (!empty($_SESSION['admin_error'])): ?>
-        <div style="background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; padding: 12px 16px; border-radius: 6px; margin-bottom: 16px; font-weight: 600;">
-            <?= $_SESSION['admin_error']; unset($_SESSION['admin_error']); ?>
-        </div>
-    <?php endif; ?>
-
     <div style="background: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
         <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
             <thead>
@@ -57,10 +45,11 @@
                             <td style="padding: 14px 16px;">
                                 <?php
                                     $statusMap = [
-                                        'pending'    => ['label' => 'Chờ xử lý', 'bg' => '#fef3c7', 'color' => '#b45309'],
-                                        'processing' => ['label' => 'Đang xử lý', 'bg' => '#e0f2fe', 'color' => '#0369a1'],
-                                        'completed'  => ['label' => 'Hoàn tất', 'bg' => '#dcfce7', 'color' => '#15803d'],
-                                        'cancelled'  => ['label' => 'Đã hủy', 'bg' => '#fee2e2', 'color' => '#b91c1c']
+                                        'pending'   => ['label' => 'Chờ xác nhận', 'bg' => '#fef3c7', 'color' => '#b45309'],
+                                        'confirmed' => ['label' => 'Đã xác nhận', 'bg' => '#dbeafe', 'color' => '#1d4ed8'],
+                                        'shipping'  => ['label' => 'Đang giao hàng', 'bg' => '#e0f2fe', 'color' => '#0369a1'],
+                                        'completed' => ['label' => 'Hoàn tất', 'bg' => '#dcfce7', 'color' => '#15803d'],
+                                        'cancelled' => ['label' => 'Đã hủy', 'bg' => '#fee2e2', 'color' => '#b91c1c']
                                     ];
                                     $st = $statusMap[$o['status']] ?? ['label' => $o['status'], 'bg' => '#f1f5f9', 'color' => '#475569'];
                                 ?>
