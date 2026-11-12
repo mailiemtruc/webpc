@@ -7,7 +7,7 @@ class Middleware {
      */
     public static function admin(): void {
         if (!Auth::check()) {
-            set_flash('warning', 'Vui lòng đăng nhập với tài khoản Quản trị viên!');
+            set_flash('info', 'Vui lòng đăng nhập với tài khoản Quản trị viên!');
             redirect('/dang-nhap');
         }
         if (!Auth::isAdmin()) {
@@ -22,7 +22,7 @@ class Middleware {
      */
     public static function staff(): void {
         if (!Auth::check()) {
-            set_flash('warning', 'Vui lòng đăng nhập!');
+            set_flash('info', 'Vui lòng đăng nhập để tiếp tục!');
             redirect('/dang-nhap');
         }
         if (!Auth::isStaff()) {
@@ -37,7 +37,7 @@ class Middleware {
      */
     public static function auth(): void {
         if (!Auth::check()) {
-            set_flash('warning', 'Vui lòng đăng nhập để tiếp tục!');
+            set_flash('info', 'Vui lòng đăng nhập để tiếp tục!');
             redirect('/dang-nhap');
         }
     }

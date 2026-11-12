@@ -230,11 +230,11 @@
         dialogTrigger = button;
         var builder = button.dataset.feature === "builder";
         document.getElementById("feature-title").textContent = builder
-          ? "Cấu hình riêng đang trên đường đến."
-          : "Đặt hàng trực tuyến sắp có mặt.";
+          ? "Công cụ xây dựng cấu hình PC sắp ra mắt."
+          : "Chức năng đang được nâng cấp.";
         document.getElementById("feature-message").textContent = builder
-          ? "Công cụ chọn linh kiện đang được hoàn thiện. Trong lúc chờ, hãy khám phá các linh kiện và thông số tại cửa hàng."
-          : "Giỏ hàng và thanh toán đang được hoàn thiện. Bạn vẫn có thể xem sản phẩm, so sánh giá và tìm hiểu cấu hình.";
+          ? "Tính năng chọn linh kiện kiểm tra tương thích đang được cập nhật. Trong lúc chờ, hãy khám phá các bộ PC và linh kiện tại cửa hàng."
+          : "Bạn có thể thêm sản phẩm trực tiếp vào giỏ hàng tại trang chi tiết hoặc danh mục sản phẩm.";
         dialog.showModal();
       });
     });

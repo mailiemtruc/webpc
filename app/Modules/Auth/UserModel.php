@@ -18,15 +18,17 @@ class UserModel extends Model {
     }
 
     public function setResetToken(string $email, string $token, int $expireMinutes = 30): bool {
+        $tokenHash = hash('sha256', $token);
         $expires = date('Y-m-d H:i:s', time() + ($expireMinutes * 60));
         $stmt = $this->db->prepare("UPDATE `{$this->table}` SET `reset_token` = ?, `reset_expires` = ? WHERE `email` = ?");
-        return $stmt->execute([$token, $expires, $email]);
+        return $stmt->execute([$tokenHash, $expires, $email]);
     }
 
     public function findByValidResetToken(string $token): ?array {
+        $tokenHash = hash('sha256', $token);
         $now = date('Y-m-d H:i:s');
         $stmt = $this->db->prepare("SELECT * FROM `{$this->table}` WHERE `reset_token` = ? AND `reset_expires` > ? LIMIT 1");
-        $stmt->execute([$token, $now]);
+        $stmt->execute([$tokenHash, $now]);
         $user = $stmt->fetch();
         return $user ?: null;
     }
@@ -37,4 +39,3 @@ class UserModel extends Model {
         return $stmt->execute([$hash, $userId]);
     }
 }
-

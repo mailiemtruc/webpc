@@ -38,9 +38,27 @@ class AdminDashboardController extends Controller {
     }
 
     public function chartData(): void {
-        // Trả về dữ liệu JSON cho biểu đồ Chart.js (demo 7 ngày gần nhất)
-        $labels = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ Nhật'];
-        $data = [12500000, 18900000, 35990000, 22400000, 48000000, 65000000, 52000000];
+        $db = Database::getInstance();
+        $stmt = $db->query("
+            SELECT DATE(created_at) AS order_date, COALESCE(SUM(final_total), 0) AS total_revenue
+            FROM orders
+            WHERE status != 'cancelled'
+              AND created_at >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
+            GROUP BY DATE(created_at)
+        ");
+
+        $dailyTotals = [];
+        foreach ($stmt->fetchAll() as $row) {
+            $dailyTotals[$row['order_date']] = (float)$row['total_revenue'];
+        }
+
+        $labels = [];
+        $data = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $dateKey = date('Y-m-d', strtotime("-{$i} days"));
+            $labels[] = date('d/m', strtotime($dateKey));
+            $data[] = $dailyTotals[$dateKey] ?? 0;
+        }
 
         $this->json([
             'labels' => $labels,

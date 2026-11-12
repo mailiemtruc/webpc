@@ -14,12 +14,14 @@ class Auth {
         unset($user['password']);
         $_SESSION['user'] = $user;
         session_regenerate_id(true);
+        $_SESSION['_csrf_token'] = bin2hex(random_bytes(32));
     }
 
     public static function logout(): void {
         self::init();
         unset($_SESSION['user']);
         session_regenerate_id(true);
+        $_SESSION['_csrf_token'] = bin2hex(random_bytes(32));
     }
 
     public static function check(): bool {

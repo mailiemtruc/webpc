@@ -22,7 +22,11 @@ if (!function_exists('env')) {
                 }
             }
         }
-        return $envData[$key] ?? getenv($key) ?: $default;
+        if (array_key_exists($key, $envData)) {
+            return $envData[$key];
+        }
+        $sysVal = getenv($key);
+        return $sysVal !== false ? $sysVal : $default;
     }
 }
 
@@ -121,7 +125,7 @@ if (!function_exists('view')) {
         extract($data);
         $viewFile = dirname(__DIR__, 2) . '/views/' . str_replace('.', '/', $viewPath) . '.php';
         if (!file_exists($viewFile)) {
-            die("View not found: {$viewPath} (File: {$viewFile})");
+            throw new \RuntimeException("View not found: {$viewPath}");
         }
         require $viewFile;
     }

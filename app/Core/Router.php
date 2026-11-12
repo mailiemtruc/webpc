@@ -81,12 +81,12 @@ class Router {
                     [$controllerClass, $method] = explode('@', $route['action']);
                     
                     if (!class_exists($controllerClass)) {
-                        die("Controller không tồn tại: {$controllerClass}");
+                        throw new \RuntimeException("Controller không tồn tại: {$controllerClass}");
                     }
 
                     $controller = new $controllerClass();
                     if (!method_exists($controller, $method)) {
-                        die("Phương thức {$method} không tồn tại trong controller {$controllerClass}");
+                        throw new \RuntimeException("Phương thức {$method} không tồn tại trong controller {$controllerClass}");
                     }
 
                     call_user_func_array([$controller, $method], $params);

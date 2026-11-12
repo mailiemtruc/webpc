@@ -1570,18 +1570,6 @@ button:active,
 .auth-switch a:hover {
   text-decoration: underline;
 }
-.demo-details {
-  color: var(--muted);
-  font-size: 11px;
-  margin-top: 20px;
-}
-.demo-details summary {
-  padding-block: 5px;
-}
-.demo-details p {
-  padding-top: 10px;
-  line-height: 1.8;
-}
 .forgot-link {
   display: flex;
   justify-content: flex-end;
@@ -2451,7 +2439,6 @@ button:active,
   .sort-form button,
   .primary-nav > a,
   .primary-nav > button,
-  .demo-details summary,
   .match-budget input,
   .match-select,
   .match-compare-heading .text-button {

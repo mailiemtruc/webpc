@@ -29,7 +29,7 @@ class Database {
             try {
                 self::$instance = new PDO($dsn, $user, $pass, $options);
             } catch (PDOException $e) {
-                die("Lỗi kết nối cơ sở dữ liệu MySQL: " . $e->getMessage() . "<br>Vui lòng kiểm tra file .env và chắc chắn rằng Laragon / MySQL đang chạy.");
+                throw new \RuntimeException('Không thể kết nối cơ sở dữ liệu MySQL.', 0, $e);
             }
         }
 

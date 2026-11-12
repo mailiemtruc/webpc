@@ -10,7 +10,6 @@
             <button class="button button-primary form-submit" type="submit">Đăng nhập <span aria-hidden="true">↗</span></button>
         </form>
         <div class="auth-switch">Lần đầu ghé PCMarket? <a href="<?= base_url('dang-ky') ?>">Tạo tài khoản</a></div>
-        <details class="demo-details"><summary>Tài khoản dùng thử cho đồ án</summary><p>Khách hàng: customer@pcmart.vn / 123456<br>Quản trị: admin@pcmart.vn / admin123</p></details>
     </section>
 </div>
 <?php require VIEWS_DIR . '/layouts/client_footer.php'; ?>

@@ -109,6 +109,7 @@ class AdminProductController extends Controller {
      * Lưu sản phẩm mới vào database
      */
     public function store(): void {
+        Middleware::csrf();
         $name = trim($_POST['name'] ?? '');
         $categoryId = (int)($_POST['category_id'] ?? 0);
         $brandId = !empty($_POST['brand_id']) ? (int)$_POST['brand_id'] : null;
@@ -217,6 +218,7 @@ class AdminProductController extends Controller {
      * Cập nhật thông tin sản phẩm
      */
     public function update(int|string $id): void {
+        Middleware::csrf();
         $id = (int)$id;
         $db = Database::getInstance();
 
@@ -295,12 +297,17 @@ class AdminProductController extends Controller {
      * Xóa sản phẩm
      */
     public function delete(int|string $id): void {
+        Middleware::csrf();
         $id = (int)$id;
         $db = Database::getInstance();
-        $stmt = $db->prepare("DELETE FROM products WHERE id = ?");
-        $stmt->execute([$id]);
+        try {
+            $stmt = $db->prepare("DELETE FROM products WHERE id = ?");
+            $stmt->execute([$id]);
+            set_flash('success', "Đã xóa sản phẩm #{$id} khỏi hệ thống!");
+        } catch (\PDOException $e) {
+            set_flash('error', 'Không thể xóa sản phẩm đã phát sinh dữ liệu liên quan. Bạn có thể chuyển trạng thái sang Ẩn.');
+        }
 
-        set_flash('success', "Đã xóa sản phẩm #{$id} khỏi hệ thống!");
         header('Location: ' . base_url('admin/products'));
         exit;
     }
