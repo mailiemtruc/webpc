@@ -91,21 +91,107 @@
       menuTrigger.focus();
     }
   });
+  function escapeHtml(str) {
+    var div = document.createElement("div");
+    div.textContent = str || "";
+    return div.innerHTML;
+  }
+
   document.querySelectorAll("[data-search-form]").forEach(function (form) {
     var input = form.querySelector('input[name="q"]');
     var clear = form.querySelector("[data-search-clear]");
-    function update() {
-      clear.hidden = !input.value.length;
+    var wrap = form.querySelector(".search-input-wrap") || form;
+    var baseApp = document.body.getAttribute("data-app-base") || "";
+
+    // Gợi ý tìm kiếm nhanh (Ajax Live Search)
+    var dropdown = document.createElement("div");
+    dropdown.className = "header-search-suggestions";
+    dropdown.hidden = true;
+    wrap.appendChild(dropdown);
+
+    var debounceTimer = null;
+    var abortController = null;
+
+    function hideDropdown() {
+      dropdown.hidden = true;
+      dropdown.innerHTML = "";
     }
-    clear.addEventListener("click", function () {
-      input.value = "";
+
+    function update() {
+      if (clear) clear.hidden = !input.value.length;
+    }
+
+    if (clear) {
+      clear.addEventListener("click", function () {
+        input.value = "";
+        update();
+        hideDropdown();
+        input.focus();
+      });
+    }
+
+    input.addEventListener("input", function () {
       update();
-      input.focus();
+      var query = input.value.trim();
+      clearTimeout(debounceTimer);
+      if (abortController) {
+        abortController.abort();
+      }
+
+      if (query.length < 2) {
+        hideDropdown();
+        return;
+      }
+
+      debounceTimer = setTimeout(function () {
+        abortController = new AbortController();
+        var searchUrl = baseApp.replace(/\/+$/, "") + "/api/search?q=" + encodeURIComponent(query);
+        fetch(searchUrl, { signal: abortController.signal })
+          .then(function (res) { return res.json(); })
+          .then(function (items) {
+            if (!Array.isArray(items) || items.length === 0) {
+              dropdown.innerHTML = '<div class="search-suggest-empty">Không tìm thấy sản phẩm khớp với "<strong>' + escapeHtml(query) + '</strong>"</div>';
+              dropdown.hidden = false;
+              return;
+            }
+
+            var html = '<div class="search-suggest-header">Gợi ý sản phẩm</div><div class="search-suggest-list">';
+            items.forEach(function (item) {
+              html += '<a href="' + escapeHtml(item.url) + '" class="search-suggest-item">';
+              html += '<img src="' + escapeHtml(item.thumbnail) + '" alt="" width="44" height="44" onerror="this.onerror=null;this.src=\'' + baseApp.replace(/\/+$/, '') + '/assets/images/product-placeholder.svg\';">';
+              html += '<div class="search-suggest-info">';
+              html += '<span class="search-suggest-title">' + escapeHtml(item.name) + '</span>';
+              html += '<div class="search-suggest-price-box">';
+              html += '<span class="search-suggest-price">' + escapeHtml(item.price_formatted) + '</span>';
+              if (item.old_price_formatted) {
+                html += '<span class="search-suggest-old-price">' + escapeHtml(item.old_price_formatted) + '</span>';
+              }
+              html += '</div></div></a>';
+            });
+            html += '</div>';
+            html += '<a class="search-suggest-view-all" href="' + baseApp.replace(/\/+$/, "") + '/san-pham?q=' + encodeURIComponent(query) + '">Xem tất cả kết quả cho "<strong>' + escapeHtml(query) + '</strong>" →</a>';
+            dropdown.innerHTML = html;
+            dropdown.hidden = false;
+          })
+          .catch(function (err) {
+            if (err.name !== "AbortError") {
+              hideDropdown();
+            }
+          });
+      }, 250);
     });
-    input.addEventListener("input", update);
+
     input.addEventListener("keydown", function (event) {
       if (event.key === "Enter" && event.isComposing) event.preventDefault();
+      if (event.key === "Escape") hideDropdown();
     });
+
+    document.addEventListener("click", function (e) {
+      if (!form.contains(e.target)) {
+        hideDropdown();
+      }
+    });
+
     update();
   });
   document

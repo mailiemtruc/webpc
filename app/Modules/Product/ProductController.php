@@ -90,14 +90,31 @@ class ProductController extends Controller {
     }
 
     public function liveSearch(): void {
-        $q = $_GET['q'] ?? '';
-        if (strlen($q) < 2) {
+        $q = trim((string)($_GET['q'] ?? ''));
+        if (mb_strlen($q, 'UTF-8') < 2) {
             $this->json([]);
             return;
         }
 
-        $sql = "SELECT id, name, slug, price, discount_price, thumbnail FROM products WHERE status = 1 AND name LIKE ? LIMIT 6";
+        $sql = "SELECT id, name, slug, price, discount_price, thumbnail FROM products WHERE status = 1 AND name LIKE ? ORDER BY id DESC LIMIT 6";
         $results = $this->productModel->query($sql, ["%{$q}%"]);
-        $this->json($results);
+
+        $formatted = array_map(function($p) {
+            $regPrice = (float)($p['price'] ?? 0);
+            $salePrice = (float)($p['discount_price'] ?? 0);
+            $hasSale = $salePrice > 0 && $salePrice < $regPrice;
+            $currentPrice = $hasSale ? $salePrice : $regPrice;
+            return [
+                'id' => (int)$p['id'],
+                'name' => $p['name'],
+                'slug' => $p['slug'],
+                'url' => base_url('san-pham/' . rawurlencode($p['slug'])),
+                'price_formatted' => number_format($currentPrice, 0, ',', '.') . ' VNĐ',
+                'old_price_formatted' => $hasSale ? number_format($regPrice, 0, ',', '.') . ' VNĐ' : null,
+                'thumbnail' => product_image_url($p['thumbnail'] ?? ''),
+            ];
+        }, $results);
+
+        $this->json($formatted);
     }
 }

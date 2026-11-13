@@ -8,7 +8,17 @@ $cardSpecs = [];
 foreach ($specKeys as $key => $label) { if (!empty($specifications[$key]) && is_scalar($specifications[$key])) $cardSpecs[$label] = $specifications[$key]; if (count($cardSpecs) >= 3) break; }
 ?>
 <article class="shop-product">
-    <a class="product-image" href="<?= base_url('san-pham/' . rawurlencode($item['slug'])) ?>" tabindex="-1" aria-hidden="true"><img src="<?= htmlspecialchars($item['thumbnail'] ?? '') ?>" alt="" width="520" height="400" loading="lazy" data-product-image><?php if ($hasDiscount): ?><span class="product-discount">Giảm <?= round((1 - $salePrice / $regularPrice) * 100) ?>%</span><?php endif; ?><span class="image-caption">Ảnh minh họa</span></a>
+    <a class="product-image" href="<?= base_url('san-pham/' . rawurlencode($item['slug'])) ?>" tabindex="-1" aria-hidden="true">
+        <img src="<?= htmlspecialchars(product_image_url($item['thumbnail'] ?? '')) ?>" 
+             alt="<?= htmlspecialchars($item['name'] ?? '') ?>" 
+             width="520" 
+             height="400" 
+             loading="lazy" 
+             data-product-image
+             onerror="this.onerror=null; this.src='<?= htmlspecialchars(asset('images/product-placeholder.svg'), ENT_QUOTES, 'UTF-8') ?>';">
+        <?php if ($hasDiscount): ?><span class="product-discount">Giảm <?= round((1 - $salePrice / $regularPrice) * 100) ?>%</span><?php endif; ?>
+        <span class="image-caption">Ảnh minh họa</span>
+    </a>
     <div class="product-body"><div class="product-meta"><span><?= htmlspecialchars($item['brand_name'] ?? $item['sku'] ?? 'PCMarket') ?></span><span class="<?= (int)($item['quantity'] ?? 0) > 0 ? 'in-stock' : '' ?>"><?= (int)($item['quantity'] ?? 0) > 0 ? '● Còn hàng' : 'Hết hàng' ?></span></div>
     <h3><a href="<?= base_url('san-pham/' . rawurlencode($item['slug'])) ?>"><?= htmlspecialchars($item['name']) ?></a></h3>
     <?php if ($cardSpecs): ?><dl class="product-spec-list"><?php foreach ($cardSpecs as $label => $value): ?><div><dt><?= $label ?></dt><dd><?= htmlspecialchars($value) ?></dd></div><?php endforeach; ?></dl><?php endif; ?>

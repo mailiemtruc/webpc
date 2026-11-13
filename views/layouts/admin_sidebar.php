@@ -2,11 +2,13 @@
     <a class="wordmark" href="<?= base_url('admin') ?>">PC<span class="brand-accent">MARKET</span></a><span class="workspace-label">Không gian vận hành</span>
     <nav class="admin-navigation">
         <?php
-        $requestUri = $_SERVER['REQUEST_URI'] ?? '';
-        $isProducts = str_contains($requestUri, 'admin/products');
-        $isOrders   = str_contains($requestUri, 'admin/orders');
-        $isCoupons  = str_contains($requestUri, 'admin/coupons');
-        $isOverview = !$isProducts && !$isOrders && !$isCoupons;
+        $requestUri   = $_SERVER['REQUEST_URI'] ?? '';
+        $isProducts   = str_contains($requestUri, 'admin/products');
+        $isCategories = str_contains($requestUri, 'admin/categories');
+        $isBrands     = str_contains($requestUri, 'admin/brands');
+        $isOrders     = str_contains($requestUri, 'admin/orders');
+        $isCoupons    = str_contains($requestUri, 'admin/coupons');
+        $isOverview   = !$isProducts && !$isCategories && !$isBrands && !$isOrders && !$isCoupons;
         ?>
         <span class="sidebar-caption">Tổng quan</span>
         <a class="sidebar-link <?= $isOverview ? 'is-active' : '' ?>" href="<?= base_url('admin') ?>"><i class="fa-solid fa-table-cells-large" aria-hidden="true"></i>Hoạt động cửa hàng</a>
@@ -14,6 +16,8 @@
         <span class="sidebar-caption">Quản lý bán hàng</span>
         <?php if (is_admin()): ?>
             <a class="sidebar-link <?= $isProducts ? 'is-active' : '' ?>" href="<?= base_url('admin/products') ?>"><i class="fa-solid fa-box" aria-hidden="true"></i>Sản phẩm & kho hàng</a>
+            <a class="sidebar-link <?= $isCategories ? 'is-active' : '' ?>" href="<?= base_url('admin/categories') ?>"><i class="fa-solid fa-folder-tree" aria-hidden="true"></i>Danh mục sản phẩm</a>
+            <a class="sidebar-link <?= $isBrands ? 'is-active' : '' ?>" href="<?= base_url('admin/brands') ?>"><i class="fa-solid fa-copyright" aria-hidden="true"></i>Thương hiệu</a>
         <?php endif; ?>
         <a class="sidebar-link <?= $isOrders ? 'is-active' : '' ?>" href="<?= base_url('admin/orders') ?>"><i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>Đơn hàng</a>
         <a class="sidebar-link <?= $isCoupons ? 'is-active' : '' ?>" href="<?= base_url('admin/coupons') ?>"><i class="fa-solid fa-ticket" aria-hidden="true"></i>Khuyến mãi</a>
