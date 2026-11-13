@@ -13,7 +13,11 @@ class GoogleAuth {
     public static function isConfigured(): bool {
         $clientId = trim((string)env('GOOGLE_CLIENT_ID', ''));
         $clientSecret = trim((string)env('GOOGLE_CLIENT_SECRET', ''));
-        return $clientId !== '' && $clientSecret !== '';
+        return ($clientId !== '' && $clientSecret !== '') || $clientId === 'demo';
+    }
+
+    public static function isDemoMode(): bool {
+        return trim((string)env('GOOGLE_CLIENT_ID', '')) === 'demo';
     }
 
     public static function getClientId(): string {
@@ -36,6 +40,10 @@ class GoogleAuth {
      * Tạo liên kết chuyển hướng người dùng sang trang cấp quyền của Google
      */
     public static function buildAuthUrl(string $state): string {
+        if (self::isDemoMode()) {
+            return self::getRedirectUri() . '?code=mock_google_oauth_code&state=' . urlencode($state);
+        }
+
         $params = [
             'client_id'             => self::getClientId(),
             'redirect_uri'          => self::getRedirectUri(),
@@ -56,6 +64,13 @@ class GoogleAuth {
      * @return array{access_token: string, expires_in?: int, id_token?: string}|null
      */
     public static function exchangeCodeForToken(string $code): ?array {
+        if (self::isDemoMode() && $code === 'mock_google_oauth_code') {
+            return [
+                'access_token' => 'mock_google_access_token_demo',
+                'expires_in'   => 3600,
+            ];
+        }
+
         $payload = [
             'code'          => $code,
             'client_id'     => self::getClientId(),
@@ -102,6 +117,16 @@ class GoogleAuth {
      * @return array{sub: string, email: string, name?: string, picture?: string, email_verified?: bool}|null
      */
     public static function fetchUserInfo(string $accessToken): ?array {
+        if (self::isDemoMode() && $accessToken === 'mock_google_access_token_demo') {
+            return [
+                'sub'            => 'google_1098237492817293847',
+                'email'          => 'mailiemtruc04@gmail.com',
+                'name'           => 'Mai Liêm Trực',
+                'picture'        => 'assets/images/default-avatar.png',
+                'email_verified' => true,
+            ];
+        }
+
         $ch = curl_init(self::USERINFO_ENDPOINT);
         curl_setopt_array($ch, [
             CURLOPT_HTTPGET        => true,
