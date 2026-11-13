@@ -53,3 +53,4 @@
     </section>
 </div>
 <?php require VIEWS_DIR . '/layouts/client_footer.php'; ?>
+

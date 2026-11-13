@@ -26,3 +26,4 @@ CREATE TABLE IF NOT EXISTS `user_backup_codes` (
 UPDATE `users`
 SET `email_verified_at` = COALESCE(`email_verified_at`, NOW())
 WHERE `email_verified_at` IS NULL;
+

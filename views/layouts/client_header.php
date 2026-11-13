@@ -26,12 +26,12 @@ if (preg_match('#/san-pham/?$#', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Roboto:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="<?= asset('css/client.css') ?>?v=8">
+    <link rel="stylesheet" href="<?= asset('css/client.css') ?>?v=9">
     <link rel="stylesheet" href="<?= asset('css/motion.css') ?>?v=1">
     <link rel="stylesheet" href="<?= asset('css/loading.css') ?>?v=1">
     <link rel="stylesheet" href="<?= asset('css/pc-compare.css') ?>?v=1">
     <link rel="stylesheet" href="<?= asset('css/pcm-showcase.css') ?>?v=2">
-    <script src="<?= asset('js/ui.js') ?>?v=6" defer></script>
+    <script src="<?= asset('js/ui.js') ?>?v=7" defer></script>
     <script src="<?= asset('js/motion.js') ?>?v=1" defer></script>
     <script src="<?= asset('js/loading.js') ?>?v=1" defer></script>
     <script src="<?= asset('js/pc-compare.js') ?>?v=1" defer></script>
@@ -50,8 +50,75 @@ if (preg_match('#/san-pham/?$#', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH
         </form>
         <div class="header-tools">
             <?php if ($visitor): ?>
-            <details class="account-menu"><summary><i class="fa-regular fa-user" aria-hidden="true"></i><span><?= htmlspecialchars($visitor['full_name'] ?? 'Tài khoản') ?></span></summary><div><a href="<?= base_url('tai-khoan/bao-mat') ?>">Bảo mật &amp; 2FA</a><?php if (is_staff()): ?><a href="<?= base_url('admin') ?>">Quản trị cửa hàng</a><?php endif; ?><form class="logout-form" action="<?= base_url('dang-xuat') ?>" method="post"><?= csrf_field() ?><button class="menu-action" type="submit">Đăng xuất</button></form></div></details>
-            <?php else: ?><a class="account-link" href="<?= base_url('dang-nhap') ?>"><i class="fa-regular fa-user" aria-hidden="true"></i><span>Tài khoản<small>Đăng nhập / Đăng ký</small></span></a><?php endif; ?>
+            <?php
+                $initial = mb_strtoupper(mb_substr($visitor['full_name'] ?? 'U', 0, 1, 'UTF-8'));
+                $roleLabel = is_admin() ? 'Quản trị viên' : (is_staff() ? 'Nhân viên' : 'Thành viên');
+                $roleBadgeClass = is_admin() ? 'badge-admin' : (is_staff() ? 'badge-staff' : 'badge-customer');
+                $roleIcon = is_admin() ? 'fa-crown' : (is_staff() ? 'fa-user-shield' : 'fa-circle-check');
+            ?>
+            <details class="account-menu" data-account-menu>
+                <summary class="account-trigger" aria-label="Mở menu tài khoản của <?= htmlspecialchars($visitor['full_name'] ?? '') ?>">
+                    <span class="account-avatar-pill"><?= htmlspecialchars($initial) ?></span>
+                    <span class="account-trigger-info">
+                        <span class="account-user-name"><?= htmlspecialchars($visitor['full_name'] ?? 'Tài khoản') ?></span>
+                        <span class="account-user-role"><?= $roleLabel ?></span>
+                    </span>
+                    <i class="fa-solid fa-chevron-down account-chevron" aria-hidden="true"></i>
+                </summary>
+                <div class="account-dropdown-panel" role="menu">
+                    <div class="account-dropdown-card">
+                        <span class="account-card-avatar"><?= htmlspecialchars($initial) ?></span>
+                        <div class="account-card-meta">
+                            <strong class="account-card-name"><?= htmlspecialchars($visitor['full_name'] ?? 'Tài khoản') ?></strong>
+                            <span class="account-card-email"><?= htmlspecialchars($visitor['email'] ?? '') ?></span>
+                            <span class="account-card-badge <?= $roleBadgeClass ?>">
+                                <i class="fa-solid <?= $roleIcon ?>" aria-hidden="true"></i> <?= $roleLabel ?>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="account-menu-nav">
+                        <?php if (is_staff()): ?>
+                        <a href="<?= base_url('admin') ?>" class="account-menu-link item-admin-link">
+                            <span class="menu-icon-box icon-admin"><i class="fa-solid fa-gauge-high" aria-hidden="true"></i></span>
+                            <span class="menu-link-text">
+                                <strong>Không gian Quản trị</strong>
+                                <small>Xem KPI, sản phẩm, đơn hàng &amp; kho</small>
+                            </span>
+                            <span class="menu-tag-admin">Admin</span>
+                        </a>
+                        <?php endif; ?>
+                        <a href="<?= base_url('tai-khoan/bao-mat') ?>" class="account-menu-link">
+                            <span class="menu-icon-box icon-shield"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></span>
+                            <span class="menu-link-text">
+                                <strong>Bảo mật &amp; 2FA</strong>
+                                <small>Đổi mật khẩu, Authenticator, mã dự phòng</small>
+                            </span>
+                        </a>
+                        <a href="<?= base_url('gio-hang') ?>" class="account-menu-link">
+                            <span class="menu-icon-box icon-cart"><i class="fa-solid fa-bag-shopping" aria-hidden="true"></i></span>
+                            <span class="menu-link-text">
+                                <strong>Giỏ hàng của tôi</strong>
+                                <small>Theo dõi giỏ hàng &amp; thanh toán</small>
+                            </span>
+                        </a>
+                    </div>
+                    <div class="account-dropdown-footer">
+                        <form class="account-logout-form" action="<?= base_url('dang-xuat') ?>" method="post">
+                            <?= csrf_field() ?>
+                            <button class="account-logout-btn" type="submit">
+                                <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>
+                                <span>Đăng xuất an toàn</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </details>
+            <?php else: ?>
+            <a class="account-link" href="<?= base_url('dang-nhap') ?>">
+                <i class="fa-regular fa-user" aria-hidden="true"></i>
+                <span>Tài khoản<small>Đăng nhập / Đăng ký</small></span>
+            </a>
+            <?php endif; ?>
             <a href="<?= base_url('gio-hang') ?>" class="bag-button" aria-label="Giỏ hàng"><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i><span class="bag-label">Giỏ hàng</span><span class="bag-count"><?= array_sum(array_map('intval', array_column($_SESSION['cart'] ?? [], 'quantity'))) ?></span></a>
         </div>
     </div>

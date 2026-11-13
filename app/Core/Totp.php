@@ -203,3 +203,4 @@ class Totp {
         return $binary;
     }
 }
+

@@ -379,4 +379,20 @@
       }, 1000);
     });
   });
+
+  /* Đóng popover menu tài khoản khi nhấn ra ngoài hoặc bấm phím Escape */
+  document.addEventListener("pointerdown", function (event) {
+    var accountMenu = document.querySelector(".account-menu");
+    if (accountMenu && accountMenu.open && !accountMenu.contains(event.target)) {
+      accountMenu.open = false;
+    }
+  });
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+      var accountMenu = document.querySelector(".account-menu");
+      if (accountMenu && accountMenu.open) {
+        accountMenu.open = false;
+      }
+    }
+  });
 })();
