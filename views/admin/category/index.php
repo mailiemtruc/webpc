@@ -88,3 +88,4 @@ require VIEWS_DIR . '/layouts/admin_header.php';
 </div>
 
 <?php require VIEWS_DIR . '/layouts/admin_footer.php'; ?>
+

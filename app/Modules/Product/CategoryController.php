@@ -173,3 +173,4 @@ class CategoryController extends Controller {
         $this->redirectWith('/admin/categories', 'success', 'Xóa danh mục thành công!');
     }
 }
+

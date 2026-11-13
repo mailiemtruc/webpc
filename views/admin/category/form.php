@@ -83,3 +83,4 @@ $action = $isEdit ? base_url('admin/categories/update/' . $category['id']) : bas
 </div>
 
 <?php require VIEWS_DIR . '/layouts/admin_footer.php'; ?>
+

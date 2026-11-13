@@ -146,3 +146,4 @@ class BrandController extends Controller {
         $this->redirectWith('/admin/brands', 'success', 'Xóa thương hiệu thành công!');
     }
 }
+

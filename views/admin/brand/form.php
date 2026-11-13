@@ -55,3 +55,4 @@ $action = $isEdit ? base_url('admin/brands/update/' . $brand['id']) : base_url('
 </div>
 
 <?php require VIEWS_DIR . '/layouts/admin_footer.php'; ?>
+
