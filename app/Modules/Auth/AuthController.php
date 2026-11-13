@@ -3,6 +3,7 @@ namespace App\Modules\Auth;
 
 use App\Core\Auth;
 use App\Core\Controller;
+use App\Core\GoogleAuth;
 use App\Core\Mailer;
 use App\Core\Middleware;
 use App\Core\QrCode;
@@ -95,6 +96,128 @@ class AuthController extends Controller {
         }
 
         $this->completeLogin($user, 'Tài khoản vừa đăng nhập thành công bằng email và mật khẩu.');
+    }
+
+    public function redirectToGoogle(): void {
+        if (Auth::check()) {
+            redirect('/');
+        }
+
+        if (!GoogleAuth::isConfigured()) {
+            $this->redirectWith(
+                '/dang-nhap',
+                'info',
+                'Chức năng Đăng nhập Google đang chờ thiết lập Client ID. Quản trị viên vui lòng cấu hình <code>GOOGLE_CLIENT_ID</code> và <code>GOOGLE_CLIENT_SECRET</code> trong file <code>.env</code> theo hướng dẫn tại Google Cloud Console.'
+            );
+        }
+
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $state = bin2hex(random_bytes(16));
+        $_SESSION['oauth2_google_state'] = $state;
+
+        $authUrl = GoogleAuth::buildAuthUrl($state);
+        header('Location: ' . $authUrl);
+        exit;
+    }
+
+    public function handleGoogleCallback(): void {
+        if (Auth::check()) {
+            redirect('/');
+        }
+
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $error = trim((string)($_GET['error'] ?? ''));
+        if ($error !== '') {
+            $this->redirectWith('/dang-nhap', 'error', 'Bạn đã hủy quá trình đăng nhập bằng Google.');
+        }
+
+        $state = trim((string)($_GET['state'] ?? ''));
+        $savedState = (string)($_SESSION['oauth2_google_state'] ?? '');
+        unset($_SESSION['oauth2_google_state']);
+
+        if ($state === '' || $savedState === '' || !hash_equals($savedState, $state)) {
+            $this->redirectWith('/dang-nhap', 'error', 'Phiên xác thực Google không hợp lệ hoặc đã hết hạn (CSRF state mismatch). Vui lòng thử lại!');
+        }
+
+        $code = trim((string)($_GET['code'] ?? ''));
+        if ($code === '') {
+            $this->redirectWith('/dang-nhap', 'error', 'Không nhận được mã xác thực (authorization code) từ Google.');
+        }
+
+        $tokenData = GoogleAuth::exchangeCodeForToken($code);
+        if (!$tokenData || empty($tokenData['access_token'])) {
+            $this->redirectWith('/dang-nhap', 'error', 'Không thể kết nối lấy access token từ máy chủ Google. Vui lòng thử lại sau ít phút.');
+        }
+
+        $userInfo = GoogleAuth::fetchUserInfo((string)$tokenData['access_token']);
+        if (!$userInfo || empty($userInfo['email'])) {
+            $this->redirectWith('/dang-nhap', 'error', 'Không thể lấy thông tin tài khoản từ Google.');
+        }
+
+        $googleId = (string)($userInfo['sub'] ?? '');
+        $email    = strtolower(trim((string)$userInfo['email']));
+        $fullName = trim((string)($userInfo['name'] ?? '')) ?: 'Khách hàng Google';
+        $picture  = trim((string)($userInfo['picture'] ?? '')) ?: 'assets/images/default-avatar.png';
+
+        // 1. Kiểm tra tài khoản theo google_id
+        $user = $this->userModel->findByGoogleId($googleId);
+
+        // 2. Nếu chưa liên kết google_id, tìm theo email để liên kết tự động
+        if (!$user) {
+            $user = $this->userModel->findByEmail($email);
+            if ($user) {
+                $this->userModel->linkGoogleAccount((int)$user['id'], $googleId);
+                $user = $this->userModel->find((int)$user['id']);
+            }
+        }
+
+        // 3. Nếu chưa từng tồn tại tài khoản -> Tự động đăng ký mới!
+        if (!$user) {
+            $newUserId = $this->userModel->createGoogleUser([
+                'full_name' => $fullName,
+                'email'     => $email,
+                'google_id' => $googleId,
+                'avatar'    => $picture,
+            ]);
+            $user = $this->userModel->find($newUserId);
+            $this->clearFailedLogins($email);
+            $this->completeLogin(
+                $user,
+                'Tài khoản vừa được tạo mới và đăng nhập thành công qua Google OAuth 2.0.'
+            );
+            return;
+        }
+
+        // Kiểm tra trạng thái tài khoản
+        if ((int)($user['status'] ?? 1) !== 1) {
+            $this->redirectWith('/dang-nhap', 'error', 'Tài khoản của bạn đã bị tạm khóa. Vui lòng liên hệ quản trị viên!');
+        }
+
+        $this->clearFailedLogins($email);
+
+        // Nếu tài khoản có bật 2FA -> chuyển sang bước 2FA
+        if ((int)($user['two_factor_enabled'] ?? 0) === 1 && !empty($user['two_factor_secret'])) {
+            session_regenerate_id(true);
+            $_SESSION['_csrf_token'] = bin2hex(random_bytes(32));
+            $_SESSION['2fa_pending'] = [
+                'user_id'    => (int)$user['id'],
+                'email'      => $user['email'],
+                'expires_at' => time() + self::LOCKOUT_SECONDS,
+                'attempts'   => 0,
+            ];
+            $this->redirectWith('/xac-thuc-2fa', 'info', 'Vui lòng nhập mã xác thực 2 bước (Authenticator) hoặc mã dự phòng để hoàn tất đăng nhập Google.');
+        }
+
+        $this->completeLogin(
+            $user,
+            'Tài khoản vừa đăng nhập thành công qua Google OAuth 2.0.'
+        );
     }
 
     public function showTwoFactorChallenge(): void {

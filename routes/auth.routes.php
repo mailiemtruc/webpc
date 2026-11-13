@@ -13,6 +13,10 @@ Router::post('/dang-ky', 'App\Modules\Auth\AuthController@register', ['App\Core\
 
 Router::post('/dang-xuat', 'App\Modules\Auth\AuthController@logout', ['App\Core\Middleware::csrf']);
 
+// Đăng nhập & Đăng ký nhanh qua Google OAuth 2.0
+Router::get('/auth/google', 'App\Modules\Auth\AuthController@redirectToGoogle');
+Router::get('/auth/google/callback', 'App\Modules\Auth\AuthController@handleGoogleCallback');
+
 // Xác nhận tài khoản qua Email & Gửi lại liên kết xác nhận
 Router::get('/xac-nhan-email', 'App\Modules\Auth\AuthController@verifyEmail');
 Router::get('/gui-lai-xac-nhan', 'App\Modules\Auth\AuthController@showResendVerification');

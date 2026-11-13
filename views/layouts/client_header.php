@@ -50,67 +50,20 @@ if (preg_match('#/san-pham/?$#', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH
         </form>
         <div class="header-tools">
             <?php if ($visitor): ?>
-            <?php
-                $initial = mb_strtoupper(mb_substr($visitor['full_name'] ?? 'U', 0, 1, 'UTF-8'));
-                $roleLabel = is_admin() ? 'Quản trị viên' : (is_staff() ? 'Nhân viên' : 'Thành viên');
-                $roleBadgeClass = is_admin() ? 'badge-admin' : (is_staff() ? 'badge-staff' : 'badge-customer');
-                $roleIcon = is_admin() ? 'fa-crown' : (is_staff() ? 'fa-user-shield' : 'fa-circle-check');
-            ?>
-            <details class="account-menu" data-account-menu>
-                <summary class="account-trigger" aria-label="Mở menu tài khoản của <?= htmlspecialchars($visitor['full_name'] ?? '') ?>">
-                    <span class="account-avatar-pill"><?= htmlspecialchars($initial) ?></span>
-                    <span class="account-trigger-info">
-                        <span class="account-user-name"><?= htmlspecialchars($visitor['full_name'] ?? 'Tài khoản') ?></span>
-                        <span class="account-user-role"><?= $roleLabel ?></span>
-                    </span>
-                    <i class="fa-solid fa-chevron-down account-chevron" aria-hidden="true"></i>
+            <details class="account-menu">
+                <summary>
+                    <i class="fa-regular fa-user" aria-hidden="true"></i>
+                    <span><?= htmlspecialchars($visitor['full_name'] ?? 'Tài khoản') ?></span>
                 </summary>
-                <div class="account-dropdown-panel" role="menu">
-                    <div class="account-dropdown-card">
-                        <span class="account-card-avatar"><?= htmlspecialchars($initial) ?></span>
-                        <div class="account-card-meta">
-                            <strong class="account-card-name"><?= htmlspecialchars($visitor['full_name'] ?? 'Tài khoản') ?></strong>
-                            <span class="account-card-email"><?= htmlspecialchars($visitor['email'] ?? '') ?></span>
-                            <span class="account-card-badge <?= $roleBadgeClass ?>">
-                                <i class="fa-solid <?= $roleIcon ?>" aria-hidden="true"></i> <?= $roleLabel ?>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="account-menu-nav">
-                        <?php if (is_staff()): ?>
-                        <a href="<?= base_url('admin') ?>" class="account-menu-link item-admin-link">
-                            <span class="menu-icon-box icon-admin"><i class="fa-solid fa-gauge-high" aria-hidden="true"></i></span>
-                            <span class="menu-link-text">
-                                <strong>Không gian Quản trị</strong>
-                                <small>Xem KPI, sản phẩm, đơn hàng &amp; kho</small>
-                            </span>
-                            <span class="menu-tag-admin">Admin</span>
-                        </a>
-                        <?php endif; ?>
-                        <a href="<?= base_url('tai-khoan/bao-mat') ?>" class="account-menu-link">
-                            <span class="menu-icon-box icon-shield"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></span>
-                            <span class="menu-link-text">
-                                <strong>Bảo mật &amp; 2FA</strong>
-                                <small>Đổi mật khẩu, Authenticator, mã dự phòng</small>
-                            </span>
-                        </a>
-                        <a href="<?= base_url('gio-hang') ?>" class="account-menu-link">
-                            <span class="menu-icon-box icon-cart"><i class="fa-solid fa-bag-shopping" aria-hidden="true"></i></span>
-                            <span class="menu-link-text">
-                                <strong>Giỏ hàng của tôi</strong>
-                                <small>Theo dõi giỏ hàng &amp; thanh toán</small>
-                            </span>
-                        </a>
-                    </div>
-                    <div class="account-dropdown-footer">
-                        <form class="account-logout-form" action="<?= base_url('dang-xuat') ?>" method="post">
-                            <?= csrf_field() ?>
-                            <button class="account-logout-btn" type="submit">
-                                <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>
-                                <span>Đăng xuất an toàn</span>
-                            </button>
-                        </form>
-                    </div>
+                <div>
+                    <a href="<?= base_url('tai-khoan/bao-mat') ?>"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Bảo mật &amp; 2FA</a>
+                    <?php if (is_staff()): ?>
+                        <a href="<?= base_url('admin') ?>"><i class="fa-solid fa-gauge-high" aria-hidden="true"></i> Quản trị cửa hàng</a>
+                    <?php endif; ?>
+                    <form class="logout-form" action="<?= base_url('dang-xuat') ?>" method="post">
+                        <?= csrf_field() ?>
+                        <button class="menu-action" type="submit"><i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i> Đăng xuất</button>
+                    </form>
                 </div>
             </details>
             <?php else: ?>

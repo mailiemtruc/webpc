@@ -11,6 +11,27 @@ class UserModel extends Model {
         return $this->whereFirst('email', $email);
     }
 
+    public function findByGoogleId(string $googleId): ?array {
+        return $this->whereFirst('google_id', $googleId);
+    }
+
+    public function linkGoogleAccount(int $userId, string $googleId): bool {
+        $stmt = $this->db->prepare(
+            "UPDATE `{$this->table}` SET `google_id` = ?, `email_verified_at` = IFNULL(`email_verified_at`, NOW()) WHERE `id` = ?"
+        );
+        return $stmt->execute([$googleId, $userId]);
+    }
+
+    public function createGoogleUser(array $data): int {
+        $data['role'] = 'customer';
+        $data['status'] = 1;
+        $data['email_verified_at'] = date('Y-m-d H:i:s');
+        if (empty($data['password'])) {
+            $data['password'] = password_hash(bin2hex(random_bytes(16)), PASSWORD_BCRYPT);
+        }
+        return $this->create($data);
+    }
+
     public function registerUser(array $data): int {
         $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
         $data['role'] = 'customer';
