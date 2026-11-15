@@ -8,7 +8,11 @@
         $isBrands     = str_contains($requestUri, 'admin/brands');
         $isOrders     = str_contains($requestUri, 'admin/orders');
         $isCoupons    = str_contains($requestUri, 'admin/coupons');
-        $isOverview   = !$isProducts && !$isCategories && !$isBrands && !$isOrders && !$isCoupons;
+        $isUsers      = str_contains($requestUri, 'admin/users');
+        $isReviews    = str_contains($requestUri, 'admin/reviews');
+        $isBlogs      = str_contains($requestUri, 'admin/blogs');
+        $isBanners    = str_contains($requestUri, 'admin/banners');
+        $isOverview   = !$isProducts && !$isCategories && !$isBrands && !$isOrders && !$isCoupons && !$isUsers && !$isReviews && !$isBlogs && !$isBanners;
         ?>
         <span class="sidebar-caption">Tổng quan</span>
         <a class="sidebar-link <?= $isOverview ? 'is-active' : '' ?>" href="<?= base_url('admin') ?>"><i class="fa-solid fa-table-cells-large" aria-hidden="true"></i>Hoạt động cửa hàng</a>
@@ -22,10 +26,16 @@
         <a class="sidebar-link <?= $isOrders ? 'is-active' : '' ?>" href="<?= base_url('admin/orders') ?>"><i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>Đơn hàng</a>
         <a class="sidebar-link <?= $isCoupons ? 'is-active' : '' ?>" href="<?= base_url('admin/coupons') ?>"><i class="fa-solid fa-ticket" aria-hidden="true"></i>Khuyến mãi</a>
 
-        <span class="sidebar-caption">Các phân hệ đang phát triển</span>
-        <?php foreach (['fa-users' => 'Khách hàng', 'fa-newspaper' => 'Nội dung', 'fa-sliders' => 'Cấu hình PC'] as $icon => $label): ?>
-            <span class="sidebar-link is-unavailable" title="Phân hệ chưa được kết nối"><i class="fa-solid <?= $icon ?>" aria-hidden="true"></i><?= $label ?><span class="module-dot" aria-label="Đang phát triển"></span></span>
-        <?php endforeach; ?>
+        <span class="sidebar-caption">Khách hàng & Đánh giá</span>
+        <a class="sidebar-link <?= $isUsers ? 'is-active' : '' ?>" href="<?= base_url('admin/users') ?>"><i class="fa-solid fa-users" aria-hidden="true"></i>Tài khoản khách hàng</a>
+        <a class="sidebar-link <?= $isReviews ? 'is-active' : '' ?>" href="<?= base_url('admin/reviews') ?>"><i class="fa-solid fa-star" aria-hidden="true"></i>Duyệt đánh giá</a>
+
+        <span class="sidebar-caption">Nội dung & Truyền thông</span>
+        <a class="sidebar-link <?= $isBlogs ? 'is-active' : '' ?>" href="<?= base_url('admin/blogs') ?>"><i class="fa-solid fa-newspaper" aria-hidden="true"></i>Tin tức công nghệ</a>
+        <a class="sidebar-link <?= $isBanners ? 'is-active' : '' ?>" href="<?= base_url('admin/banners') ?>"><i class="fa-solid fa-images" aria-hidden="true"></i>Banner & Slider</a>
+
+        <span class="sidebar-caption">Phân hệ đang phát triển</span>
+        <span class="sidebar-link is-unavailable" title="Phân hệ PC Builder đang được phát triển bởi Dev 5"><i class="fa-solid fa-sliders" aria-hidden="true"></i>Cấu hình PC (Builder)<span class="module-dot" aria-label="Đang phát triển"></span></span>
     </nav>
     <div class="sidebar-bottom"><span class="sidebar-project">PCMarket / Quản trị vận hành</span><a class="sidebar-link" href="<?= base_url('tai-khoan/bao-mat') ?>"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i>Bảo mật &amp; 2FA</a><form class="sidebar-logout-form" action="<?= base_url('dang-xuat') ?>" method="post"><?= csrf_field() ?><button class="sidebar-link sidebar-logout-btn" type="submit"><i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>Đăng xuất</button></form></div>
 </aside>

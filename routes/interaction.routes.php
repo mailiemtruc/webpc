@@ -20,6 +20,11 @@ Router::post(
     'App\Modules\Interaction\ProfileController@update'
 );
 
+Router::post(
+    '/tai-khoan/doi-mat-khau',
+    'App\Modules\Interaction\ProfileController@changePassword'
+);
+
 Router::get(
     '/tai-khoan/don-hang',
     'App\Modules\Interaction\ProfileController@orders'
