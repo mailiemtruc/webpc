@@ -74,3 +74,4 @@ $actionUrl = $isEdit ? base_url('admin/blogs/' . (int)$blog['id'] . '/update') :
 </div>
 
 <?php require VIEWS_DIR . '/layouts/admin_footer.php'; ?>
+
