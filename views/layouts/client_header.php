@@ -56,6 +56,8 @@ if (preg_match('#/san-pham/?$#', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH
                     <span><?= htmlspecialchars($visitor['full_name'] ?? 'Tài khoản') ?></span>
                 </summary>
                 <div>
+                    <a href="<?= base_url('tai-khoan') ?>"><i class="fa-regular fa-id-card" aria-hidden="true"></i> Thông tin tài khoản</a>
+                    <a href="<?= base_url('tai-khoan/don-hang') ?>"><i class="fa-solid fa-box-archive" aria-hidden="true"></i> Đơn hàng của tôi</a>
                     <a href="<?= base_url('tai-khoan/bao-mat') ?>"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Bảo mật &amp; 2FA</a>
                     <?php if (is_staff()): ?>
                         <a href="<?= base_url('admin') ?>"><i class="fa-solid fa-gauge-high" aria-hidden="true"></i> Quản trị cửa hàng</a>
@@ -85,6 +87,7 @@ if (preg_match('#/san-pham/?$#', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH
                 <a href="<?= base_url('san-pham?danh-muc=pc-van-phong') ?>" class="pcm-quick-pill"><i class="fa-solid fa-briefcase" aria-hidden="true"></i> PC VĂN PHÒNG</a>
                 <a href="<?= base_url('san-pham?danh-muc=man-hinh-may-tinh') ?>" class="pcm-quick-pill"><i class="fa-solid fa-tv" aria-hidden="true"></i> MÀN HÌNH MÁY TÍNH</a>
                 <a href="<?= base_url('san-pham?danh-muc=pc-ai-tri-tue-nhan-tao') ?>" class="pcm-quick-pill"><i class="fa-solid fa-brain" aria-hidden="true"></i> PC AI</a>
+                <a href="<?= base_url('tin-tuc') ?>" class="pcm-quick-pill"><i class="fa-solid fa-newspaper" aria-hidden="true"></i> TIN TỨC</a>
             </nav>
         </div>
     </div>
