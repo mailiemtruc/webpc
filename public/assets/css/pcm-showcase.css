@@ -37,12 +37,12 @@ body {
 .pcm-slider-container {
     position: relative;
     width: 100%;
-    border-radius: 10px;
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 6px 24px rgba(15, 23, 42, 0.12);
     background: #0a0e1a;
-    aspect-ratio: 1003 / 350;
-    max-height: 420px;
+    aspect-ratio: 16 / 9;
+    max-height: 540px;
 }
 
 .pcm-slider-track {
@@ -163,8 +163,9 @@ body {
     width: 100%;
     height: auto;
     display: block;
-    aspect-ratio: 330 / 185;
+    aspect-ratio: 16 / 9;
     object-fit: cover;
+    object-position: center;
 }
 
 /* ==========================================================

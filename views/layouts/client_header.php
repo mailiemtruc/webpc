@@ -30,7 +30,7 @@ if (preg_match('#/san-pham/?$#', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH
     <link rel="stylesheet" href="<?= asset('css/motion.css') ?>?v=1">
     <link rel="stylesheet" href="<?= asset('css/loading.css') ?>?v=1">
     <link rel="stylesheet" href="<?= asset('css/pc-compare.css') ?>?v=1">
-    <link rel="stylesheet" href="<?= asset('css/pcm-showcase.css') ?>?v=2">
+    <link rel="stylesheet" href="<?= asset('css/pcm-showcase.css') ?>?v=3">
     <script src="<?= asset('js/ui.js') ?>?v=7" defer></script>
     <script src="<?= asset('js/motion.js') ?>?v=1" defer></script>
     <script src="<?= asset('js/loading.js') ?>?v=1" defer></script>

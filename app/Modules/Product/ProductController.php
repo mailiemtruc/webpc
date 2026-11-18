@@ -14,16 +14,16 @@ class ProductController extends Controller {
     }
 
     public function home(): void {
-        $hotSaleGaming = $this->productModel->getHotSaleGaming(6);
-        $hotSaleComponents = $this->productModel->getHotSaleComponents(6);
-        $featuredProducts = $this->productModel->getFeaturedProducts(8);
-        $gamingPCs = $this->productModel->getGamingPCs(6);
-        $workstationPCs = $this->productModel->getWorkstationPCs(6);
-        $amdGamingPCs = $this->productModel->getAmdGamingPCs(6);
-        $officePCs = $this->productModel->getOfficePCs(6);
-        $monitors = $this->productModel->getMonitors(6);
-        $aiPCs = $this->productModel->getAiPCs(6);
-        $components = $this->productModel->getComponents(6);
+        $hotSaleGaming = $this->productModel->getHotSaleGaming(10);
+        $hotSaleComponents = $this->productModel->getHotSaleComponents(10);
+        $featuredProducts = $this->productModel->getFeaturedProducts(10);
+        $gamingPCs = $this->productModel->getGamingPCs(10);
+        $workstationPCs = $this->productModel->getWorkstationPCs(10);
+        $amdGamingPCs = $this->productModel->getAmdGamingPCs(10);
+        $officePCs = $this->productModel->getOfficePCs(10);
+        $monitors = $this->productModel->getMonitors(10);
+        $aiPCs = $this->productModel->getAiPCs(10);
+        $components = $this->productModel->getComponents(10);
 
         $heroBanners = [];
         try {

@@ -7,9 +7,10 @@ require VIEWS_DIR . '/layouts/client_header.php';
         <!-- 1. HERO SHOWCASE: SLIDER CAROUSEL & 3 SUB-BANNERS -->
         <?php
         $slides = !empty($heroBanners) ? $heroBanners : [
-            ['title' => 'Khuyến Mại Lớn PCMarket - Ưu Đãi PC Gaming & Linh Kiện', 'image' => 'assets/images/banners/hero_1.jpg', 'link' => '/san-pham?danh-muc=pc-gaming'],
-            ['title' => 'PC Gaming Premium Luxury - Đỉnh Cao Hiệu Năng', 'image' => 'assets/images/banners/hero_2.jpg', 'link' => '/san-pham?danh-muc=pc-gaming'],
-            ['title' => 'PC AI Local & Deep Learning Workstation', 'image' => 'assets/images/banners/hero_3.jpg', 'link' => '/san-pham?danh-muc=pc-ai-tri-tue-nhan-tao'],
+            ['title' => 'PC Gaming RTX 50 Series - Hiệu Năng Đỉnh Cao', 'image' => 'assets/images/banners/hero_1.jpg', 'link' => '/san-pham?danh-muc=pc-gaming'],
+            ['title' => 'PC AI & Workstation - Render 4K Deep Learning', 'image' => 'assets/images/banners/hero_2.jpg', 'link' => '/san-pham?danh-muc=pc-ai-tri-tue-nhan-tao'],
+            ['title' => 'Tự Ráp Cấu Hình PC Builder Chuyên Nghiệp', 'image' => 'assets/images/banners/hero_3.jpg', 'link' => '/build-pc'],
+            ['title' => 'Màn Hình 240Hz & Gaming Gear Chính Hãng', 'image' => 'assets/images/banners/hero_4.jpg', 'link' => '/san-pham?danh-muc=man-hinh-may-tinh'],
         ];
         ?>
         <section class="pcm-hero-section" aria-label="Khuyến mại nổi bật">
@@ -25,12 +26,12 @@ require VIEWS_DIR . '/layouts/client_header.php';
                         ?>
                         <div class="pcm-slide <?= $idx === 0 ? 'active' : '' ?>">
                             <a href="<?= htmlspecialchars($slideHref, ENT_QUOTES, 'UTF-8') ?>">
-                                <img src="<?= htmlspecialchars($slideImg, ENT_QUOTES, 'UTF-8') ?>"
+                                <img src="<?= htmlspecialchars($slideImg, ENT_QUOTES, 'UTF-8') ?>?v=3"
                                      alt="<?= htmlspecialchars($slide['title'] ?? 'PCMarket Banner', ENT_QUOTES, 'UTF-8') ?>"
-                                     width="1003"
-                                     height="350"
+                                     width="1376"
+                                     height="768"
                                      <?= $idx === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?>
-                                     onerror="this.onerror=null; this.src='<?= htmlspecialchars(asset('images/banners/hero_1.jpg'), ENT_QUOTES, 'UTF-8') ?>';">
+                                     onerror="this.onerror=null; this.src='<?= htmlspecialchars(asset('images/banners/hero_1.jpg'), ENT_QUOTES, 'UTF-8') ?>?v=3';">
                             </a>
                         </div>
                     <?php endforeach; ?>
@@ -53,13 +54,13 @@ require VIEWS_DIR . '/layouts/client_header.php';
             <!-- 3 Sub-Banners -->
             <div class="pcm-sub-banners">
                 <a class="pcm-sub-banner-item" href="<?= base_url('san-pham?danh-muc=pc-gaming') ?>">
-                    <img src="<?= asset('images/banners/sub_banner_1.jpg') ?>" alt="Chiến Delta Force" width="330" height="185">
+                    <img src="<?= asset('images/banners/sub_banner_1.jpg') ?>?v=3" alt="PC Gaming Chiến Mượt 2K/4K" width="1376" height="768">
                 </a>
                 <a class="pcm-sub-banner-item" href="<?= base_url('san-pham?danh-muc=pc-do-hoa') ?>">
-                    <img src="<?= asset('images/banners/sub_banner_2.jpg') ?>" alt="PC Gaming Premium Luxury" width="330" height="185">
+                    <img src="<?= asset('images/banners/sub_banner_2.jpg') ?>?v=3" alt="PC Đồ Họa & Workstation" width="1376" height="768">
                 </a>
-                <a class="pcm-sub-banner-item" href="<?= base_url('san-pham') ?>">
-                    <img src="<?= asset('images/banners/sub_banner_3.jpg') ?>" alt="PCM Ráp máy tại nhà" width="330" height="185">
+                <a class="pcm-sub-banner-item" href="<?= base_url('san-pham?danh-muc=linh-kien-may-tinh') ?>">
+                    <img src="<?= asset('images/banners/sub_banner_3.jpg') ?>?v=3" alt="Linh Kiện PC Chính Hãng 100%" width="1376" height="768">
                 </a>
             </div>
         </section>
