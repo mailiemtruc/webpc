@@ -3023,3 +3023,31 @@ button:active,
     grid-template-columns: 1fr;
   }
 }
+
+/* Custom Brand Logo Image */
+.wordmark-logo {
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
+  flex-shrink: 0;
+}
+.brand-logo {
+  height: 40px;
+  width: auto;
+  max-width: 190px;
+  object-fit: contain;
+  display: block;
+}
+.brand-logo-footer {
+  height: 36px;
+}
+.brand-logo-admin {
+  height: 32px;
+  max-width: 168px;
+}
+@media (max-width: 720px) {
+  .brand-logo {
+    height: 32px;
+    max-width: 145px;
+  }
+}

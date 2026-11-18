@@ -1,5 +1,5 @@
 <aside class="admin-sidebar" id="admin-sidebar" aria-label="Menu quản trị">
-    <a class="wordmark" href="<?= base_url('admin') ?>">PC<span class="brand-accent">MARKET</span></a><span class="workspace-label">Không gian vận hành</span>
+    <a class="wordmark wordmark-logo" href="<?= base_url('admin') ?>" aria-label="PCMarket Admin"><img class="brand-logo brand-logo-admin" src="<?= asset('images/logo-pcmarket.png') ?>?v=1" alt="PCMarket" width="136" height="34"></a><span class="workspace-label">Không gian vận hành</span>
     <nav class="admin-navigation">
         <?php
         $requestUri   = $_SERVER['REQUEST_URI'] ?? '';
