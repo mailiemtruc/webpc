@@ -72,14 +72,14 @@
                 </a>
             </li>
             <li class="pcm-mega-cat-item" data-target="#panel-audio">
-                <a href="<?= base_url('san-pham?danh-muc=linh-kien-may-tinh') ?>">
+                <a href="<?= base_url('san-pham?danh-muc=loa-mic-webcam') ?>">
                     <span class="pcm-mega-icon"><i class="fa-solid fa-headphones" style="color: #0284c7;"></i></span>
                     <span class="pcm-mega-name">LOA, MIC, WEBCAM</span>
                     <i class="fa-solid fa-chevron-right pcm-mega-arrow"></i>
                 </a>
             </li>
-            <li class="pcm-mega-cat-item" data-target="#panel-gaming">
-                <a href="<?= base_url('san-pham?danh-muc=pc-gaming') ?>">
+            <li class="pcm-mega-cat-item" data-target="#panel-vm">
+                <a href="<?= base_url('san-pham?danh-muc=pc-gia-lap-ao-hoa') ?>">
                     <span class="pcm-mega-icon"><i class="fa-solid fa-server" style="color: #6366f1;"></i></span>
                     <span class="pcm-mega-name">PC GIẢ LẬP ẢO HÓA</span>
                     <i class="fa-solid fa-chevron-right pcm-mega-arrow"></i>
@@ -356,6 +356,122 @@
                     <ul>
                         <li><a href="<?= base_url('san-pham?danh-muc=pc-ai-tri-tue-nhan-tao') ?>">Cấu hình tối ưu theo VRAM</a></li>
                         <li><a href="<?= base_url('san-pham?danh-muc=pc-ai-tri-tue-nhan-tao') ?>">Hỗ trợ cài đặt LLM miễn phí</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 8. PANEL GAMING GEAR (PHÍM / CHUỘT / TAI NGHE) -->
+            <div class="pcm-mega-subpanel" id="panel-gear">
+                <div class="pcm-mega-col">
+                    <h4 class="pcm-mega-group-title"><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Bàn+phím') ?>">BÀN PHÍM CƠ GAMING</a></h4>
+                    <ul>
+                        <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Bàn+phím') ?>">Tất Cả Bàn Phím Cơ</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Akko') ?>">Bàn Phím Cơ Akko / MonsGeek</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Corsair') ?>">Bàn Phím Corsair Gaming</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Razer') ?>">Bàn Phím Razer Huntsman / BlackWidow</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Logitech') ?>">Bàn Phím Logitech G Pro</a></li>
+                    </ul>
+                </div>
+                <div class="pcm-mega-col">
+                    <h4 class="pcm-mega-group-title"><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Chuột') ?>">CHUỘT CHƠI GAME</a></h4>
+                    <ul>
+                        <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Chuột') ?>">Tất Cả Chuột Gaming</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Logitech') ?>">Chuột Logitech G Pro / G502</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Razer') ?>">Chuột Razer DeathAdder / Viper</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=ASUS') ?>">Chuột ASUS ROG / TUF Gaming</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Wireless') ?>">Chuột Không Dây Siêu Nhẹ</a></li>
+                    </ul>
+                </div>
+                <div class="pcm-mega-col">
+                    <h4 class="pcm-mega-group-title"><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Tai+nghe') ?>">TAI NGHE GAMING</a></h4>
+                    <ul>
+                        <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Tai+nghe') ?>">Tai Nghe Chụp Tai 7.1</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=HyperX') ?>">Tai Nghe HyperX Cloud</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Corsair') ?>">Tai Nghe Corsair Wireless</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Razer') ?>">Tai Nghe Razer BlackShark</a></li>
+                    </ul>
+                </div>
+                <div class="pcm-mega-col">
+                    <h4 class="pcm-mega-group-title"><a href="<?= base_url('san-pham?danh-muc=gaming-gear') ?>">THƯƠNG HIỆU NỔI BẬT</a></h4>
+                    <ul>
+                        <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&brand[]=logitech') ?>">Logitech G Chính Hãng</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&brand[]=razer') ?>">Razer For Gamers</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&brand[]=corsair') ?>">Corsair Gaming</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&brand[]=asus') ?>">ASUS ROG / TUF</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&brand[]=akko') ?>">Akko Mechanical</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 9. PANEL LOA, MIC, WEBCAM -->
+            <div class="pcm-mega-subpanel" id="panel-audio">
+                <div class="pcm-mega-col">
+                    <h4 class="pcm-mega-group-title"><a href="<?= base_url('san-pham?danh-muc=loa-mic-webcam&q=Loa') ?>">LOA MÁY TÍNH</a></h4>
+                    <ul>
+                        <li><a href="<?= base_url('san-pham?danh-muc=loa-mic-webcam&q=Loa') ?>">Tất Cả Loa Để Bàn 2.0 / 2.1</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=loa-mic-webcam&q=Edifier') ?>">Loa Kiểm Âm & Bookshelf Edifier</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=loa-mic-webcam&q=Creative') ?>">Loa Soundbar Creative</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=loa-mic-webcam&q=Acoustic') ?>">Loa Hi-Fi Acoustic Energy</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=loa-mic-webcam&q=SOUNARC') ?>">Loa Di Động Bluetooth / LG</a></li>
+                    </ul>
+                </div>
+                <div class="pcm-mega-col">
+                    <h4 class="pcm-mega-group-title"><a href="<?= base_url('san-pham?danh-muc=loa-mic-webcam&q=Mic') ?>">MICROPHONE THU ÂM & STREAM</a></h4>
+                    <ul>
+                        <li><a href="<?= base_url('san-pham?danh-muc=loa-mic-webcam&q=Mic') ?>">Tất Cả Micro Livestream USB</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=loa-mic-webcam&q=HyperX') ?>">Micro HyperX QuadCast 2 S RGB</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=loa-mic-webcam&q=Elgato') ?>">Micro Elgato Wave Neo</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=loa-mic-webcam&q=Endgame') ?>">Micro Endgame Gear XSTRM</a></li>
+                    </ul>
+                </div>
+                <div class="pcm-mega-col">
+                    <h4 class="pcm-mega-group-title"><a href="<?= base_url('san-pham?danh-muc=loa-mic-webcam&q=Webcam') ?>">WEBCAM STREAM & HỌP ONLINE</a></h4>
+                    <ul>
+                        <li><a href="<?= base_url('san-pham?danh-muc=loa-mic-webcam&q=Webcam') ?>">Tất Cả Webcam Full HD / 4K</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=loa-mic-webcam&q=Brio') ?>">Webcam Logitech Brio 100 / 300 / 4K</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=loa-mic-webcam&q=C922') ?>">Webcam Logitech C922 Pro Stream</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=loa-mic-webcam&q=C930') ?>">Webcam Hội Nghị Logitech C925e / C930e</a></li>
+                    </ul>
+                </div>
+                <div class="pcm-mega-col">
+                    <h4 class="pcm-mega-group-title"><a href="<?= base_url('san-pham?danh-muc=loa-mic-webcam') ?>">COMBO STREAMING & STUDIO</a></h4>
+                    <ul>
+                        <li><a href="<?= base_url('san-pham?danh-muc=loa-mic-webcam') ?>">Xem Toàn Bộ Loa, Mic, Webcam</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear') ?>">Phụ Kiện Gaming Gear Kèm Theo</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 10. PANEL PC GIẢ LẬP ẢO HÓA -->
+            <div class="pcm-mega-subpanel" id="panel-vm">
+                <div class="pcm-mega-col">
+                    <h4 class="pcm-mega-group-title"><a href="<?= base_url('san-pham?danh-muc=pc-gia-lap-ao-hoa') ?>">PC GIẢ LẬP NOX / LDPLAYER</a></h4>
+                    <ul>
+                        <li><a href="<?= base_url('san-pham?danh-muc=pc-gia-lap-ao-hoa') ?>">Xem Tất Cả PC Giả Lập Ảo Hóa</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=pc-gia-lap-ao-hoa&q=i5') ?>">PC Core i5 Chạy 10 - 20 Tab Android</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=pc-gia-lap-ao-hoa&q=i9') ?>">PC Core i9 24 Nhân Treo Game 24/7</a></li>
+                    </ul>
+                </div>
+                <div class="pcm-mega-col">
+                    <h4 class="pcm-mega-group-title"><a href="<?= base_url('san-pham?danh-muc=pc-gia-lap-ao-hoa&q=Workstation') ?>">PC WORKSTATION ĐA NHÂN</a></h4>
+                    <ul>
+                        <li><a href="<?= base_url('san-pham?danh-muc=pc-gia-lap-ao-hoa&q=14900KF') ?>">Cấu Hình Intel Core i9-14900KF</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=pc-gia-lap-ao-hoa&q=14700KF') ?>">Cấu Hình Intel Core i7-14700KF</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=pc-gia-lap-ao-hoa&q=3060') ?>">VRAM 12GB RTX 3060 Cho Giả Lập</a></li>
+                    </ul>
+                </div>
+                <div class="pcm-mega-col">
+                    <h4 class="pcm-mega-group-title"><a href="<?= base_url('san-pham?danh-muc=pc-gia-lap-ao-hoa') ?>">ẢO HÓA VMWARE & DOCKER</a></h4>
+                    <ul>
+                        <li><a href="<?= base_url('san-pham?danh-muc=pc-gia-lap-ao-hoa&q=5070') ?>">PC RTX 5070 Ti 16GB Chạy Lab & AI</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=pc-gia-lap-ao-hoa') ?>">Chạy Tool MMO / Máy Ảo Đa Luồng</a></li>
+                    </ul>
+                </div>
+                <div class="pcm-mega-col">
+                    <h4 class="pcm-mega-group-title"><a href="<?= base_url('build-pc') ?>">TỰ CẤU HÌNH THEO NHU CẦU</a></h4>
+                    <ul>
+                        <li><a href="<?= base_url('build-pc') ?>">Mở Công Cụ Build PC ↗</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=pc-workstation') ?>">Xem Thêm PC Workstation</a></li>
                     </ul>
                 </div>
             </div>

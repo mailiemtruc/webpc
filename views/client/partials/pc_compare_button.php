@@ -1,4 +1,4 @@
-<?php if (in_array((int)($compareProduct['category_id'] ?? 0), [1, 2, 3, 15, 16, 17], true)): ?>
+<?php if (in_array((int)($compareProduct['category_id'] ?? 0), [1, 2, 3, 15, 16, 17, 19], true)): ?>
 <?php
 $comparisonPrice = (float)$compareProduct['price'];
 $comparisonDiscount = (float)($compareProduct['discount_price'] ?? 0);

@@ -66,6 +66,13 @@ class ProductController extends Controller {
             'mainboard-bo-mach-chu' => 'Bo Mạch Chủ (Mainboard)',
             'ram-bo-nho-trong' => 'Bộ Nhớ Trong (RAM)',
             'o-cung-ssd-hdd' => 'Ổ Cứng SSD/HDD',
+            'nguon-may-tinh-psu' => 'Nguồn Máy Tính (PSU)',
+            'vo-case-may-tinh' => 'Vỏ Case Máy Tính',
+            'tan-nhiet-cooling' => 'Tản Nhiệt (Cooling)',
+            'pc-do-hoa' => 'PC Đồ Họa & Render',
+            'gaming-gear' => 'Gaming Gear — Bàn Phím, Chuột & Tai Nghe',
+            'loa-mic-webcam' => 'Loa, Microphone & Webcam Chính Hãng',
+            'pc-gia-lap-ao-hoa' => 'PC Giả Lập & Ảo Hóa Đa Nhiệm',
         ];
 
         $pageTitle = $titles[$categorySlug] ?? 'Tất cả sản phẩm';

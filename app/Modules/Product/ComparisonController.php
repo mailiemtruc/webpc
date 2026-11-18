@@ -14,7 +14,7 @@ class ComparisonController extends Controller {
         $ids = array_values(array_unique(array_map('intval', explode(',', $raw))));
         $model = new ProductModel();
         $products = [];
-        $pcCategories = [1, 2, 3, 15, 16, 17];
+        $pcCategories = [1, 2, 3, 15, 16, 17, 19];
         foreach ($ids as $id) {
             $product = $model->find($id);
             if (!$product || (int)$product['status'] !== 1 || !in_array((int)$product['category_id'], $pcCategories, true)) continue;

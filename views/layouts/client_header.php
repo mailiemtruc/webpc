@@ -8,6 +8,7 @@ $catalogCategories = [
     'o-cung-ssd-hdd' => ['SSD & HDD', 9, 'hard-drive'], 'nguon-may-tinh-psu' => ['Nguồn máy tính', 10, 'plug'],
     'vo-case-may-tinh' => ['Case máy tính', 11, 'computer'], 'tan-nhiet-cooling' => ['Tản nhiệt', 12, 'fan'],
     'man-hinh-may-tinh' => ['Màn hình', 13, 'desktop'], 'gaming-gear' => ['Bàn phím & chuột', 14, 'keyboard'],
+    'loa-mic-webcam' => ['Loa, Mic, Webcam', 18, 'headphones'], 'pc-gia-lap-ao-hoa' => ['PC Giả Lập Ảo Hóa', 19, 'server'],
 ];
 if (preg_match('#/san-pham/?$#', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH))) {
     $requestedCategory = is_string($_GET['danh-muc'] ?? null) ? $_GET['danh-muc'] : '';
@@ -27,7 +28,7 @@ if (preg_match('#/san-pham/?$#', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Roboto:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="<?= asset('css/client.css') ?>?v=11">
+    <link rel="stylesheet" href="<?= asset('css/client.css') ?>?v=12">
     <link rel="stylesheet" href="<?= asset('css/motion.css') ?>?v=1">
     <link rel="stylesheet" href="<?= asset('css/loading.css') ?>?v=1">
     <link rel="stylesheet" href="<?= asset('css/pc-compare.css') ?>?v=1">
@@ -44,7 +45,7 @@ if (preg_match('#/san-pham/?$#', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH
 <header class="store-header">
     <div class="page-width header-inner">
         <button class="icon-button mobile-menu-trigger" type="button" data-menu-toggle aria-controls="mobile-menu" aria-expanded="false" aria-label="Mở danh mục"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
-        <a class="wordmark wordmark-logo" href="<?= base_url() ?>" aria-label="PCMarket — Trang chủ"><img class="brand-logo" src="<?= asset('images/logo-pcmarket.png') ?>?v=1" alt="PCMarket" width="192" height="48"></a>
+        <a class="wordmark wordmark-logo" href="<?= base_url() ?>" aria-label="PCMarket — Trang chủ"><img class="brand-logo" src="<?= asset('images/logo-pcmarket.png') ?>?v=2" alt="PCMarket" width="227" height="42"></a>
         <form class="search-form header-search" id="store-search" action="<?= base_url('san-pham') ?>" method="get" role="search" data-search-form novalidate>
             <label class="sr-only" for="site-search">Tìm sản phẩm</label>
             <div class="search-input-wrap"><input id="site-search" type="search" name="q" placeholder="Bạn cần tìm PC, CPU, VGA hay linh kiện nào?" value="<?= htmlspecialchars(is_string($_GET['q'] ?? null) ? $_GET['q'] : '') ?>"><button type="button" class="icon-button" data-search-clear aria-label="Xóa tìm kiếm" hidden>×</button><button class="search-submit" type="submit" aria-label="Tìm kiếm"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></button></div>
