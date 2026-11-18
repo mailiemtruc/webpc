@@ -24,13 +24,18 @@ class ProductController extends Controller {
         $monitors = $this->productModel->getMonitors(10);
         $aiPCs = $this->productModel->getAiPCs(10);
         $components = $this->productModel->getComponents(10);
+        $gamingGears = $this->productModel->getGamingGears(10);
+        $audioVideo = $this->productModel->getAudioVideo(10);
 
         $heroBanners = [];
+        $latestBlogs = [];
         try {
             $db = Database::getInstance();
             $heroBanners = $db->query("SELECT title, image, link FROM banners WHERE position = 'home_main' AND status = 1 ORDER BY display_order ASC, id DESC")->fetchAll(PDO::FETCH_ASSOC);
+            $latestBlogs = $db->query("SELECT id, title, slug, thumbnail, summary, view_count, created_at FROM blogs WHERE status = 1 ORDER BY created_at DESC, id DESC LIMIT 3")->fetchAll(PDO::FETCH_ASSOC);
         } catch (\Throwable $e) {
             $heroBanners = [];
+            $latestBlogs = [];
         }
 
         $this->view('client.home.index', [
@@ -46,6 +51,9 @@ class ProductController extends Controller {
             'monitors' => $monitors,
             'aiPCs' => $aiPCs,
             'components' => $components,
+            'gamingGears' => $gamingGears,
+            'audioVideo' => $audioVideo,
+            'latestBlogs' => $latestBlogs,
         ]);
     }
 

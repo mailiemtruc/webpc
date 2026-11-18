@@ -427,6 +427,26 @@ class ProductModel extends Model {
         return $res ?: $this->getHotComponents($limit);
     }
 
+    public function getGamingGears(int $limit = 10): array {
+        $sql = "SELECT p.*, b.name as brand_name, c.name as category_name 
+                FROM products p 
+                LEFT JOIN brands b ON p.brand_id = b.id 
+                LEFT JOIN categories c ON p.category_id = c.id 
+                WHERE p.status = 1 AND p.category_id = 14
+                ORDER BY p.is_featured DESC, p.view_count DESC, p.id DESC LIMIT {$limit}";
+        return $this->query($sql);
+    }
+
+    public function getAudioVideo(int $limit = 10): array {
+        $sql = "SELECT p.*, b.name as brand_name, c.name as category_name 
+                FROM products p 
+                LEFT JOIN brands b ON p.brand_id = b.id 
+                LEFT JOIN categories c ON p.category_id = c.id 
+                WHERE p.status = 1 AND p.category_id = 18
+                ORDER BY (CASE WHEN p.name LIKE '%Mic%' THEN 0 WHEN p.name LIKE '%Webcam%' THEN 1 ELSE 2 END), p.view_count DESC, p.id ASC LIMIT {$limit}";
+        return $this->query($sql);
+    }
+
     public function getHotGamingPCs(int $limit = 4): array {
         $sql = "SELECT p.*, b.name as brand_name 
                 FROM products p 

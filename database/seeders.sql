@@ -370,22 +370,91 @@ INSERT INTO `coupons` (`id`, `code`, `description`, `type`, `discount_value`, `m
 (3, 'GAMING5', 'Giảm 5% tối đa 1.000.000đ cho bộ PC Gaming', 'percentage', 5.00, 15000000.00, 1000000.00, 50, 8, '2026-01-01', '2026-12-31', 1),
 (4, 'VIP500K', 'Giảm 500.000đ cho dàn PC Hi-End trên 30 triệu', 'fixed', 500000.00, 30000000.00, NULL, 30, 4, '2026-01-01', '2026-12-31', 1);
 
--- 6. SEED ĐƠN HÀNG MẪU (ORDERS & ORDER_ITEMS)
+-- 6. SEED ĐƠN HÀNG MẪU (ORDERS & ORDER_ITEMS — Trải đều 7 ngày cho biểu đồ Admin Dashboard)
 TRUNCATE TABLE `orders`;
 INSERT INTO `orders` (`id`, `order_code`, `user_id`, `customer_name`, `customer_phone`, `customer_email`, `shipping_address`, `note`, `subtotal`, `coupon_id`, `coupon_code`, `discount_amount`, `final_total`, `payment_method`, `payment_status`, `status`, `created_at`) VALUES
-(1, 'PCM-20261101-0001', 3, 'Nguyễn Văn Khách', '0988889999', 'customer@pcmart.vn', 'Số 83A Cửu Long, Phường 15, Quận 10, TP.HCM', 'Giao giờ hành chính, gọi trước 15 phút', 17800000.00, 4, 'VIP500K', 500000.00, 17300000.00, 'banking', 'paid', 'completed', '2026-11-15 10:30:00'),
-(2, 'PCM-20261103-0002', 4, 'Trần Minh Tuấn', '0912345678', 'tuan.tran@gmail.com', '456 Lê Duẩn, Quận 1, TP.HCM', 'Đóng gói cẩn thận', 22900000.00, 2, 'PCMART100K', 100000.00, 22800000.00, 'cod', 'unpaid', 'shipping', '2026-11-17 14:15:00');
+(1, 'PCM-20261112-0001', 3, 'Nguyễn Văn Khách', '0988889999', 'customer@pcmart.vn', '83A Cửu Long, Phường 15, Quận 10, TP.HCM', 'Giao giờ hành chính, gọi trước 15 phút', 17800000.00, 4, 'VIP500K', 500000.00, 17300000.00, 'banking', 'paid', 'completed', DATE_SUB(NOW(), INTERVAL 151 HOUR)),
+(2, 'PCM-20261112-0002', NULL, 'Lê Hoàng Nam', '0903456789', 'hoangnam.le@gmail.com', '120 Võ Văn Ngân, TP. Thủ Đức, TP.HCM', 'Cài sẵn Windows 11 + driver VGA', 3289000.00, 2, 'PCMART100K', 100000.00, 3189000.00, 'banking', 'paid', 'completed', DATE_SUB(NOW(), INTERVAL 145 HOUR)),
+(3, 'PCM-20261113-0003', 4, 'Trần Minh Tuấn', '0912345678', 'tuan.tran@gmail.com', '456 Lê Duẩn, Quận 1, TP.HCM', 'Đóng gói chống sốc kỹ', 80500000.00, 4, 'VIP500K', 500000.00, 80000000.00, 'banking', 'paid', 'completed', DATE_SUB(NOW(), INTERVAL 126 HOUR)),
+(4, 'PCM-20261113-0004', NULL, 'Phạm Thị Thu Hà', '0977112233', 'thuha.pham@gmail.com', '28 Nguyễn Thị Minh Khai, Quận 3, TP.HCM', 'Xuất hóa đơn VAT công ty', 15980000.00, 2, 'PCMART100K', 100000.00, 15880000.00, 'banking', 'paid', 'completed', DATE_SUB(NOW(), INTERVAL 119 HOUR)),
+(5, 'PCM-20261114-0005', NULL, 'Võ Quốc Bảo', '0938224466', 'quocbao.vo@gmail.com', '72 Cách Mạng Tháng 8, Quận 3, TP.HCM', 'Ráp hoàn chỉnh trước khi giao', 70980000.00, 3, 'GAMING5', 1000000.00, 69980000.00, 'banking', 'paid', 'completed', DATE_SUB(NOW(), INTERVAL 101 HOUR)),
+(6, 'PCM-20261114-0006', 3, 'Nguyễn Văn Khách', '0988889999', 'customer@pcmart.vn', '83A Cửu Long, Phường 15, Quận 10, TP.HCM', '', 16690000.00, 1, 'WELCOME50K', 50000.00, 16640000.00, 'cod', 'paid', 'completed', DATE_SUB(NOW(), INTERVAL 96 HOUR)),
+(7, 'PCM-20261115-0007', NULL, 'Đặng Hữu Phúc', '0966554433', 'huuphuc.dang@gmail.com', '195 Phan Xích Long, Phú Nhuận, TP.HCM', 'Test stress Furmark trước khi xuất kho', 26980000.00, 4, 'VIP500K', 500000.00, 26480000.00, 'banking', 'paid', 'completed', DATE_SUB(NOW(), INTERVAL 79 HOUR)),
+(8, 'PCM-20261115-0008', NULL, 'Huỳnh Gia Huy', '0945667788', 'giahuy.huynh@gmail.com', '310 Điện Biên Phủ, Bình Thạnh, TP.HCM', '', 42180000.00, 2, 'PCMART100K', 100000.00, 42080000.00, 'banking', 'paid', 'completed', DATE_SUB(NOW(), INTERVAL 74 HOUR)),
+(9, 'PCM-20261116-0009', 4, 'Trần Minh Tuấn', '0912345678', 'tuan.tran@gmail.com', '456 Lê Duẩn, Quận 1, TP.HCM', 'Giao sau 14h', 22900000.00, 4, 'VIP500K', 500000.00, 22400000.00, 'banking', 'paid', 'completed', DATE_SUB(NOW(), INTERVAL 54 HOUR)),
+(10, 'PCM-20261116-0010', NULL, 'Bùi Thanh Sơn', '0909887766', 'thanhson.bui@gmail.com', '54 Hoàng Hoa Thám, Tân Bình, TP.HCM', '', 6870000.00, 1, 'WELCOME50K', 50000.00, 6820000.00, 'banking', 'paid', 'shipping', DATE_SUB(NOW(), INTERVAL 49 HOUR)),
+(11, 'PCM-20261116-0011', NULL, 'Ngô Đức Anh', '0918332211', 'ducanh.ngo@gmail.com', '88 Nguyễn Văn Linh, Quận 7, TP.HCM', 'Khách đổi ý nâng lên cấu hình khác', 12499000.00, NULL, NULL, 0.00, 12499000.00, 'cod', 'unpaid', 'cancelled', DATE_SUB(NOW(), INTERVAL 46 HOUR)),
+(12, 'PCM-20261117-0012', NULL, 'Trịnh Công Minh', '0902334455', 'congminh.trinh@gmail.com', '142 Lý Thường Kiệt, Quận 10, TP.HCM', 'Lắp ráp tận nhà buổi chiều', 26000000.00, 4, 'VIP500K', 500000.00, 25500000.00, 'banking', 'paid', 'completed', DATE_SUB(NOW(), INTERVAL 31 HOUR)),
+(13, 'PCM-20261117-0013', NULL, 'Phan Ngọc Linh', '0981223344', 'ngoclinh.phan@gmail.com', '205 Cộng Hòa, Tân Bình, TP.HCM', '', 16980000.00, 3, 'GAMING5', 800000.00, 16180000.00, 'banking', 'paid', 'shipping', DATE_SUB(NOW(), INTERVAL 27 HOUR)),
+(14, 'PCM-20261117-0014', 3, 'Nguyễn Văn Khách', '0988889999', 'customer@pcmart.vn', '83A Cửu Long, Phường 15, Quận 10, TP.HCM', '', 6490000.00, 2, 'PCMART100K', 100000.00, 6390000.00, 'cod', 'unpaid', 'shipping', DATE_SUB(NOW(), INTERVAL 23 HOUR)),
+(15, 'PCM-20261118-0015', NULL, 'Đỗ Mạnh Cường', '0933445566', 'manhcuong.do@gmail.com', '16 Nguyễn Huệ, Quận 1, TP.HCM', 'Chuyển khoản VietQR xác nhận ngay', 23879000.00, 4, 'VIP500K', 500000.00, 23379000.00, 'banking', 'paid', 'confirmed', DATE_SUB(NOW(), INTERVAL 9 HOUR)),
+(16, 'PCM-20261118-0016', NULL, 'Lý Minh Khôi', '0979881122', 'minhkhoi.ly@gmail.com', '610 Quang Trung, Gò Vấp, TP.HCM', '', 61170000.00, 2, 'PCMART100K', 100000.00, 61070000.00, 'banking', 'paid', 'confirmed', DATE_SUB(NOW(), INTERVAL 7 HOUR)),
+(17, 'PCM-20261118-0017', 4, 'Trần Minh Tuấn', '0912345678', 'tuan.tran@gmail.com', '456 Lê Duẩn, Quận 1, TP.HCM', 'Gọi trước khi giao', 3880000.00, 1, 'WELCOME50K', 50000.00, 3830000.00, 'cod', 'unpaid', 'pending', DATE_SUB(NOW(), INTERVAL 4 HOUR)),
+(18, 'PCM-20261118-0018', NULL, 'Vũ Thảo Vy', '0915667799', 'thaovy.vu@gmail.com', '99 Pasteur, Quận 1, TP.HCM', 'Tư vấn thêm nâng cấp RAM 32GB', 37989000.00, 2, 'PCMART100K', 100000.00, 37889000.00, 'cod', 'unpaid', 'pending', DATE_SUB(NOW(), INTERVAL 2 HOUR));
 
 TRUNCATE TABLE `order_items`;
 INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `product_name`, `product_sku`, `product_thumbnail`, `price`, `quantity`, `total`) VALUES
 (1, 1, 1, 'TTK FIRE', 'PCM-01-001', 'assets/images/products/pcm_001.jpg', 17800000.00, 1, 17800000.00),
-(2, 2, 2, 'TTK FIRE - A', 'PCM-01-002', 'assets/images/products/pcm_002.jpg', 22900000.00, 1, 22900000.00);
+(2, 2, 144, 'Màn Hình VSP IP2409S (24 inch / IPS / FHD / 144Hz / 1ms)', 'PCM-13-144', 'assets/images/products/pcm_107.jpg', 1890000.00, 1, 1890000.00),
+(3, 2, 168, 'Bàn phím AKKO 3087 v2 World Tour Tokyo', 'PCM-14-168', 'assets/images/products/pcm_117.jpg', 1399000.00, 1, 1399000.00),
+(4, 3, 14, 'TTK - AIR 4070Ti', 'PCM-02-014', 'assets/images/products/pcm_004.jpg', 80500000.00, 1, 80500000.00),
+(5, 4, 23, 'Case PC ROSA OFFICE Ryzen 3 3400G/A520/8G/256G', 'PCM-03-023', 'assets/images/products/pcm_005.jpg', 7990000.00, 2, 15980000.00),
+(6, 5, 214, 'PC Fractal Design Gaming Ryzen 7 9800X3D - RTX 5070 12GB OC WHITE', 'PCM-16-214', 'assets/images/products/pcm_163.jpg', 70980000.00, 1, 70980000.00),
+(7, 6, 251, 'Loa Creative Sound Blaster Katana V2X', 'PCM-18-251', 'assets/images/products/pcm_228.jpg', 8790000.00, 1, 8790000.00),
+(8, 6, 263, 'Loa Acoustic Energy Aego BT2', 'PCM-18-263', 'assets/images/products/pcm_263.jpg', 7900000.00, 1, 7900000.00),
+(9, 7, 220, 'PC AI Local Starter 12 - I5 14400F - RTX 3060 12GB', 'PCM-17-220', 'assets/images/products/pcm_169.jpg', 26980000.00, 1, 26980000.00),
+(10, 8, 68, 'Card Màn Hình Colorful iGame GeForce RTX 5060 Ultra DUO OC 8GB-V', 'PCM-07-068', 'assets/images/products/pcm_030.jpg', 15190000.00, 1, 15190000.00),
+(11, 8, 33, 'CPU AMD Ryzen 9 9950X3D2 Dual Edition (Up to 5.6GHz | 16 Cores Zen5 | 192 MB Cache)', 'PCM-05-033', 'assets/images/products/pcm_010.jpg', 26990000.00, 1, 26990000.00),
+(12, 9, 2, 'TTK FIRE - A', 'PCM-01-002', 'assets/images/products/pcm_002.jpg', 22900000.00, 1, 22900000.00),
+(13, 10, 169, 'Bàn phím AKKO 3098 RF Dracula Castle (Dual-mode / AKKO sw v3)', 'PCM-14-169', 'assets/images/products/pcm_118.jpg', 1590000.00, 1, 1590000.00),
+(14, 10, 173, 'Bàn phím AKKO 3098S One Piece', 'PCM-14-173', 'assets/images/products/pcm_122.jpg', 2590000.00, 1, 2590000.00),
+(15, 10, 259, 'Thiết bị Elgato Microphone Wave Neo (10MAI9901)', 'PCM-18-259', 'assets/images/products/pcm_236.jpg', 2690000.00, 1, 2690000.00),
+(16, 11, 145, 'Màn hình MSI MAG 272QP QD-OLED X24 (26.5 inch - QD OLED - 2K - 240Hz - 0.03ms - USB TypeC)', 'PCM-13-145', 'assets/images/products/pcm_108.jpg', 12499000.00, 1, 12499000.00),
+(17, 12, 209, 'TTK WATER - A', 'PCM-15-209', 'assets/images/products/pcm_007.jpg', 26000000.00, 1, 26000000.00),
+(18, 13, 282, 'PC Đồ Họa 2D - Edit Video i5 12400F- RTX 3050 6GB OC (Tối Ưu Giả Lập & Ảo Hóa)', 'PCM-19-282', 'assets/images/products/pcm_282.jpg', 16980000.00, 1, 16980000.00),
+(19, 14, 146, 'Màn Hình MSI MAG 274QPF X32 (27 inch - IPS - 2K - 320Hz - 0.5ms)', 'PCM-13-146', 'assets/images/products/pcm_110.jpg', 6490000.00, 1, 6490000.00),
+(20, 15, 3, 'TTK FIRE PLUS', 'PCM-01-003', 'assets/images/products/pcm_003.jpg', 22289000.00, 1, 22289000.00),
+(21, 15, 170, 'Bàn phím AKKO 3098 RF World Tour London (Dual-mode / AKKO sw v3)', 'PCM-14-170', 'assets/images/products/pcm_119.jpg', 1590000.00, 1, 1590000.00),
+(22, 16, 69, 'Card màn hình MSI RTX 5070 Ti 16G GAMING TRIO OC WHITE', 'PCM-07-069', 'assets/images/products/pcm_031.jpg', 45990000.00, 1, 45990000.00),
+(23, 16, 83, 'Ram Biwin Black Opal DW100 RGB 16GB ( 1 x 16GB ) DDR5 6000', 'PCM-08-083', 'assets/images/products/pcm_045.jpg', 7590000.00, 2, 15180000.00),
+(24, 17, 253, 'Loa Edifier MR3 Bluetooth - Màu đen', 'PCM-18-253', 'assets/images/products/pcm_230.jpg', 1990000.00, 1, 1990000.00),
+(25, 17, 271, 'Loa máy tính Edifier MR3 White', 'PCM-18-271', 'assets/images/products/pcm_271.jpg', 1890000.00, 1, 1890000.00),
+(26, 18, 24, 'TTK VP 02', 'PCM-03-024', 'assets/images/products/pcm_006.jpg', 9999000.00, 1, 9999000.00),
+(27, 18, 147, 'Màn Hình Gaming LG UltraGear 25G590B-B (24.5 inch - IPS - FHD - 1000Hz - 1ms)', 'PCM-13-147', 'assets/images/products/pcm_111.jpg', 27990000.00, 1, 27990000.00);
 
 -- 7. SEED ĐÁNH GIÁ (REVIEWS)
 TRUNCATE TABLE `reviews`;
 INSERT INTO `reviews` (`id`, `user_id`, `product_id`, `rating`, `comment`, `status`, `created_at`) VALUES
-(1, 3, 1, 5, 'Bộ máy chạy cực kỳ mượt và mát, test game 2K FPS rất cao, giao hàng đóng gói chắc chắn!', 1, NOW()),
-(2, 4, 2, 5, 'Nhân viên tư vấn tận tâm, đi dây gọn đẹp, linh kiện nguyên seal chính hãng 100%.', 1, NOW());
+(1, 3, 1, 5, 'Bộ máy chạy cực kỳ mượt và mát, test game 2K FPS rất cao, giao hàng đóng gói chắc chắn!', 1, DATE_SUB(NOW(), INTERVAL 6 DAY)),
+(2, 4, 1, 5, 'Đi dây bên trong vỏ case gọn gàng, bật máy chưa tới 8 giây, rất đáng tiền.', 1, DATE_SUB(NOW(), INTERVAL 4 DAY)),
+(3, 4, 2, 5, 'Nhân viên tư vấn tận tâm, đi dây gọn đẹp, linh kiện nguyên seal chính hãng 100%.', 1, DATE_SUB(NOW(), INTERVAL 5 DAY)),
+(4, 3, 3, 5, 'Chiến Cyberpunk 2077 và Black Myth Wukong 2K Max Setting mượt mà, nhiệt độ GPU chỉ ~65 độ.', 1, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(5, 4, 14, 5, 'Render Blender và Premiere Pro 4K nhanh hơn hẳn máy cũ, chạy êm không bị ồn quạt.', 1, DATE_SUB(NOW(), INTERVAL 5 DAY)),
+(6, 3, 15, 4, 'Hiệu năng đồ họa rất ổn định, giao hàng đúng hẹn, hộp linh kiện bàn giao đầy đủ.', 1, DATE_SUB(NOW(), INTERVAL 3 DAY)),
+(7, 3, 23, 5, 'Mua 2 bộ cho văn phòng kế toán, mở Excel file nặng mượt, kích thước gọn gàng.', 1, DATE_SUB(NOW(), INTERVAL 5 DAY)),
+(8, 4, 24, 5, 'Giá hợp lý, cài sẵn Windows bản quyền, cắm điện là dùng ngay.', 1, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(9, 3, 33, 5, 'CPU chính hãng nguyên seal, nhiệt độ ổn định, hiệu năng đa nhân vượt trội.', 1, DATE_SUB(NOW(), INTERVAL 4 DAY)),
+(10, 4, 34, 5, 'Lắp vào mainboard nhận ngay, benchmark đạt chuẩn thông số nhà sản xuất.', 1, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(11, 3, 50, 5, 'Bo mạch chủ VRM mát, có WiFi tích hợp tiện lợi, BIOS tiếng Việt/Anh dễ tinh chỉnh.', 1, DATE_SUB(NOW(), INTERVAL 4 DAY)),
+(12, 4, 68, 5, 'Card màn hình quạt chạy êm ru, bật DLSS kéo FPS cực cao ở màn 2K 180Hz.', 1, DATE_SUB(NOW(), INTERVAL 3 DAY)),
+(13, 3, 69, 5, 'Đóng gói 2 lớp chống sốc cẩn thận, test Furmark 30 phút mát mẻ không lỗi.', 1, DATE_SUB(NOW(), INTERVAL 1 DAY)),
+(14, 4, 83, 5, 'Bật XMP lên đúng bus ngay lần đầu, đèn RGB đồng bộ với mainboard rất đẹp.', 1, DATE_SUB(NOW(), INTERVAL 3 DAY)),
+(15, 3, 97, 5, 'Tốc độ đọc ghi NVMe đúng quảng cáo, copy project video hàng chục GB cực nhanh.', 1, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(16, 4, 106, 5, 'Nguồn chuẩn 80 Plus dây full modular dễ đi dây gọn trong case bể cá.', 1, DATE_SUB(NOW(), INTERVAL 3 DAY)),
+(17, 3, 118, 5, 'Vỏ case kính cường lực trong suốt, luồng gió thoáng và sẵn quạt ARGB rất sáng.', 1, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(18, 4, 130, 5, 'Tản nhiệt giữ CPU full load dưới 72 độ, quạt êm không hú.', 1, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(19, 3, 144, 5, 'Màn hình tấm nền Fast IPS màu sắc tươi, 180Hz bắn Valorant sướng mắt, không điểm chết.', 1, DATE_SUB(NOW(), INTERVAL 6 DAY)),
+(20, 4, 145, 4, 'Viền mỏng đẹp, chân đế chắc chắn, chỉ tiếc loa tích hợp hơi nhỏ nhưng mình dùng tai nghe riêng.', 1, DATE_SUB(NOW(), INTERVAL 4 DAY)),
+(21, 3, 168, 5, 'Bàn phím gõ cực đầm tay, switch mượt, LED RGB sáng rõ ban đêm.', 1, DATE_SUB(NOW(), INTERVAL 5 DAY)),
+(22, 4, 169, 5, 'Chuột cầm ôm tay, trọng lượng siêu nhẹ, kết nối không dây không hề có độ trễ.', 1, DATE_SUB(NOW(), INTERVAL 3 DAY)),
+(23, 3, 170, 5, 'Tai nghe đeo lâu không bị đau tai, mic lọc ồn rõ tiếng khi họp và chơi game cùng team.', 1, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(24, 4, 209, 5, 'Dàn Workstation chạy dựng hình 3D liên tục 12 tiếng vẫn cực mát và ổn định.', 1, DATE_SUB(NOW(), INTERVAL 1 DAY)),
+(25, 3, 214, 5, 'Combo AMD Ryzen chơi game Esports FPS nhảy vọt, rất hài lòng với dịch vụ PCMarket.', 1, DATE_SUB(NOW(), INTERVAL 4 DAY)),
+(26, 4, 220, 5, 'Chạy mô hình AI Local LLaMA và Stable Diffusion cực nhanh nhờ VRAM lớn.', 1, DATE_SUB(NOW(), INTERVAL 3 DAY)),
+(27, 3, 251, 5, 'Âm thanh loa trong trẻo, bass chắc gọn, đặt trên bàn làm việc nhìn cực kỳ sang.', 1, DATE_SUB(NOW(), INTERVAL 4 DAY)),
+(28, 4, 259, 5, 'Mic thu âm lọc tạp âm tốt, cắm USB nhận luôn trên Windows/OBS để livestream.', 1, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(29, 3, 271, 5, 'Webcam Logitech bắt nét tự động nhanh, hình ảnh sắc nét cả trong phòng thiếu sáng.', 1, DATE_SUB(NOW(), INTERVAL 1 DAY)),
+(30, 4, 282, 5, 'Treo 15 tab giả lập Android mượt mà suốt ngày không giật lag, CPU đa nhân quá khỏe.', 1, DATE_SUB(NOW(), INTERVAL 1 DAY));
 
 -- 8. SEED BANNERS SLIDER TRANG CHỦ (16:9 HIGH-RES DESIGNED FOR PCMARKET)
 TRUNCATE TABLE `banners`;

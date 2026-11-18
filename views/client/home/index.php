@@ -297,7 +297,112 @@ require VIEWS_DIR . '/layouts/client_header.php';
             </div>
         </section>
 
-        <!-- 10. DỊCH VỤ & CAM KẾT CHÍNH HÃNG PCM -->
+        <?php if (!empty($gamingGears)): ?>
+        <!-- 10. GAMING GEAR -->
+        <section class="pcm-section" aria-labelledby="sec-gear-title">
+            <div class="pcm-section-header pcm-header-amber">
+                <div class="pcm-section-badge">
+                    <h2 id="sec-gear-title">GAMING GEAR</h2>
+                </div>
+                <div class="pcm-section-subtags">
+                    <a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Bàn+phím') ?>">Bàn Phím Cơ</a>
+                    <span class="pcm-tag-sep">|</span>
+                    <a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Chuột') ?>">Chuột Chơi Game</a>
+                    <span class="pcm-tag-sep">|</span>
+                    <a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Tai+nghe') ?>">Tai Nghe Gaming</a>
+                    <span class="pcm-tag-sep">|</span>
+                    <a href="<?= base_url('san-pham?danh-muc=gaming-gear&brand[]=logitech') ?>">Logitech G</a>
+                    <span class="pcm-tag-sep">|</span>
+                    <a href="<?= base_url('san-pham?danh-muc=gaming-gear&brand[]=razer') ?>">Razer</a>
+                </div>
+                <a class="pcm-section-more" href="<?= base_url('san-pham?danh-muc=gaming-gear') ?>">
+                    XEM TẤT CẢ +
+                </a>
+            </div>
+            <div class="pcm-product-grid">
+                <?php foreach ($gamingGears as $item): ?>
+                    <?php require VIEWS_DIR . '/client/partials/pcm_card.php'; ?>
+                <?php endforeach; ?>
+            </div>
+        </section>
+        <?php endif; ?>
+
+        <?php if (!empty($audioVideo)): ?>
+        <!-- 11. LOA, MIC, WEBCAM -->
+        <section class="pcm-section" aria-labelledby="sec-audio-title">
+            <div class="pcm-section-header pcm-header-teal">
+                <div class="pcm-section-badge">
+                    <h2 id="sec-audio-title">LOA, MIC, WEBCAM</h2>
+                </div>
+                <div class="pcm-section-subtags">
+                    <a href="<?= base_url('san-pham?danh-muc=loa-mic-webcam&q=Loa') ?>">Loa Máy Tính & Kiểm Âm</a>
+                    <span class="pcm-tag-sep">|</span>
+                    <a href="<?= base_url('san-pham?danh-muc=loa-mic-webcam&q=Mic') ?>">Micro Thu Âm & Stream</a>
+                    <span class="pcm-tag-sep">|</span>
+                    <a href="<?= base_url('san-pham?danh-muc=loa-mic-webcam&q=Webcam') ?>">Webcam Full HD / 4K</a>
+                    <span class="pcm-tag-sep">|</span>
+                    <a href="<?= base_url('san-pham?danh-muc=loa-mic-webcam&q=Edifier') ?>">Edifier</a>
+                </div>
+                <a class="pcm-section-more" href="<?= base_url('san-pham?danh-muc=loa-mic-webcam') ?>">
+                    XEM TẤT CẢ +
+                </a>
+            </div>
+            <div class="pcm-product-grid">
+                <?php foreach ($audioVideo as $item): ?>
+                    <?php require VIEWS_DIR . '/client/partials/pcm_card.php'; ?>
+                <?php endforeach; ?>
+            </div>
+        </section>
+        <?php endif; ?>
+
+        <?php if (!empty($latestBlogs)): ?>
+        <!-- 12. TIN TỨC CÔNG NGHỆ MỚI NHẤT -->
+        <section class="pcm-section pcm-blog-section" aria-labelledby="sec-blog-title">
+            <div class="pcm-section-header pcm-header-navy">
+                <div class="pcm-section-badge">
+                    <h2 id="sec-blog-title">TIN TỨC CÔNG NGHỆ</h2>
+                </div>
+                <div class="pcm-section-subtags">
+                    <a href="<?= base_url('tin-tuc') ?>">Tư Vấn Build PC</a>
+                    <span class="pcm-tag-sep">|</span>
+                    <a href="<?= base_url('tin-tuc') ?>">Đánh Giá Phần Cứng</a>
+                    <span class="pcm-tag-sep">|</span>
+                    <a href="<?= base_url('tin-tuc') ?>">Thủ Thuật & Kinh Nghiệm</a>
+                </div>
+                <a class="pcm-section-more" href="<?= base_url('tin-tuc') ?>">
+                    XEM TẤT CẢ +
+                </a>
+            </div>
+            <div class="pcm-blog-grid">
+                <?php foreach ($latestBlogs as $post): ?>
+                    <article class="pcm-blog-card">
+                        <a class="pcm-blog-thumb" href="<?= base_url('tin-tuc/' . rawurlencode($post['slug'])) ?>">
+                            <img src="<?= htmlspecialchars(product_image_url($post['thumbnail'] ?? ''), ENT_QUOTES, 'UTF-8') ?>"
+                                 alt="<?= htmlspecialchars($post['title'] ?? '', ENT_QUOTES, 'UTF-8') ?>"
+                                 loading="lazy">
+                        </a>
+                        <div class="pcm-blog-body">
+                            <div class="pcm-blog-meta">
+                                <span><i class="fa-regular fa-calendar" aria-hidden="true"></i> <?= date('d/m/Y', strtotime($post['created_at'] ?? 'now')) ?></span>
+                                <span><i class="fa-regular fa-eye" aria-hidden="true"></i> <?= number_format((int)($post['view_count'] ?? 0)) ?> lượt xem</span>
+                            </div>
+                            <h3 class="pcm-blog-title">
+                                <a href="<?= base_url('tin-tuc/' . rawurlencode($post['slug'])) ?>">
+                                    <?= htmlspecialchars($post['title'] ?? '', ENT_QUOTES, 'UTF-8') ?>
+                                </a>
+                            </h3>
+                            <p class="pcm-blog-excerpt"><?= htmlspecialchars($post['summary'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
+                            <a class="pcm-blog-readmore" href="<?= base_url('tin-tuc/' . rawurlencode($post['slug'])) ?>">
+                                Đọc chi tiết <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </article>
+                <?php endforeach; ?>
+            </div>
+        </section>
+        <?php endif; ?>
+
+        <!-- 13. DỊCH VỤ & CAM KẾT CHÍNH HÃNG PCM -->
         <section class="pcm-assurance-banner" aria-label="Cam kết dịch vụ">
             <div class="pcm-assurance-item">
                 <div class="pcm-assurance-icon"><i class="fa-solid fa-truck-fast"></i></div>
