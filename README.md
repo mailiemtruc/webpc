@@ -10,7 +10,7 @@ Hệ thống được xây dựng theo kiến trúc **Modular MVC** tách biệt
 
 ### Phân hệ Khách hàng (Client)
 - **Trang chủ thương mại điện tử:** Hero Slider 16:9 + 3 Sub-banner thiết kế riêng, Mega Menu 10 nhóm danh mục chi tiết, khối Hot Sale theo tab, showcase đầy đủ PC Gaming, Workstation, AMD Gaming, Văn phòng, Màn hình, PC AI, Linh kiện, Gaming Gear, Loa/Mic/Webcam và Tin tức công nghệ.
-- **Kho dữ liệu thực tế:** **289 sản phẩm** kèm ảnh HD sắc nét thuộc **19 danh mục** và **24 thương hiệu** chính hãng.
+- **Kho dữ liệu thực tế:** **292 sản phẩm** kèm ảnh HD sắc nét thuộc **19 danh mục** và **24 thương hiệu** chính hãng.
 - **Danh mục & Bộ lọc đa tiêu chí + Live Search:** Lọc kết hợp theo danh mục cha/con, thương hiệu, khoảng giá, CPU, RAM, VGA, sắp xếp, phân trang và gợi ý tìm kiếm tức thì qua Ajax (`GET /api/search`).
 - **So sánh cấu hình PC (2–4 bộ máy):** Chọn trực tiếp từ card hoặc trang chi tiết, xem bảng đối chiếu thông số qua API `GET /api/compare`.
 - **Xây dựng cấu hình PC (PC Builder):** Chọn từng linh kiện (CPU, Mainboard, RAM, VGA, SSD, PSU, Case, Tản nhiệt, Màn hình), kiểm tra tương thích & công suất nguồn, tính tổng tiền realtime, in/xuất báo giá và đẩy cả bộ vào giỏ hàng.
@@ -77,7 +77,7 @@ Hệ thống được xây dựng theo kiến trúc **Modular MVC** tách biệt
 3. **Import cơ sở dữ liệu trên phpMyAdmin (`http://localhost/phpmyadmin`):**
    - Khởi động **Apache** và **MySQL**.
    - Import file **`database/schema.sql`** trước (tự tạo database `webpc_db` chuẩn `utf8mb4_unicode_ci` và toàn bộ bảng).
-   - Import tiếp file **`database/seeders.sql`** để nạp đầy đủ 289 sản phẩm, 19 danh mục, 24 thương hiệu, đơn hàng mẫu, đánh giá, banner và blog.
+   - Import tiếp file **`database/seeders.sql`** để nạp đầy đủ 292 sản phẩm, 19 danh mục, 24 thương hiệu, đơn hàng mẫu, đánh giá, banner và blog.
 4. **Truy cập hệ thống:**
    - **Trang khách hàng:** `http://localhost/webpc/public/`
    - **Trang quản trị:** `http://localhost/webpc/public/admin` (đăng nhập tại `/dang-nhap`)

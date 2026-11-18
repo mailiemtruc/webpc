@@ -10,6 +10,7 @@ class PCBuilderModel
     private const TYPES = [
         'cpu' => 5, 'motherboard' => 6, 'gpu' => 7, 'ram' => 8,
         'storage' => 9, 'psu' => 10, 'case' => 11, 'cooler' => 12,
+        'monitor' => 13,
     ];
 
     public function __construct() { $this->db = Database::getInstance(); }
