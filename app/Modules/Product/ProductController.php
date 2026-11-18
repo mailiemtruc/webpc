@@ -70,7 +70,7 @@ class ProductController extends Controller {
             'vo-case-may-tinh' => 'Vỏ Case Máy Tính',
             'tan-nhiet-cooling' => 'Tản Nhiệt (Cooling)',
             'pc-do-hoa' => 'PC Đồ Họa & Render',
-            'gaming-gear' => 'Gaming Gear — Bàn Phím, Chuột & Tai Nghe',
+            'gaming-gear' => 'Gaming Gear',
             'loa-mic-webcam' => 'Loa, Microphone & Webcam Chính Hãng',
             'pc-gia-lap-ao-hoa' => 'PC Giả Lập & Ảo Hóa Đa Nhiệm',
         ];

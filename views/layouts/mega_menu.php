@@ -67,7 +67,7 @@
             <li class="pcm-mega-cat-item" data-target="#panel-gear">
                 <a href="<?= base_url('san-pham?danh-muc=gaming-gear') ?>">
                     <span class="pcm-mega-icon"><i class="fa-solid fa-keyboard" style="color: #f59e0b;"></i></span>
-                    <span class="pcm-mega-name">GAMING GEAR (PHÍM/CHUỘT)</span>
+                    <span class="pcm-mega-name">GAMING GEAR</span>
                     <i class="fa-solid fa-chevron-right pcm-mega-arrow"></i>
                 </a>
             </li>

@@ -7,7 +7,7 @@ $catalogCategories = [
     'vga-card-man-hinh' => ['Card đồ họa', 7, 'display'], 'ram-bo-nho-trong' => ['Bộ nhớ RAM', 8, 'memory'],
     'o-cung-ssd-hdd' => ['SSD & HDD', 9, 'hard-drive'], 'nguon-may-tinh-psu' => ['Nguồn máy tính', 10, 'plug'],
     'vo-case-may-tinh' => ['Case máy tính', 11, 'computer'], 'tan-nhiet-cooling' => ['Tản nhiệt', 12, 'fan'],
-    'man-hinh-may-tinh' => ['Màn hình', 13, 'desktop'], 'gaming-gear' => ['Bàn phím & chuột', 14, 'keyboard'],
+    'man-hinh-may-tinh' => ['Màn hình', 13, 'desktop'], 'gaming-gear' => ['Gaming Gear', 14, 'keyboard'],
     'loa-mic-webcam' => ['Loa, Mic, Webcam', 18, 'headphones'], 'pc-gia-lap-ao-hoa' => ['PC Giả Lập Ảo Hóa', 19, 'server'],
 ];
 if (preg_match('#/san-pham/?$#', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH))) {

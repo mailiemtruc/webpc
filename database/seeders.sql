@@ -33,7 +33,7 @@ INSERT INTO `categories` (`id`, `parent_id`, `name`, `slug`, `icon`, `display_or
 (11, 4, 'Vỏ Case Máy Tính', 'vo-case-may-tinh', 'fa-box', 7, 1),
 (12, 4, 'Tản Nhiệt (Cooling)', 'tan-nhiet-cooling', 'fa-fan', 8, 1),
 (13, NULL, 'Màn Hình Máy Tính', 'man-hinh-may-tinh', 'fa-tv', 5, 1),
-(14, NULL, 'Bàn Phím & Chuột (Gear)', 'gaming-gear', 'fa-keyboard', 6, 1),
+(14, NULL, 'Gaming Gear', 'gaming-gear', 'fa-keyboard', 6, 1),
 (15, NULL, 'PC Workstation', 'pc-workstation', 'fa-calculator', 7, 1),
 (16, NULL, 'PC AMD Gaming', 'pc-amd-gaming', 'fa-fire', 8, 1),
 (17, NULL, 'PC AI - Trí Tuệ Nhân Tạo', 'pc-ai-tri-tue-nhan-tao', 'fa-brain', 9, 1),
