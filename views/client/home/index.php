@@ -7,9 +7,9 @@ require VIEWS_DIR . '/layouts/client_header.php';
         <!-- 1. HERO SHOWCASE: SLIDER CAROUSEL & 3 SUB-BANNERS -->
         <?php
         $slides = !empty($heroBanners) ? $heroBanners : [
-            ['title' => 'Top Cấu Hình PC Chiến Delta Force - Trải nghiệm đỉnh cao', 'image' => 'assets/images/banners/hero_delta_force.jpg', 'link' => '/san-pham?danh-muc=pc-gaming'],
-            ['title' => 'PC Gaming RTX 40 & 50 Series - Thống trị mọi tựa game', 'image' => 'assets/images/banners/hero_slide_2.jpg', 'link' => '/san-pham?danh-muc=pc-gaming'],
-            ['title' => 'PC AI & Deep Learning Studio 2026', 'image' => 'assets/images/banners/hero_slide_3.jpg', 'link' => '/san-pham?danh-muc=pc-ai-tri-tue-nhan-tao'],
+            ['title' => 'Khuyến Mại Lớn PCMarket - Ưu Đãi PC Gaming & Linh Kiện', 'image' => 'assets/images/banners/hero_1.jpg', 'link' => '/san-pham?danh-muc=pc-gaming'],
+            ['title' => 'PC Gaming Premium Luxury - Đỉnh Cao Hiệu Năng', 'image' => 'assets/images/banners/hero_2.jpg', 'link' => '/san-pham?danh-muc=pc-gaming'],
+            ['title' => 'PC AI Local & Deep Learning Workstation', 'image' => 'assets/images/banners/hero_3.jpg', 'link' => '/san-pham?danh-muc=pc-ai-tri-tue-nhan-tao'],
         ];
         ?>
         <section class="pcm-hero-section" aria-label="Khuyến mại nổi bật">
@@ -30,7 +30,7 @@ require VIEWS_DIR . '/layouts/client_header.php';
                                      width="1003"
                                      height="350"
                                      <?= $idx === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?>
-                                     onerror="this.onerror=null; this.src='<?= htmlspecialchars(asset('images/banners/hero_delta_force.jpg'), ENT_QUOTES, 'UTF-8') ?>';">
+                                     onerror="this.onerror=null; this.src='<?= htmlspecialchars(asset('images/banners/hero_1.jpg'), ENT_QUOTES, 'UTF-8') ?>';">
                             </a>
                         </div>
                     <?php endforeach; ?>
