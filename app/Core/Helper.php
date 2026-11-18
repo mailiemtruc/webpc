@@ -426,3 +426,34 @@ if (!function_exists('render_pagination')) {
     }
 }
 
+if (!function_exists('payment_bank_config')) {
+    /**
+     * Lấy cấu hình tài khoản ngân hàng nhận thanh toán VietQR từ .env
+     *
+     * @return array{bank_code:string, bank_name:string, account_no:string, account_name:string}
+     */
+    function payment_bank_config(): array {
+        return [
+            'bank_code'    => trim((string)env('PAYMENT_BANK_CODE', 'MB')) ?: 'MB',
+            'bank_name'    => trim((string)env('PAYMENT_BANK_NAME', 'MB Bank (Ngân hàng Quân Đội)')) ?: 'MB Bank',
+            'account_no'   => trim((string)env('PAYMENT_ACCOUNT_NO', '0987654321')) ?: '0987654321',
+            'account_name' => trim((string)env('PAYMENT_ACCOUNT_NAME', 'CONG TY PCMARKET')) ?: 'CONG TY PCMARKET',
+        ];
+    }
+}
+
+if (!function_exists('vietqr_image_url')) {
+    /**
+     * Sinh URL ảnh QR chuẩn VietQR có sẵn số tiền & nội dung chuyển khoản
+     */
+    function vietqr_image_url(int $amount, string $transferNote): string {
+        $cfg = payment_bank_config();
+        return 'https://img.vietqr.io/image/'
+            . rawurlencode($cfg['bank_code']) . '-'
+            . rawurlencode($cfg['account_no']) . '-compact2.png'
+            . '?amount=' . max(0, $amount)
+            . '&addInfo=' . rawurlencode($transferNote)
+            . '&accountName=' . rawurlencode($cfg['account_name']);
+    }
+}
+

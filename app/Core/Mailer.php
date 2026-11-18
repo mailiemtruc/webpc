@@ -122,6 +122,120 @@ HTML;
     }
 
     /**
+     * Gửi email xác nhận đơn hàng sau khi đặt hàng thành công (COD hoặc VietQR).
+     *
+     * @param array<string,mixed> $order
+     * @param array<int,array<string,mixed>> $items
+     * @return array{sent: bool, driver: string, error: ?string}
+     */
+    public static function sendOrderConfirmation(array $order, array $items): array {
+        $toEmail = trim((string)($order['customer_email'] ?? ''));
+        if ($toEmail === '' || !filter_var($toEmail, FILTER_VALIDATE_EMAIL)) {
+            return ['sent' => false, 'driver' => 'none', 'error' => 'Email không hợp lệ hoặc bị bỏ trống.'];
+        }
+
+        $appName       = env('APP_NAME', 'PCMarket');
+        $orderCode     = (string)($order['order_code'] ?? '');
+        $subject       = "[{$appName}] Xác nhận đơn hàng #{$orderCode}";
+        $safeName      = htmlspecialchars((string)($order['customer_name'] ?? 'Quý khách'), ENT_QUOTES, 'UTF-8');
+        $safePhone     = htmlspecialchars((string)($order['customer_phone'] ?? ''), ENT_QUOTES, 'UTF-8');
+        $safeAddress   = htmlspecialchars((string)($order['shipping_address'] ?? ''), ENT_QUOTES, 'UTF-8');
+        $safeCode      = htmlspecialchars($orderCode, ENT_QUOTES, 'UTF-8');
+        $isBanking     = ($order['payment_method'] ?? 'cod') === 'banking';
+        $paymentLabel  = $isBanking ? 'Chuyển khoản Ngân hàng (VietQR)' : 'Thanh toán khi nhận hàng (COD)';
+        $subtotalText  = number_format((float)($order['subtotal'] ?? 0), 0, ',', '.') . ' VNĐ';
+        $finalText     = number_format((float)($order['final_total'] ?? 0), 0, ',', '.') . ' VNĐ';
+        $orderUrl      = htmlspecialchars(base_url('dat-hang-thanh-cong?code=' . rawurlencode($orderCode)), ENT_QUOTES, 'UTF-8');
+
+        $rowsHtml = '';
+        foreach ($items as $item) {
+            $itemName  = htmlspecialchars((string)($item['name'] ?? $item['product_name'] ?? 'Sản phẩm'), ENT_QUOTES, 'UTF-8');
+            $itemQty   = (int)($item['quantity'] ?? 1);
+            $itemTotal = (float)($item['line_total'] ?? $item['total'] ?? ((float)($item['price'] ?? 0) * $itemQty));
+            $itemPrice = number_format($itemTotal, 0, ',', '.') . ' VNĐ';
+            $rowsHtml .= "<tr>"
+                . "<td style=\"padding:8px 10px; border-bottom:1px solid #e2e8f0; font-size:13px; color:#1e293b;\">{$itemName} <strong>× {$itemQty}</strong></td>"
+                . "<td style=\"padding:8px 10px; border-bottom:1px solid #e2e8f0; font-size:13px; text-align:right; font-weight:700; color:#dc2626; white-space:nowrap;\">{$itemPrice}</td>"
+                . "</tr>";
+        }
+
+        $discountRow = '';
+        $discountAmt = (float)($order['discount_amount'] ?? 0);
+        if (!empty($order['coupon_code']) && $discountAmt > 0) {
+            $safeCoupon = htmlspecialchars((string)$order['coupon_code'], ENT_QUOTES, 'UTF-8');
+            $discText   = '-' . number_format($discountAmt, 0, ',', '.') . ' VNĐ';
+            $discountRow = "<tr>"
+                . "<td style=\"padding:8px 10px; border-bottom:1px solid #e2e8f0; font-size:13px; color:#15803d;\">Mã giảm giá ({$safeCoupon})</td>"
+                . "<td style=\"padding:8px 10px; border-bottom:1px solid #e2e8f0; font-size:13px; text-align:right; font-weight:700; color:#15803d; white-space:nowrap;\">{$discText}</td>"
+                . "</tr>";
+        }
+
+        $bankingHtml = '';
+        if ($isBanking) {
+            $bankCfg    = payment_bank_config();
+            $bankName   = htmlspecialchars($bankCfg['bank_name'], ENT_QUOTES, 'UTF-8');
+            $accountNo  = htmlspecialchars($bankCfg['account_no'], ENT_QUOTES, 'UTF-8');
+            $accountNm  = htmlspecialchars($bankCfg['account_name'], ENT_QUOTES, 'UTF-8');
+            $qrUrl      = htmlspecialchars(vietqr_image_url((int)round((float)($order['final_total'] ?? 0)), $orderCode), ENT_QUOTES, 'UTF-8');
+            $bankingHtml = <<<HTML
+<div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:16px; margin:18px 0; font-size:13px; color:#1e3a8a; line-height:1.7;">
+  <div style="font-weight:800; color:#1d4ed8; margin-bottom:8px;">THÔNG TIN CHUYỂN KHOẢN VIETQR</div>
+  <div><strong>Ngân hàng:</strong> {$bankName}</div>
+  <div><strong>Số tài khoản:</strong> <code>{$accountNo}</code></div>
+  <div><strong>Chủ tài khoản:</strong> {$accountNm}</div>
+  <div><strong>Số tiền:</strong> <strong style="color:#dc2626;">{$finalText}</strong></div>
+  <div><strong>Nội dung chuyển khoản:</strong> <code>{$safeCode}</code></div>
+  <div style="margin-top:12px; text-align:center;">
+    <img src="{$qrUrl}" alt="Mã QR VietQR" width="180" height="180" style="border:1px solid #dbeafe; border-radius:6px; background:#fff; padding:6px;">
+  </div>
+</div>
+HTML;
+        }
+
+        $body = <<<HTML
+<h2 style="margin:0 0 12px; color:#15803d; font-size:20px;">Đặt hàng thành công!</h2>
+<p style="margin:0 0 14px; font-size:14px; line-height:1.6;">Xin chào <strong>{$safeName}</strong>,</p>
+<p style="margin:0 0 16px; font-size:14px; line-height:1.6;">Cảm ơn bạn đã đặt hàng tại <strong>PCMarket</strong>. Mã đơn hàng của bạn là <strong style="color:#0284c7;">{$safeCode}</strong>.</p>
+<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:6px; padding:12px 14px; font-size:13px; line-height:1.7; margin:0 0 16px;">
+  <div><strong>Người nhận:</strong> {$safeName} ({$safePhone})</div>
+  <div><strong>Địa chỉ giao hàng:</strong> {$safeAddress}</div>
+  <div><strong>Phương thức thanh toán:</strong> {$paymentLabel}</div>
+  <div><strong>Trạng thái thanh toán:</strong> Chưa thanh toán (Chờ xác nhận)</div>
+</div>
+<table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse; border:1px solid #e2e8f0; border-radius:6px; overflow:hidden; margin-bottom:14px;">
+  <thead>
+    <tr style="background:#f1f5f9;">
+      <th align="left" style="padding:8px 10px; font-size:12px; color:#475569;">Sản phẩm</th>
+      <th align="right" style="padding:8px 10px; font-size:12px; color:#475569;">Thành tiền</th>
+    </tr>
+  </thead>
+  <tbody>
+    {$rowsHtml}
+    <tr>
+      <td style="padding:8px 10px; border-bottom:1px solid #e2e8f0; font-size:13px; color:#475569;">Tạm tính</td>
+      <td style="padding:8px 10px; border-bottom:1px solid #e2e8f0; font-size:13px; text-align:right; color:#1e293b;">{$subtotalText}</td>
+    </tr>
+    {$discountRow}
+    <tr style="background:#f8fafc;">
+      <td style="padding:10px; font-size:14px; font-weight:800; color:#0f172a;">Tổng thanh toán</td>
+      <td style="padding:10px; font-size:15px; font-weight:800; text-align:right; color:#dc2626;">{$finalText}</td>
+    </tr>
+  </tbody>
+</table>
+{$bankingHtml}
+<p style="margin:18px 0 0; text-align:center;">
+  <a href="{$orderUrl}" style="display:inline-block; background:#2454d6; color:#ffffff; text-decoration:none; font-weight:700; font-size:13px; padding:10px 22px; border-radius:6px;">Xem chi tiết đơn hàng</a>
+</p>
+HTML;
+
+        return self::send(
+            $toEmail,
+            $subject,
+            self::wrapHtmlTemplate($body, 'Email xác nhận đơn hàng tự động từ PCMarket.')
+        );
+    }
+
+    /**
      * Điều phối gửi email theo driver cấu hình trong .env (smtp | mail | log).
      *
      * @return array{sent: bool, driver: string, error: ?string}

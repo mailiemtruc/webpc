@@ -2,6 +2,7 @@
 namespace App\Modules\Order;
 
 use App\Core\Controller;
+use App\Core\Mailer;
 use App\Core\Middleware;
 use App\Modules\Coupon\CouponModel;
 
@@ -71,6 +72,7 @@ class CheckoutController extends Controller {
             'finalTotal'     => $finalTotal,
             'user'           => auth_user(),
             'checkoutNonce'  => $_SESSION['checkout_nonce'],
+            'bankConfig'     => payment_bank_config(),
         ]);
     }
 
@@ -179,6 +181,18 @@ class CheckoutController extends Controller {
         $orderId = $this->orderModel->createOrder($orderData, $eval['items']);
 
         if ($orderId) {
+            // Gửi email xác nhận đơn hàng nếu khách hàng cung cấp địa chỉ email
+            if ($email !== '') {
+                try {
+                    $mailRes = Mailer::sendOrderConfirmation($orderData, $eval['items']);
+                    if (!empty($mailRes['sent'])) {
+                        set_flash('info', 'Email xác nhận đơn hàng đã được gửi tới ' . $email . '.');
+                    }
+                } catch (\Throwable $e) {
+                    // Không làm gián đoạn luồng hoàn tất đơn nếu máy chủ SMTP tạm lỗi
+                }
+            }
+
             unset($_SESSION['cart'], $_SESSION['coupon'], $_SESSION['checkout_nonce'], $_SESSION['order_error_message']);
             $_SESSION['last_order_code'] = $orderCode;
             header('Location: ' . base_url('dat-hang-thanh-cong?code=' . rawurlencode($orderCode)));
@@ -219,8 +233,9 @@ class CheckoutController extends Controller {
         }
 
         $this->view('client.order.success', [
-            'title' => 'Đặt hàng thành công — PCMarket',
-            'order' => $order,
+            'title'      => 'Đặt hàng thành công — PCMarket',
+            'order'      => $order,
+            'bankConfig' => payment_bank_config(),
         ]);
     }
 }

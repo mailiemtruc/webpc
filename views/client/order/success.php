@@ -1,13 +1,11 @@
 <?php require VIEWS_DIR . '/layouts/client_header.php'; ?>
 
 <?php
+$bank             = $bankConfig ?? payment_bank_config();
 $isBankingPending = ($order['payment_method'] ?? '') === 'banking' && ($order['payment_status'] ?? 'unpaid') === 'unpaid';
 $transferAmount   = (int)round((float)($order['final_total'] ?? 0));
 $transferNote     = $order['order_code'] ?? '';
-$vietQrUrl        = 'https://img.vietqr.io/image/MB-0987654321-compact2.png'
-    . '?amount=' . $transferAmount
-    . '&addInfo=' . rawurlencode($transferNote)
-    . '&accountName=' . rawurlencode('CONG TY PCMARKET');
+$vietQrUrl        = vietqr_image_url($transferAmount, $transferNote);
 ?>
 
 <div class="page-width" style="padding: 40px 0 70px; text-align: center;">
@@ -38,16 +36,24 @@ $vietQrUrl        = 'https://img.vietqr.io/image/MB-0987654321-compact2.png'
         <?php if ($isBankingPending): ?>
             <div style="text-align: left; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 20px; margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 20px; align-items: center;">
                 <div style="flex: 0 0 180px; text-align: center; background: #fff; padding: 10px; border-radius: 8px; border: 1px solid #dbeafe;">
-                    <img src="<?= htmlspecialchars($vietQrUrl) ?>" alt="Mã QR thanh toán VietQR" width="160" height="160" style="display: block; margin: 0 auto; object-fit: contain;">
+                    <img src="<?= htmlspecialchars($vietQrUrl) ?>" alt="Mã QR thanh toán VietQR" width="160" height="160" style="display: block; margin: 0 auto; object-fit: contain;" onerror="this.onerror=null; this.src='<?= htmlspecialchars(asset('images/product-placeholder.svg'), ENT_QUOTES, 'UTF-8') ?>';">
                     <small style="display: block; margin-top: 6px; color: #475569; font-weight: 600;">Quét bằng app Ngân hàng</small>
                 </div>
                 <div style="flex: 1; min-width: 240px; font-size: 14px; color: #1e3a8a; line-height: 1.7;">
                     <h2 style="font-size: 15px; font-weight: 800; margin: 0 0 8px; color: #1d4ed8;">HƯỚNG DẪN CHUYỂN KHOẢN</h2>
-                    <div><strong>Ngân hàng:</strong> MB Bank (Quân Đội)</div>
-                    <div><strong>Số tài khoản:</strong> <code>0987654321</code></div>
-                    <div><strong>Chủ tài khoản:</strong> CONG TY PCMARKET</div>
+                    <div><strong>Ngân hàng:</strong> <?= htmlspecialchars($bank['bank_name']) ?></div>
+                    <div>
+                        <strong>Số tài khoản:</strong>
+                        <code id="vietqr-account-no"><?= htmlspecialchars($bank['account_no']) ?></code>
+                        <button type="button" data-copy-target="vietqr-account-no" style="margin-left:6px;padding:2px 8px;font-size:11.5px;border:1px solid #93c5fd;background:#fff;color:#1d4ed8;border-radius:4px;cursor:pointer;font-weight:700;">Sao chép</button>
+                    </div>
+                    <div><strong>Chủ tài khoản:</strong> <?= htmlspecialchars($bank['account_name']) ?></div>
                     <div><strong>Số tiền:</strong> <strong style="color: #dc2626;"><?= number_format((float)$order['final_total'], 0, ',', '.') ?> VNĐ</strong></div>
-                    <div><strong>Nội dung CK:</strong> <code><?= htmlspecialchars($transferNote) ?></code></div>
+                    <div>
+                        <strong>Nội dung CK:</strong>
+                        <code id="vietqr-transfer-note"><?= htmlspecialchars($transferNote) ?></code>
+                        <button type="button" data-copy-target="vietqr-transfer-note" style="margin-left:6px;padding:2px 8px;font-size:11.5px;border:1px solid #93c5fd;background:#fff;color:#1d4ed8;border-radius:4px;cursor:pointer;font-weight:700;">Sao chép</button>
+                    </div>
                     <p style="margin: 8px 0 0; font-size: 12.5px; color: #475569;">Đơn hàng đang ở trạng thái chờ đối soát và sẽ được xác nhận ngay sau khi kế toán nhận được tiền.</p>
                 </div>
             </div>
@@ -87,5 +93,22 @@ $vietQrUrl        = 'https://img.vietqr.io/image/MB-0987654321-compact2.png'
         </a>
     </div>
 </div>
+
+<script>
+document.querySelectorAll('[data-copy-target]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+        var el = document.getElementById(btn.getAttribute('data-copy-target'));
+        if (!el) return;
+        var text = el.textContent.trim();
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(function () {
+                var orig = btn.textContent;
+                btn.textContent = 'Đã chép ✓';
+                setTimeout(function () { btn.textContent = orig; }, 1600);
+            });
+        }
+    });
+});
+</script>
 
 <?php require VIEWS_DIR . '/layouts/client_footer.php'; ?>

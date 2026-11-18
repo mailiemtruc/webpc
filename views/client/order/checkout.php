@@ -60,9 +60,10 @@
                             <small style="color: #64748b;">Quét mã VietQR chuyển khoản nhanh 24/7 — hiển thị QR ngay sau khi đặt hàng</small>
                         </div>
                     </label>
+                    <?php $bank = $bankConfig ?? payment_bank_config(); ?>
                     <div id="banking-preview-note" style="display: none; background: #eff6ff; border: 1px solid #bfdbfe; color: #1e3a8a; border-radius: 6px; padding: 12px 14px; font-size: 13px; line-height: 1.5;">
                         <strong>Thông tin tài khoản nhận thanh toán:</strong><br>
-                        Ngân hàng: <strong>MB Bank</strong> · Số TK: <strong>0987654321</strong> · Chủ TK: <strong>CONG TY PCMARKET</strong><br>
+                        Ngân hàng: <strong><?= htmlspecialchars($bank['bank_name']) ?></strong> · Số TK: <strong><?= htmlspecialchars($bank['account_no']) ?></strong> · Chủ TK: <strong><?= htmlspecialchars($bank['account_name']) ?></strong><br>
                         Sau khi bấm <em>Xác nhận đặt hàng</em>, hệ thống sẽ tạo mã đơn và mã QR kèm đúng số tiền cần chuyển. Trạng thái thanh toán giữ ở <em>Chưa thanh toán</em> cho tới khi nhân viên đối soát.
                     </div>
                 </div>
