@@ -1,9 +1,7 @@
 <?php
 require VIEWS_DIR . '/layouts/admin_header.php';
-require VIEWS_DIR . '/layouts/admin_sidebar.php';
 ?>
 
-<div class="admin-content">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 14px;">
         <div>
             <h1 style="font-size: 22px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">Quản lý banner & slider</h1>
@@ -129,7 +127,6 @@ require VIEWS_DIR . '/layouts/admin_sidebar.php';
             </button>
         </form>
     </div>
-</div>
 
 <?php require VIEWS_DIR . '/layouts/admin_footer.php'; ?>
 

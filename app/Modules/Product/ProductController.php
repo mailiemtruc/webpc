@@ -2,6 +2,9 @@
 namespace App\Modules\Product;
 
 use App\Core\Controller;
+use App\Core\Database;
+use App\Modules\Interaction\ReviewModel;
+use PDO;
 
 class ProductController extends Controller {
     private ProductModel $productModel;
@@ -22,8 +25,17 @@ class ProductController extends Controller {
         $aiPCs = $this->productModel->getAiPCs(6);
         $components = $this->productModel->getComponents(6);
 
+        $heroBanners = [];
+        try {
+            $db = Database::getInstance();
+            $heroBanners = $db->query("SELECT title, image, link FROM banners WHERE position = 'home_main' AND status = 1 ORDER BY display_order ASC, id DESC")->fetchAll(PDO::FETCH_ASSOC);
+        } catch (\Throwable $e) {
+            $heroBanners = [];
+        }
+
         $this->view('client.home.index', [
             'title' => 'PCMarket — Siêu Thị Máy Tính Gaming, Workstation & Linh Kiện Chính Hãng',
+            'heroBanners' => $heroBanners,
             'hotSaleGaming' => $hotSaleGaming,
             'hotSaleComponents' => $hotSaleComponents,
             'featuredProducts' => $featuredProducts,
@@ -83,9 +95,25 @@ class ProductController extends Controller {
             return;
         }
 
+        // Tăng lượt xem sản phẩm phục vụ thống kê Dashboard
+        try {
+            $db = Database::getInstance();
+            $db->prepare("UPDATE products SET view_count = view_count + 1 WHERE id = ?")->execute([(int)$product['id']]);
+        } catch (\Throwable $e) {
+            // Không chặn hiển thị sản phẩm nếu ghi nhận view_count lỗi
+        }
+
+        $reviews = [];
+        try {
+            $reviews = (new ReviewModel())->forProduct((int)$product['id']);
+        } catch (\Throwable $e) {
+            $reviews = [];
+        }
+
         $this->view('client.product.detail', [
             'title' => $product['name'] . ' - PCMarket',
             'product' => $product,
+            'reviews' => $reviews,
         ]);
     }
 

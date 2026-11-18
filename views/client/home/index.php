@@ -5,34 +5,35 @@ require VIEWS_DIR . '/layouts/client_header.php';
 <div class="pcm-homepage-wrapper">
     <div class="page-width">
         <!-- 1. HERO SHOWCASE: SLIDER CAROUSEL & 3 SUB-BANNERS -->
+        <?php
+        $slides = !empty($heroBanners) ? $heroBanners : [
+            ['title' => 'Top Cấu Hình PC Chiến Delta Force - Trải nghiệm đỉnh cao', 'image' => 'assets/images/banners/hero_delta_force.jpg', 'link' => '/san-pham?danh-muc=pc-gaming'],
+            ['title' => 'PC Gaming RTX 40 & 50 Series - Thống trị mọi tựa game', 'image' => 'assets/images/banners/hero_slide_2.jpg', 'link' => '/san-pham?danh-muc=pc-gaming'],
+            ['title' => 'PC AI & Deep Learning Studio 2026', 'image' => 'assets/images/banners/hero_slide_3.jpg', 'link' => '/san-pham?danh-muc=pc-ai-tri-tue-nhan-tao'],
+        ];
+        ?>
         <section class="pcm-hero-section" aria-label="Khuyến mại nổi bật">
             <div class="pcm-slider-container" id="pcmHeroSlider">
                 <div class="pcm-slider-track">
-                    <div class="pcm-slide active">
-                        <a href="<?= base_url('san-pham?danh-muc=pc-gaming') ?>">
-                            <img src="<?= asset('images/banners/hero_delta_force.jpg') ?>" 
-                                 alt="Top Cấu Hình PC Chiến Delta Force - Trải nghiệm đỉnh cao" 
-                                 width="1003" 
-                                 height="350" 
-                                 fetchpriority="high">
-                        </a>
-                    </div>
-                    <div class="pcm-slide">
-                        <a href="<?= base_url('san-pham?danh-muc=pc-gaming') ?>">
-                            <img src="<?= asset('images/banners/hero_slide_2.jpg') ?>" 
-                                 alt="PC Gaming RTX 40 & 50 Series - Thống trị mọi tựa game" 
-                                 width="1003" 
-                                 height="350">
-                        </a>
-                    </div>
-                    <div class="pcm-slide">
-                        <a href="<?= base_url('san-pham?danh-muc=pc-ai-tri-tue-nhan-tao') ?>">
-                            <img src="<?= asset('images/banners/hero_slide_3.jpg') ?>" 
-                                 alt="PC AI & Deep Learning Studio 2026" 
-                                 width="1003" 
-                                 height="350">
-                        </a>
-                    </div>
+                    <?php foreach ($slides as $idx => $slide): ?>
+                        <?php
+                        $rawLink = trim((string)($slide['link'] ?? ''));
+                        $slideHref = ($rawLink === '')
+                            ? base_url('san-pham')
+                            : (preg_match('#^https?://#i', $rawLink) ? $rawLink : base_url(ltrim($rawLink, '/')));
+                        $slideImg = product_image_url($slide['image'] ?? '');
+                        ?>
+                        <div class="pcm-slide <?= $idx === 0 ? 'active' : '' ?>">
+                            <a href="<?= htmlspecialchars($slideHref, ENT_QUOTES, 'UTF-8') ?>">
+                                <img src="<?= htmlspecialchars($slideImg, ENT_QUOTES, 'UTF-8') ?>"
+                                     alt="<?= htmlspecialchars($slide['title'] ?? 'PCMarket Banner', ENT_QUOTES, 'UTF-8') ?>"
+                                     width="1003"
+                                     height="350"
+                                     <?= $idx === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?>
+                                     onerror="this.onerror=null; this.src='<?= htmlspecialchars(asset('images/banners/hero_delta_force.jpg'), ENT_QUOTES, 'UTF-8') ?>';">
+                            </a>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
 
                 <!-- Slider Controls -->
@@ -43,9 +44,9 @@ require VIEWS_DIR . '/layouts/client_header.php';
                     <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
                 </button>
                 <div class="pcm-slider-dots">
-                    <span class="pcm-dot active" data-index="0"></span>
-                    <span class="pcm-dot" data-index="1"></span>
-                    <span class="pcm-dot" data-index="2"></span>
+                    <?php foreach ($slides as $idx => $slide): ?>
+                        <span class="pcm-dot <?= $idx === 0 ? 'active' : '' ?>" data-index="<?= $idx ?>"></span>
+                    <?php endforeach; ?>
                 </div>
             </div>
 

@@ -1,4 +1,4 @@
-<?php if ((int)($compareProduct['category_id'] ?? 0) >= 1 && (int)$compareProduct['category_id'] <= 3): ?>
+<?php if (in_array((int)($compareProduct['category_id'] ?? 0), [1, 2, 3, 15, 16, 17], true)): ?>
 <?php
 $comparisonPrice = (float)$compareProduct['price'];
 $comparisonDiscount = (float)($compareProduct['discount_price'] ?? 0);
@@ -6,7 +6,7 @@ $comparisonData = [
     'id' => (int)$compareProduct['id'], 'name' => $compareProduct['name'],
     'category' => (int)$compareProduct['category_id'], 'quantity' => (int)($compareProduct['quantity'] ?? 0),
     'price' => $comparisonDiscount > 0 && $comparisonDiscount < $comparisonPrice ? $comparisonDiscount : $comparisonPrice,
-    'image' => $compareProduct['thumbnail'], 'url' => base_url('san-pham/' . rawurlencode($compareProduct['slug'])),
+    'image' => product_image_url($compareProduct['thumbnail'] ?? ''), 'url' => base_url('san-pham/' . rawurlencode($compareProduct['slug'])),
     'specs' => json_decode($compareProduct['specifications'] ?? '{}', true) ?: [],
 ];
 ?>

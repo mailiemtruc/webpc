@@ -14,16 +14,17 @@ class ComparisonController extends Controller {
         $ids = array_values(array_unique(array_map('intval', explode(',', $raw))));
         $model = new ProductModel();
         $products = [];
+        $pcCategories = [1, 2, 3, 15, 16, 17];
         foreach ($ids as $id) {
             $product = $model->find($id);
-            if (!$product || (int)$product['status'] !== 1 || (int)$product['category_id'] < 1 || (int)$product['category_id'] > 3) continue;
+            if (!$product || (int)$product['status'] !== 1 || !in_array((int)$product['category_id'], $pcCategories, true)) continue;
             $price = (float)$product['price'];
             $discount = (float)($product['discount_price'] ?? 0);
             $products[] = [
                 'id' => (int)$product['id'], 'name' => $product['name'],
                 'category' => (int)$product['category_id'], 'quantity' => (int)$product['quantity'],
                 'price' => $discount > 0 && $discount < $price ? $discount : $price,
-                'image' => $product['thumbnail'], 'url' => base_url('san-pham/' . rawurlencode($product['slug'])),
+                'image' => product_image_url($product['thumbnail'] ?? ''), 'url' => base_url('san-pham/' . rawurlencode($product['slug'])),
                 'specs' => json_decode($product['specifications'] ?? '{}', true) ?: [],
             ];
         }

@@ -1,12 +1,10 @@
 <?php
 require VIEWS_DIR . '/layouts/admin_header.php';
-require VIEWS_DIR . '/layouts/admin_sidebar.php';
 
 $isEdit = !empty($blog['id']);
 $actionUrl = $isEdit ? base_url('admin/blogs/' . (int)$blog['id'] . '/update') : base_url('admin/blogs/store');
 ?>
 
-<div class="admin-content">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
         <div>
             <h1 style="font-size: 22px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">
@@ -71,7 +69,6 @@ $actionUrl = $isEdit ? base_url('admin/blogs/' . (int)$blog['id'] . '/update') :
             </div>
         </form>
     </div>
-</div>
 
 <?php require VIEWS_DIR . '/layouts/admin_footer.php'; ?>
 
