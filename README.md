@@ -28,7 +28,6 @@ Hệ thống được xây dựng theo kiến trúc **Modular MVC** tách biệt
 ---
 
 ## 2. Phân công nhóm 5 thành viên
-Xem kế hoạch chi tiết tại [KE_HOACH_DU_AN.md](./KE_HOACH_DU_AN.md).
 
 | Thành viên | Phân hệ đảm nhiệm | Tỉ lệ đóng góp |
 | :--- | :--- | :---: |
