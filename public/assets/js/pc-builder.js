@@ -8,6 +8,8 @@
   const dialog = document.getElementById('pcb-picker');
   const list = document.getElementById('pcb-picker-list');
   const feedback = document.getElementById('pcb-feedback');
+  const pageNode = document.querySelector('.pcb-page');
+  const placeholderImg = pageNode?.dataset.placeholder || '';
   let activeType = '';
   const money = value => new Intl.NumberFormat('vi-VN').format(value) + ' ₫';
   const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
@@ -22,6 +24,10 @@
       const type = slot.dataset.slot, item = selected[type];
       slot.querySelector('[data-selected-label]').textContent = item ? item.name : 'Chưa chọn linh kiện';
       slot.querySelector('[data-selected-price]').textContent = item ? money(item.price) : '—';
+      const chooseBtn = slot.querySelector('[data-choose]');
+      if (chooseBtn) chooseBtn.textContent = item ? 'Đổi' : 'Chọn';
+      const removeBtn = slot.querySelector('[data-remove]');
+      if (removeBtn) removeBtn.hidden = !item;
       slot.classList.toggle('is-selected', !!item);
       if (item) { total += item.price; count++; }
     });
@@ -38,7 +44,7 @@
       else notes.push({unknown:true,text:'Chưa đủ thông tin socket để xác nhận CPU và Mainboard.'});
     }
     const ramType = specValue(selected.ram, ['memory_type','ram_type','type','loai_ram']);
-    const boardRam = specValue(selected.motherboard, ['memory_type','ram_type','supported_memory','loai_ram']);
+    const boardRam = specValue(selected.motherboard, ['memory_type','ram_type','supported_memory','loai_ram','ram']);
     if (selected.ram && selected.motherboard) {
       if (ramType && boardRam) notes.push({ok:boardRam.toLowerCase().includes(ramType.toLowerCase()) || ramType.toLowerCase().includes(boardRam.toLowerCase()),text:`Chuẩn RAM: ${ramType}; Mainboard: ${boardRam}.`});
       else notes.push({unknown:true,text:'Chưa đủ thông tin chuẩn RAM của Mainboard hoặc RAM.'});
@@ -58,10 +64,19 @@
     activeType = type;
     document.getElementById('pcb-picker-title').textContent = `Chọn ${labels[type]}`;
     const items = catalog[type] || [];
-    list.innerHTML = items.length ? items.map(p => `<article class="pcb-product-option"><img src="${escapeHtml(p.thumbnail)}" alt=""><div class="pcb-option-info"><strong>${escapeHtml(p.name)}</strong><span>${escapeHtml(p.sku)} · Tồn kho: ${p.stock}</span><b>${money(p.price)}</b></div><button class="button button-primary" type="button" data-select-product="${p.id}" ${p.stock < 1 ? 'disabled' : ''}>${p.stock < 1 ? 'Hết hàng' : 'Chọn'}</button></article>`).join('') : '<p class="pcb-empty">Chưa có sản phẩm trong danh mục này.</p>';
+    const onErrAttr = placeholderImg ? ` onerror="this.onerror=null;this.src='${escapeHtml(placeholderImg)}';"` : '';
+    list.innerHTML = items.length ? items.map(p => `<article class="pcb-product-option"><img src="${escapeHtml(p.thumbnail)}" alt="${escapeHtml(p.name)}"${onErrAttr}><div class="pcb-option-info"><strong>${escapeHtml(p.name)}</strong><span>${escapeHtml(p.sku)} · Tồn kho: ${p.stock}</span><b>${money(p.price)}</b></div><button class="button button-primary" type="button" data-select-product="${p.id}" ${p.stock < 1 ? 'disabled' : ''}>${p.stock < 1 ? 'Hết hàng' : 'Chọn'}</button></article>`).join('') : '<p class="pcb-empty">Chưa có sản phẩm trong danh mục này.</p>';
     dialog.showModal();
   }
   document.querySelectorAll('[data-choose]').forEach(button => button.addEventListener('click', () => openPicker(button.dataset.choose)));
+  document.querySelectorAll('[data-remove]').forEach(button => button.addEventListener('click', () => {
+    const type = button.dataset.remove;
+    if (selected[type]) {
+      delete selected[type];
+      feedback.textContent = `Đã bỏ chọn ${labels[type]}.`;
+      render();
+    }
+  }));
   list.addEventListener('click', event => {
     const button = event.target.closest('[data-select-product]');
     if (!button) return;
@@ -83,9 +98,11 @@
       const token = document.querySelector('meta[name="csrf-token"]')?.content || '';
       const body = new URLSearchParams({ _csrf: token, product_ids: JSON.stringify(ids) });
       const base = document.body.dataset.appBase || '';
-      const response = await fetch(`${base}/api/builder/add-to-cart`, { method:'POST', credentials:'same-origin', headers:{'Accept':'application/json','X-Requested-With':'XMLHttpRequest'}, body });
+      const response = await fetch(`${base}/api/builder/add-to-cart`, { method:'POST', credentials:'same-origin', headers:{'Accept':'application/json','X-Requested-With':'XMLHttpRequest','X-CSRF-TOKEN':token}, body });
       const result = await response.json();
       if (!response.ok || !result.success) throw new Error(result.message || 'Không thể thêm cấu hình vào giỏ hàng.');
+      const bagCount = document.querySelector('.bag-count');
+      if (bagCount && typeof result.cartCount === 'number') bagCount.textContent = String(result.cartCount);
       feedback.textContent = result.message;
       window.location.href = result.redirect;
     } catch (error) { feedback.textContent = error.message; }

@@ -656,3 +656,15 @@
   text-align: left;
   cursor: pointer;
 }
+.dashboard-revenue-panel {
+  margin-bottom: 28px;
+}
+.dashboard-chart-wrap {
+  position: relative;
+  height: 280px;
+  padding: 0 25px 12px;
+}
+.dashboard-revenue-panel > .metric-note {
+  display: block;
+  padding: 0 25px 20px;
+}

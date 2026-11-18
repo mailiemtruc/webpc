@@ -9,12 +9,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Roboto:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="<?= asset('css/client.css') ?>?v=8"><link rel="stylesheet" href="<?= asset('css/admin.css') ?>?v=5">
+    <link rel="stylesheet" href="<?= asset('css/client.css') ?>?v=8"><link rel="stylesheet" href="<?= asset('css/admin.css') ?>?v=6">
     <script src="<?= asset('js/ui.js') ?>?v=6" defer></script>
     <link rel="stylesheet" href="<?= asset('css/motion.css') ?>?v=1">
     <script src="<?= asset('js/motion.js') ?>?v=1" defer></script>
 </head>
-<body class="admin-body">
+<body class="admin-body" data-app-base="<?= htmlspecialchars(base_url()) ?>">
 <a class="skip-link" href="#main-content">Đến nội dung chính</a>
 <?php require VIEWS_DIR . '/layouts/admin_sidebar.php'; ?>
 <button class="admin-backdrop" type="button" data-admin-backdrop aria-label="Đóng menu quản trị" hidden></button>

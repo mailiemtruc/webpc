@@ -87,11 +87,12 @@ if (preg_match('#/san-pham/?$#', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH
                 <a href="<?= base_url('san-pham?danh-muc=pc-van-phong') ?>" class="pcm-quick-pill"><i class="fa-solid fa-briefcase" aria-hidden="true"></i> PC VĂN PHÒNG</a>
                 <a href="<?= base_url('san-pham?danh-muc=man-hinh-may-tinh') ?>" class="pcm-quick-pill"><i class="fa-solid fa-tv" aria-hidden="true"></i> MÀN HÌNH MÁY TÍNH</a>
                 <a href="<?= base_url('san-pham?danh-muc=pc-ai-tri-tue-nhan-tao') ?>" class="pcm-quick-pill"><i class="fa-solid fa-brain" aria-hidden="true"></i> PC AI</a>
+                <a href="<?= base_url('build-pc') ?>" class="pcm-quick-pill"><i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i> TỰ RÁP PC</a>
                 <a href="<?= base_url('tin-tuc') ?>" class="pcm-quick-pill"><i class="fa-solid fa-newspaper" aria-hidden="true"></i> TIN TỨC</a>
             </nav>
         </div>
     </div>
-    <nav class="mobile-menu page-width" id="mobile-menu" aria-label="Danh mục di động" hidden><a href="<?= base_url('san-pham') ?>">Tất cả sản phẩm <span>→</span></a><?php foreach ($catalogCategories as $slug => $category): ?><a href="<?= base_url('san-pham?danh-muc=' . $slug) ?>"><span><i class="fa-solid fa-<?= $category[2] ?>" aria-hidden="true"></i> <?= $category[0] ?></span><span>→</span></a><?php endforeach; ?></nav>
+    <nav class="mobile-menu page-width" id="mobile-menu" aria-label="Danh mục di động" hidden><a href="<?= base_url('san-pham') ?>">Tất cả sản phẩm <span>→</span></a><a href="<?= base_url('build-pc') ?>"><span><i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i> Xây dựng cấu hình PC</span><span>→</span></a><a href="<?= base_url('tin-tuc') ?>"><span><i class="fa-solid fa-newspaper" aria-hidden="true"></i> Tin tức công nghệ</span><span>→</span></a><?php foreach ($catalogCategories as $slug => $category): ?><a href="<?= base_url('san-pham?danh-muc=' . $slug) ?>"><span><i class="fa-solid fa-<?= $category[2] ?>" aria-hidden="true"></i> <?= $category[0] ?></span><span>→</span></a><?php endforeach; ?></nav>
 </header>
 <main id="main-content" tabindex="-1">
 <?php foreach (['success' => 'Thành công', 'error' => 'Có lỗi xảy ra', 'info' => 'Thông báo'] as $flashType => $flashLabel): ?>

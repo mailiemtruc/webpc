@@ -44,9 +44,14 @@ class PCBuilderController extends Controller
         foreach ($products as $id => $p) {
             $oldQty = (int)($_SESSION['cart'][$id]['quantity'] ?? 0);
             $_SESSION['cart'][$id] = [
-                'id'=>(int)$p['id'], 'name'=>$p['name'], 'slug'=>'', 'sku'=>$p['sku'],
-                'price'=>(float)$p['current_price'], 'original_price'=>(float)$p['price'],
-                'thumbnail'=>$p['thumbnail'], 'quantity'=>$oldQty + 1,
+                'id'             => (int)$p['id'],
+                'name'           => $p['name'],
+                'slug'           => $p['slug'] ?? '',
+                'sku'            => $p['sku'] ?: ('PCM-' . $p['id']),
+                'price'          => (float)$p['current_price'],
+                'original_price' => (float)$p['price'],
+                'thumbnail'      => $p['thumbnail'],
+                'quantity'       => $oldQty + 1,
             ];
         }
         $count = array_sum(array_map(fn($item)=>(int)$item['quantity'], $_SESSION['cart']));

@@ -34,8 +34,8 @@
         <a class="sidebar-link <?= $isBlogs ? 'is-active' : '' ?>" href="<?= base_url('admin/blogs') ?>"><i class="fa-solid fa-newspaper" aria-hidden="true"></i>Tin tức công nghệ</a>
         <a class="sidebar-link <?= $isBanners ? 'is-active' : '' ?>" href="<?= base_url('admin/banners') ?>"><i class="fa-solid fa-images" aria-hidden="true"></i>Banner & Slider</a>
 
-        <span class="sidebar-caption">Phân hệ đang phát triển</span>
-        <span class="sidebar-link is-unavailable" title="Phân hệ PC Builder đang được phát triển bởi Dev 5"><i class="fa-solid fa-sliders" aria-hidden="true"></i>Cấu hình PC (Builder)<span class="module-dot" aria-label="Đang phát triển"></span></span>
+        <span class="sidebar-caption">Công cụ cửa hàng</span>
+        <a class="sidebar-link" href="<?= base_url('build-pc') ?>" target="_blank" rel="noopener"><i class="fa-solid fa-sliders" aria-hidden="true"></i>Cấu hình PC (Builder) ↗</a>
     </nav>
     <div class="sidebar-bottom"><span class="sidebar-project">PCMarket / Quản trị vận hành</span><a class="sidebar-link" href="<?= base_url('tai-khoan/bao-mat') ?>"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i>Bảo mật &amp; 2FA</a><form class="sidebar-logout-form" action="<?= base_url('dang-xuat') ?>" method="post"><?= csrf_field() ?><button class="sidebar-link sidebar-logout-btn" type="submit"><i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>Đăng xuất</button></form></div>
 </aside>
