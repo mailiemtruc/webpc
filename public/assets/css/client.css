@@ -366,6 +366,10 @@ input[type="search"]::-webkit-search-cancel-button {
   color: white;
   border: 0;
   border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 .search-submit:hover {
   background: var(--primary-hover);
@@ -716,9 +720,14 @@ input[type="search"]::-webkit-search-cancel-button {
     background 0.15s,
     border-color 0.15s;
 }
-.button span {
+.button span[aria-hidden="true"],
+.button .button-arrow {
   font-size: 19px;
   line-height: 1;
+}
+.button span:not([aria-hidden="true"]) {
+  font-size: inherit;
+  line-height: inherit;
 }
 .button-primary {
   color: white;
@@ -727,6 +736,16 @@ input[type="search"]::-webkit-search-cancel-button {
 .button-primary:hover {
   background: var(--primary-hover);
   color: white;
+}
+.button-secondary {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #334155;
+}
+.button-secondary:hover {
+  background: #e2e8f0;
+  border-color: #94a3b8;
+  color: #0f172a;
 }
 .button-white {
   background: white;
@@ -743,6 +762,33 @@ input[type="search"]::-webkit-search-cancel-button {
 .button-outline:hover {
   background: var(--soft);
   border-color: var(--primary);
+}
+/* Detail actions flex container & button alignment */
+.detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin: 14px 0;
+}
+.detail-actions .button,
+.detail-actions .pc-compare-toggle {
+  margin: 0 !important;
+  min-height: 45px;
+  height: 45px;
+  padding: 11px 19px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 5px;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  vertical-align: middle;
+  cursor: pointer;
+  width: auto;
+  max-width: none;
 }
 button:active,
 .button:active {

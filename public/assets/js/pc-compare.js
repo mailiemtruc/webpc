@@ -59,7 +59,7 @@
       !value ||
       !Number.isSafeInteger(value.id) ||
       value.id < 1 ||
-      ![1, 2, 3].includes(Number(value.category)) ||
+      ![1, 2, 3, 15, 16, 17, 19].includes(Number(value.category)) ||
       !Number.isFinite(Number(value.price)) ||
       Number(value.price) < 0
     )

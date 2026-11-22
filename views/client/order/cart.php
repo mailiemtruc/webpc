@@ -94,7 +94,7 @@ $finalTotal = max(0, $subtotal - $discountAmount);
                         <label style="font-size: 13px; font-weight: 700; color: #475569; display: block; margin-bottom: 6px;">Mã giảm giá:</label>
                         <div style="display: flex; gap: 8px;">
                             <input type="text" id="coupon-code-input" placeholder="Nhập mã (VD: WELCOME50K)" value="<?= htmlspecialchars($appliedCoupon['code'] ?? '') ?>" style="flex: 1; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-weight: 700; text-transform: uppercase;">
-                            <button type="button" id="btn-apply-coupon" style="background: #0284c7; color: #fff; border: none; padding: 8px 14px; border-radius: 6px; font-weight: 700; cursor: pointer;">Áp dụng</button>
+                            <button type="button" id="btn-apply-coupon" style="background: #0284c7; color: #fff; border: 1px solid #0284c7; padding: 8px 16px; border-radius: 6px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: background 0.15s;">Áp dụng</button>
                         </div>
                         <div id="coupon-feedback" style="margin-top: 8px; font-size: 13px; font-weight: 600; display: none;"></div>
                     </div>

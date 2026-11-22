@@ -77,14 +77,14 @@
       border-color var(--motion-fast),
       box-shadow var(--motion-ui);
   }
-  .button > span,
+  .button > span[aria-hidden="true"],
   .product-details-link > span,
   .promo-action > span {
     display: inline-block;
     transition: transform var(--motion-ui) var(--motion-ease);
   }
-  .button:hover > span,
-  .button:focus-visible > span,
+  .button:hover > span[aria-hidden="true"],
+  .button:focus-visible > span[aria-hidden="true"],
   .product-details-link:hover > span,
   .promo-action:hover > span {
     transform: translateX(4px);

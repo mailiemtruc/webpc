@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 44px;
+  min-height: 40px;
   width: 100%;
   margin-top: 9px;
   border: 1px solid var(--line);
@@ -13,25 +13,64 @@
   color: var(--primary);
   font-size: 12px;
   font-weight: 600;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
 .pc-compare-toggle:hover {
   background: var(--soft);
   border-color: var(--primary);
 }
 .pc-compare-toggle[aria-pressed="true"] {
-  background: var(--soft);
+  background: #edf4ff;
   border-color: var(--primary);
 }
 .pc-compare-toggle:disabled {
   opacity: 0.55;
   cursor: not-allowed;
 }
-.detail-copy .pc-compare-toggle {
-  max-width: 280px;
-  margin-top: 14px;
+.detail-copy .pc-compare-toggle,
+.detail-actions .pc-compare-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 45px;
+  height: 45px;
+  width: auto;
+  max-width: none;
+  margin: 0 !important;
+  padding: 11px 19px;
+  border: 1px solid #bdcbe9;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  box-sizing: border-box;
+  vertical-align: middle;
+  align-self: center;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
-.compare-active {
-  padding-bottom: 130px;
+.detail-copy .pc-compare-toggle:hover,
+.detail-actions .pc-compare-toggle:hover {
+  background: var(--soft);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.detail-copy .pc-compare-toggle[aria-pressed="true"],
+.detail-actions .pc-compare-toggle[aria-pressed="true"] {
+  background: #edf4ff;
+  border-color: var(--primary);
+  color: var(--primary);
+}
+body.compare-active {
+  padding-bottom: 0;
+}
+body.compare-active .store-footer {
+  padding-bottom: 110px;
+}
+body.compare-active:not(:has(.store-footer)) {
+  padding-bottom: 110px;
 }
 .compare-tray {
   position: fixed;
@@ -271,8 +310,14 @@
   color: var(--muted);
 }
 @media (max-width: 760px) {
-  .compare-active {
-    padding-bottom: 205px;
+  body.compare-active {
+    padding-bottom: 0;
+  }
+  body.compare-active .store-footer {
+    padding-bottom: 170px;
+  }
+  body.compare-active:not(:has(.store-footer)) {
+    padding-bottom: 170px;
   }
   .compare-tray {
     bottom: 8px;

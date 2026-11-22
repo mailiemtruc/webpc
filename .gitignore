@@ -5,6 +5,7 @@
 /vendor/
 
 # Temporary files & uploads
+/tmp/
 /public/uploads/*
 !/public/uploads/*/
 !/public/uploads/*/.gitkeep
