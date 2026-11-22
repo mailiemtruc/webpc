@@ -67,7 +67,7 @@ class AuthController extends Controller {
         }
 
         // Bắt buộc xác nhận email trước khi được đăng nhập
-        if (empty($user['email_verified_at'])) {
+        if (empty($user['status'])) {
             $this->clearFailedLogins($email);
             $resendUrl = htmlspecialchars(base_url('gui-lai-xac-nhan?email=' . rawurlencode($email)), ENT_QUOTES, 'UTF-8');
             $this->redirectWith(
