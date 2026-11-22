@@ -445,7 +445,7 @@ INSERT INTO `reviews` (`id`, `user_id`, `product_id`, `rating`, `comment`, `stat
 (15, 3, 97, 5, 'Tốc độ đọc ghi NVMe đúng quảng cáo, copy project video hàng chục GB cực nhanh.', 1, DATE_SUB(NOW(), INTERVAL 2 DAY)),
 (16, 4, 106, 5, 'Nguồn chuẩn 80 Plus dây full modular dễ đi dây gọn trong case bể cá.', 1, DATE_SUB(NOW(), INTERVAL 3 DAY)),
 (17, 3, 118, 5, 'Vỏ case kính cường lực trong suốt, luồng gió thoáng và sẵn quạt ARGB rất sáng.', 1, DATE_SUB(NOW(), INTERVAL 2 DAY)),
-(18, 4, 130, 5, 'Tản nhiệt giữ CPU full load dưới 72 độ, quạt êm không hú.', 1, DATE_SUB(NOW(), INTERVAL 2 DAY)),
+(18, 4, 128, 5, 'Tản nhiệt giữ CPU full load dưới 72 độ, quạt êm không hú.', 1, DATE_SUB(NOW(), INTERVAL 2 DAY)),
 (19, 3, 144, 5, 'Màn hình tấm nền Fast IPS màu sắc tươi, 180Hz bắn Valorant sướng mắt, không điểm chết.', 1, DATE_SUB(NOW(), INTERVAL 6 DAY)),
 (20, 4, 145, 4, 'Viền mỏng đẹp, chân đế chắc chắn, chỉ tiếc loa tích hợp hơi nhỏ nhưng mình dùng tai nghe riêng.', 1, DATE_SUB(NOW(), INTERVAL 4 DAY)),
 (21, 3, 168, 5, 'Bàn phím gõ cực đầm tay, switch mượt, LED RGB sáng rõ ban đêm.', 1, DATE_SUB(NOW(), INTERVAL 5 DAY)),

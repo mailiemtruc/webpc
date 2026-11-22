@@ -363,9 +363,9 @@
             <!-- 8. PANEL GAMING GEAR (PHÍM / CHUỘT / TAI NGHE) -->
             <div class="pcm-mega-subpanel" id="panel-gear">
                 <div class="pcm-mega-col">
-                    <h4 class="pcm-mega-group-title"><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Bàn+phím') ?>">BÀN PHÍM CƠ GAMING</a></h4>
+                    <h4 class="pcm-mega-group-title"><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=' . urlencode('Bàn phím')) ?>">BÀN PHÍM CƠ GAMING</a></h4>
                     <ul>
-                        <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Bàn+phím') ?>">Tất Cả Bàn Phím Cơ</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=' . urlencode('Bàn phím')) ?>">Tất Cả Bàn Phím Cơ</a></li>
                         <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Akko') ?>">Bàn Phím Cơ Akko / MonsGeek</a></li>
                         <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Corsair') ?>">Bàn Phím Corsair Gaming</a></li>
                         <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Razer') ?>">Bàn Phím Razer Huntsman / BlackWidow</a></li>
@@ -373,9 +373,9 @@
                     </ul>
                 </div>
                 <div class="pcm-mega-col">
-                    <h4 class="pcm-mega-group-title"><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Chuột') ?>">CHUỘT CHƠI GAME</a></h4>
+                    <h4 class="pcm-mega-group-title"><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=' . urlencode('Chuột')) ?>">CHUỘT CHƠI GAME</a></h4>
                     <ul>
-                        <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Chuột') ?>">Tất Cả Chuột Gaming</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=' . urlencode('Chuột')) ?>">Tất Cả Chuột Gaming</a></li>
                         <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Logitech') ?>">Chuột Logitech G Pro / G502</a></li>
                         <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Razer') ?>">Chuột Razer DeathAdder / Viper</a></li>
                         <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=ASUS') ?>">Chuột ASUS ROG / TUF Gaming</a></li>
@@ -383,9 +383,9 @@
                     </ul>
                 </div>
                 <div class="pcm-mega-col">
-                    <h4 class="pcm-mega-group-title"><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Tai+nghe') ?>">TAI NGHE GAMING</a></h4>
+                    <h4 class="pcm-mega-group-title"><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=' . urlencode('Tai nghe')) ?>">TAI NGHE GAMING</a></h4>
                     <ul>
-                        <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Tai+nghe') ?>">Tai Nghe Chụp Tai 7.1</a></li>
+                        <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=' . urlencode('Tai nghe')) ?>">Tai Nghe Chụp Tai 7.1</a></li>
                         <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=HyperX') ?>">Tai Nghe HyperX Cloud</a></li>
                         <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Corsair') ?>">Tai Nghe Corsair Wireless</a></li>
                         <li><a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Razer') ?>">Tai Nghe Razer BlackShark</a></li>

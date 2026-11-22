@@ -305,11 +305,11 @@ require VIEWS_DIR . '/layouts/client_header.php';
                     <h2 id="sec-gear-title">GAMING GEAR</h2>
                 </div>
                 <div class="pcm-section-subtags">
-                    <a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Bàn+phím') ?>">Bàn Phím Cơ</a>
+                    <a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=' . urlencode('Bàn phím')) ?>">Bàn Phím Cơ</a>
                     <span class="pcm-tag-sep">|</span>
-                    <a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Chuột') ?>">Chuột Chơi Game</a>
+                    <a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=' . urlencode('Chuột')) ?>">Chuột Chơi Game</a>
                     <span class="pcm-tag-sep">|</span>
-                    <a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=Tai+nghe') ?>">Tai Nghe Gaming</a>
+                    <a href="<?= base_url('san-pham?danh-muc=gaming-gear&q=' . urlencode('Tai nghe')) ?>">Tai Nghe Gaming</a>
                     <span class="pcm-tag-sep">|</span>
                     <a href="<?= base_url('san-pham?danh-muc=gaming-gear&brand[]=logitech') ?>">Logitech G</a>
                     <span class="pcm-tag-sep">|</span>
