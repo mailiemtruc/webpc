@@ -62,11 +62,29 @@
   var menu = document.getElementById("mobile-menu");
   var searchTrigger = document.querySelector("[data-search-toggle]");
   var menuTrigger = document.querySelector("[data-menu-toggle]");
+  var menuBackdrop = document.querySelector(".mobile-menu-backdrop");
   function setPanel(panel, trigger, open) {
     if (!panel || !trigger) return;
     panel.hidden = !open;
     trigger.setAttribute("aria-expanded", String(open));
+    if (panel === menu) {
+      if (menuBackdrop) menuBackdrop.hidden = !open;
+      document.documentElement.classList.toggle("is-menu-open", open);
+      if (open) {
+        var closeBtn = menu.querySelector(".mobile-menu-close");
+        if (closeBtn) closeBtn.focus();
+      }
+    }
   }
+  document.querySelectorAll("[data-menu-close]").forEach(function (el) {
+    el.addEventListener("click", function () {
+      setPanel(menu, menuTrigger, false);
+      if (menuTrigger) menuTrigger.focus();
+    });
+  });
+  window.matchMedia("(min-width: 761px)").addEventListener("change", function (event) {
+    if (event.matches && menu && !menu.hidden) setPanel(menu, menuTrigger, false);
+  });
   if (searchTrigger)
     searchTrigger.addEventListener("click", function () {
       var open = search.hidden;

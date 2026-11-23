@@ -28,12 +28,12 @@ if (preg_match('#/san-pham/?$#', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Roboto:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="<?= asset('css/client.css') ?>?v=25">
+    <link rel="stylesheet" href="<?= asset('css/client.css') ?>?v=26">
     <link rel="stylesheet" href="<?= asset('css/motion.css') ?>?v=2">
     <link rel="stylesheet" href="<?= asset('css/loading.css') ?>?v=1">
     <link rel="stylesheet" href="<?= asset('css/pc-compare.css') ?>?v=25">
-    <link rel="stylesheet" href="<?= asset('css/pcm-showcase.css') ?>?v=4">
-    <script src="<?= asset('js/ui.js') ?>?v=7" defer></script>
+    <link rel="stylesheet" href="<?= asset('css/pcm-showcase.css') ?>?v=5">
+    <script src="<?= asset('js/ui.js') ?>?v=8" defer></script>
     <script src="<?= asset('js/motion.js') ?>?v=1" defer></script>
     <script src="<?= asset('js/loading.js') ?>?v=1" defer></script>
     <script src="<?= asset('js/pc-compare.js') ?>?v=2" defer></script>
@@ -98,7 +98,57 @@ if (preg_match('#/san-pham/?$#', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH
             </nav>
         </div>
     </div>
-    <nav class="mobile-menu page-width" id="mobile-menu" aria-label="Danh mục di động" hidden><a href="<?= base_url('san-pham') ?>">Tất cả sản phẩm <span>→</span></a><a href="<?= base_url('build-pc') ?>"><span><i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i> Xây dựng cấu hình PC</span><span>→</span></a><a href="<?= base_url('tin-tuc') ?>"><span><i class="fa-solid fa-newspaper" aria-hidden="true"></i> Tin tức công nghệ</span><span>→</span></a><?php foreach ($catalogCategories as $slug => $category): ?><a href="<?= base_url('san-pham?danh-muc=' . $slug) ?>"><span><i class="fa-solid fa-<?= $category[2] ?>" aria-hidden="true"></i> <?= $category[0] ?></span><span>→</span></a><?php endforeach; ?></nav>
+    <?php
+    $mobilePcGroups = [
+        'pc-gaming' => ['PC Gaming, Streaming', 'gamepad'], 'pc-workstation' => ['PC Workstation', 'calculator'],
+        'pc-amd-gaming' => ['PC AMD Gaming', 'fire'], 'pc-do-hoa' => ['PC Đồ họa & Render', 'pen-ruler'],
+        'pc-ai-tri-tue-nhan-tao' => ['PC AI', 'brain'], 'pc-van-phong' => ['PC Văn phòng', 'briefcase'],
+        'pc-gia-lap-ao-hoa' => ['PC Giả lập ảo hóa', 'server'],
+    ];
+    $mobilePartGroups = array_diff_key($catalogCategories, $mobilePcGroups, ['pc-livestream' => 1]);
+    ?>
+    <div class="mobile-menu-backdrop" data-menu-close hidden></div>
+    <nav class="mobile-menu" id="mobile-menu" aria-label="Danh mục di động" hidden>
+        <div class="mobile-menu-head">
+            <img class="mobile-menu-logo" src="<?= asset('images/logo-pcmarket.png') ?>?v=2" alt="PCMarket" width="227" height="42">
+            <button class="mobile-menu-close" type="button" data-menu-close aria-label="Đóng danh mục"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+        </div>
+        <div class="mobile-menu-body">
+            <?php if ($visitor): ?>
+            <a class="mobile-menu-account" href="<?= base_url('tai-khoan') ?>">
+                <span class="mobile-menu-avatar"><i class="fa-regular fa-user" aria-hidden="true"></i></span>
+                <span><strong><?= htmlspecialchars($visitor['full_name'] ?? 'Tài khoản') ?></strong><small>Xem thông tin tài khoản</small></span>
+                <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+            </a>
+            <?php else: ?>
+            <div class="mobile-menu-auth">
+                <a class="mobile-menu-btn is-primary" href="<?= base_url('dang-nhap') ?>">Đăng nhập</a>
+                <a class="mobile-menu-btn" href="<?= base_url('dang-ky') ?>">Đăng ký</a>
+            </div>
+            <?php endif; ?>
+
+            <div class="mobile-menu-shortcuts">
+                <a href="<?= base_url('san-pham') ?>"><i class="fa-solid fa-layer-group" aria-hidden="true"></i><span>Tất cả<br>sản phẩm</span></a>
+                <a href="<?= base_url('build-pc') ?>"><i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i><span>Tự ráp<br>cấu hình</span></a>
+                <a href="<?= base_url('tin-tuc') ?>"><i class="fa-solid fa-newspaper" aria-hidden="true"></i><span>Tin tức<br>công nghệ</span></a>
+            </div>
+
+            <p class="mobile-menu-label">Máy tính bộ</p>
+            <div class="mobile-menu-list">
+                <?php foreach ($mobilePcGroups as $slug => [$name, $icon]): ?>
+                <a href="<?= base_url('san-pham?danh-muc=' . $slug) ?>"><span class="mobile-menu-ico"><i class="fa-solid fa-<?= $icon ?>" aria-hidden="true"></i></span><span class="mobile-menu-text"><?= $name ?></span><i class="fa-solid fa-chevron-right mobile-menu-arrow" aria-hidden="true"></i></a>
+                <?php endforeach; ?>
+            </div>
+
+            <p class="mobile-menu-label">Linh kiện &amp; phụ kiện</p>
+            <div class="mobile-menu-list">
+                <a href="<?= base_url('san-pham?danh-muc=linh-kien-may-tinh') ?>"><span class="mobile-menu-ico"><i class="fa-solid fa-microchip" aria-hidden="true"></i></span><span class="mobile-menu-text">Tất cả linh kiện</span><i class="fa-solid fa-chevron-right mobile-menu-arrow" aria-hidden="true"></i></a>
+                <?php foreach ($mobilePartGroups as $slug => $category): ?>
+                <a href="<?= base_url('san-pham?danh-muc=' . $slug) ?>"><span class="mobile-menu-ico"><i class="fa-solid fa-<?= $category[2] ?>" aria-hidden="true"></i></span><span class="mobile-menu-text"><?= $category[0] ?></span><i class="fa-solid fa-chevron-right mobile-menu-arrow" aria-hidden="true"></i></a>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </nav>
 </header>
 <main id="main-content" tabindex="-1">
 <?php foreach (['success' => 'Thành công', 'error' => 'Có lỗi xảy ra', 'info' => 'Thông báo'] as $flashType => $flashLabel): ?>
